@@ -11,7 +11,7 @@ const dbOptions = {
   useNewUrlParser: true,
   //  poolSize:process.env.POOL_SIZE
 };
-mongoose.connect("mongodb://localhost:27017/task", dbOptions, (err) => {
+mongoose.connect("mongodb://3.110.92.156:27017/task", dbOptions, (err) => {
   if (err) {
     console.log("DB Error", err);
   } else {
