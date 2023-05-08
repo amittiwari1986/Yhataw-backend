@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/malav4all/EliteShoppy-api.git"
+    "url": "git+https://github.com/amittiwari1986/Yhataw-backend.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/malav4all/EliteShoppy-api/issues"
+    "url": "https://github.com/amittiwari1986/Yhataw-backend/issue"
   },
-  "homepage": "https://github.com/malav4all/EliteShoppy-api#readme",
+  "homepage": "https://github.com/amittiwari1986/Yhataw-backend#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
