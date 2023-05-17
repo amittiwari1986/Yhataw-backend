@@ -1,7 +1,15 @@
 const userOperations = require("../services/userService");
+const userOfficeOperations = require("../services/userOfficeService");
+const userBankOperations = require("../services/userBankService");
+const userLeaveOperations = require("../services/userLeaveService");
+//const userSalaryOperations = require("../services/userSalaryService");
 const userTokens = require("../services/userTokenService");
 const User = require("../dto/userdto");
 const UserToken = require("../dto/usertokendto");
+const UserOffice = require("../dto/userofficeto");
+const UserBank = require("../dto/userbankto");
+const UserLeave = require("../dto/userleaveto");
+//const UserSalary = require("../dto/usersalaryto");
 const bcrypt = require("../utils/encrypt");
 const token = require("../utils/token");
 const otpGenerator = require('otp-generator');
@@ -47,6 +55,93 @@ const register = (req, res) => {
     .catch((err) => {
       res.status(500).json(err.message);
     });
+};
+
+const addUserOffice = (req, res) => {
+  const userOffice = new UserOffice(
+    req.body.userId,
+    req.body.emp_type,
+    req.body.department,
+    req.body.designation,
+    req.body.joining,
+    req.body.working_days,
+    req.body.working_shift,
+  );
+  const promise = userOfficeOperations.addUserOffice(userOffice);
+  promise
+    .then((data) => {
+      res.status(201).json({
+        message: "Save Successfully",
+        data: data,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json(err.message);
+    });
+};
+
+const addUserBank = (req, res) => {
+  const userBank = new UserBank(
+    req.body.userId,
+    req.body.bank_name,
+    req.body.branch_name,
+    req.body.holder_name,
+    req.body.account_no,
+    req.body.ifsc,
+  );
+  const promise = userBankOperations.addUserBank(userBank);
+  promise
+    .then((data) => {
+      res.status(201).json({
+        message: "Save Successfully",
+        data: data,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json(err.message);
+    });
+};
+
+const addUserLeave = (req, res) => {
+  const userLeave = new UserLeave(
+    req.body.userId,
+    req.body.total_leave,
+    req.body.earned_leave,
+    req.body.sick_leave,
+    req.body.casual_leave,
+  );
+  const promise = userLeaveOperations.addUserLeave(userLeave);
+  promise
+    .then((data) => {
+      res.status(201).json({
+        message: "Save Successfully",
+        data: data,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json(err.message);
+    });
+};
+
+const addUserSalary = (req, res) => {
+  // const userSalary = new UserSalary(
+  //   req.body.userId,
+  //   req.body.total_leave,
+  //   req.body.earned_leave,
+  //   req.body.sick_leave,
+  //   req.body.casual_leave,
+  // );
+  // const promise = userSalaryperations.addUserSalary(userSalary);
+  // promise
+  //   .then((data) => {
+  //     res.status(201).json({
+  //       message: "Save Successfully",
+  //       data: data,
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     res.status(500).json(err.message);
+  //   });
 };
 //User Login With JWT and Encrypt Password
 const loginUser = async (req, res) => {
@@ -256,4 +351,4 @@ const saveResetPassword = async (req, res) => {
     res.json({message: "an error occured"})
   }
 };
-module.exports = { register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword };
+module.exports = { register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary };
