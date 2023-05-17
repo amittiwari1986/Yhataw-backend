@@ -25,7 +25,16 @@ const register = (req, res) => {
     hashPassword,
     req.body.phone,
     req.body.email,
-    req.body.phoneOtp 
+    req.body.phoneOtp,
+    req.body.whatsapp,
+    req.body.dob,
+    req.body.martial_status,
+    req.body.gender,
+    req.body.address,
+    req.body.country_id,
+    req.body.state_id,
+    req.body.city,
+    req.body.zipcode,
   );
   const promise = userOperations.addUser(user);
   promise
@@ -42,10 +51,11 @@ const register = (req, res) => {
 //User Login With JWT and Encrypt Password
 const loginUser = async (req, res) => {
   let data;
-  let isnum = /^\d+$/.test(req.body.username);
+  let uname = req.body.username;
+  let isnum = uname.includes("@");
   console.log(isnum);
 
-  if(isnum == true){
+  if(isnum == false){
 
     let phone = req.body.username;
     let user = await userOperations.loginWithMobile(phone);

@@ -16,7 +16,16 @@
      email:{type:Schema.Types.String,required:true},
      logintime:{type:Schema.Types.Date,default:new Date().toString()},
      isAdmin:{type:Schema.Types.Boolean,default:false},
-     phoneOtp:{type:Schema.Types.String,required:false}
+     phoneOtp:{type:Schema.Types.String,required:false},
+     whatsapp:{type:Schema.Types.String,required:true},
+     dob:{type:Schema.Types.String,required:true},
+     martial_status:{type:Schema.Types.String,required:true},
+     gender:{type:Schema.Types.String,required:true},
+     address:{type:Schema.Types.String,required:true},
+     country_id:{type:Schema.Types.String,required:true},
+     state_id:{type:Schema.Types.String,required:true},
+     city:{type:Schema.Types.String,required:true},
+     zipcode:{type:Schema.Types.String,required:true},
  },{timestamps:true}); 
  
  const UserModel = connection.model('users',UserSchema);
