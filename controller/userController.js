@@ -2,6 +2,7 @@ const UserService = require("../services/userService")
 const UserBankService = require("../services/userBankService")
 const UserLeaveService = require("../services/userLeaveService")
 const UserOfficeService = require("../services/userOfficeService")
+
 const userController = {
     //User Update By Verify Token
     updateUser(req,res){
@@ -35,6 +36,44 @@ const userController = {
             // console.log(err.message)
             res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
         })
+    },
+    
+    // Get all user details User By id
+    getallUserByIds(req,res){
+        let id = req.params.id
+        const dataset = []
+        const promises = [
+                UserService.getUserById(id),
+                UserBankService.findOneUserId(id),
+                UserOfficeService.findOneUserId(id),
+            ]
+
+        Promise.all(promises).then((data) => {
+            console.log(data);
+            var i = 0;
+             data.forEach(function(item) {
+                if(i==0){
+                    sd = {personal: item}
+                    dataset.push(sd);
+                }
+                if(i==1){
+                    sd = {bank: item}
+                    dataset.push(sd);
+                }
+                if(i==2){
+                    sd = {office: item}
+                    dataset.push(sd);
+                }
+  
+              i++;
+            });
+
+                res.status(200).json({
+                data: dataset,
+                success: 1
+                })
+            });
+        
     },
     // Get User By id
     getUserByIds(req,res){

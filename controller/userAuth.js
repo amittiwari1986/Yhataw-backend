@@ -44,7 +44,7 @@ const register = (req, res) => {
     req.body.city,
     req.body.zipcode,
   );
-  const promise = userOperations.addUser(user);
+  const promise = userOperations.addUser(user); 
   promise
     .then((data) => {
       res.status(201).json({
@@ -171,7 +171,14 @@ const loginUser = async (req, res) => {
     let user = await userOperations.loginWithMobile(phone);
 
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      data = {
+        data: undefined,
+        settings: {
+          success: 0,
+          message: `User not found!`,
+        },
+      };
+      return res.status(400).json({ message: data });
     }
     const otp = otpGenerator.generate(8, { upperCaseAlphabets: false, specialChars: false });
     // // save otp to user collection
