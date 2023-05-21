@@ -201,7 +201,7 @@ const loginUser = async (req, res) => {
           accessToken,
           fullName: user.name,
           email: user.email,
-          role: 1,
+          role: "Admin,
           lastUpdate: new Date(),
           name: user.name,
         };
