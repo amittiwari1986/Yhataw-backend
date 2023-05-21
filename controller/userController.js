@@ -11,10 +11,12 @@ const userController = {
         promise.then((data)=>{
             console.log(data)
             res.status(201).json({
-                message : "Update Successfully"
+                message : "Update Successfully",
+                success: 1
             })
         }).catch((err)=>{
-            console.log(err.message)
+            // console.log(err.message)
+            res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
         })
     },
     // Delete User
@@ -25,11 +27,13 @@ const userController = {
         .then((data)=>{
             console.log(data)
             res.status(200).json({
-                message : "Delete Successfully"
+                message : "Delete Successfully",
+                success: 1
             })
         })
         .catch((err)=>{
-            console.log(err.message)
+            // console.log(err.message)
+            res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
         })
     },
     // Get User By id
@@ -40,10 +44,14 @@ const userController = {
         .then((data)=>{
             console.log(data)
             const {password,...others} = data._doc
-            res.status(200).json(others)
+            res.status(200).json({
+                data: others,
+                success: 1
+            })
         })
         .catch((err)=>{
-            console.log(err.message)
+            // console.log(err.message)
+            res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
         })
     },
     // fetch All Users
@@ -52,10 +60,14 @@ const userController = {
         console.log(query)
         const promise = UserService.getAllUsers(query);
         promise.then((data)=>{
-            res.send(data)
+            res.status(200).json({
+                data: data,
+                success: 1
+            })
             console.log(data)
         }).catch((err)=>{
-            console.log(err.message)
+            // console.log(err.message)
+            res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
         })
     },
 
@@ -67,10 +79,14 @@ const userController = {
         .then((data)=>{
             console.log(data)
             const {password,...others} = data._doc
-            res.status(200).json(others)
+            res.status(200).json({
+                data: others,
+                success: 1
+            })
         })
         .catch((err)=>{
-            console.log(err.message)
+            // console.log(err.message)
+            res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
         })
     },
 
@@ -82,10 +98,14 @@ const userController = {
         .then((data)=>{
             console.log(data)
             const {password,...others} = data._doc
-            res.status(200).json(others)
+            res.status(200).json({
+                data: others,
+                success: 1
+            })
         })
         .catch((err)=>{
-            console.log(err.message)
+            // console.log(err.message)
+            res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
         })
     },
 
@@ -97,10 +117,14 @@ const userController = {
         .then((data)=>{
             console.log(data)
             const {password,...others} = data._doc
-            res.status(200).json(others)
+            res.status(200).json({
+                data: others,
+                success: 1
+            })
         })
         .catch((err)=>{
-            console.log(err.message)
+            // console.log(err.message)
+            res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
         })
     }
 }
