@@ -49,11 +49,13 @@ const register = (req, res) => {
     .then((data) => {
       res.status(201).json({
         message: "Registration Successfully",
+        success: 1,
         data: data,
       });
     })
     .catch((err) => {
-      res.status(500).json(err.message);
+      //res.status(500).json(err.message);
+      res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
     });
 };
 
@@ -72,11 +74,13 @@ const addUserOffice = (req, res) => {
     .then((data) => {
       res.status(201).json({
         message: "Save Successfully",
+        success: 1,
         data: data,
       });
     })
     .catch((err) => {
-      res.status(500).json(err.message);
+      // res.status(500).json(err.message);
+      res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
     });
 };
 
@@ -94,11 +98,13 @@ const addUserBank = (req, res) => {
     .then((data) => {
       res.status(201).json({
         message: "Save Successfully",
+        success: 1,
         data: data,
       });
     })
     .catch((err) => {
-      res.status(500).json(err.message);
+      // res.status(500).json(err.message);
+      res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
     });
 };
 
@@ -115,11 +121,13 @@ const addUserLeave = (req, res) => {
     .then((data) => {
       res.status(201).json({
         message: "Save Successfully",
+        success: 1,
         data: data,
       });
     })
     .catch((err) => {
-      res.status(500).json(err.message);
+      // res.status(500).json(err.message);
+      res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
     });
 };
 
@@ -158,20 +166,19 @@ const loginUser = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
-
+    const otp = otpGenerator.generate(8, { upperCaseAlphabets: false, specialChars: false });
+    // // save otp to user collection
+    user.phoneOtp = otp;
+    
     res.status(201).json({
       data: {
         userId: user._id,
       },
       settings: {
             success: 1,
-            message: `OTP sended to your registered phone number`,
+            message: `OTP sended to your registered phone number. otp is ${otp}`,
           },
     });
-
-    const otp = otpGenerator.generate(8, { upperCaseAlphabets: false, specialChars: false });
-    // // save otp to user collection
-    user.phoneOtp = otp;
     // // user.isAccountVerified = true;
     await userOperations.updateUser(user._id,user);
 
@@ -243,11 +250,11 @@ const loginWithPhone = async (req, res) => {
       const user = await userOperations.getUserById(userId);
       // console.log(user);
       if (!user) {
-        return res.status(400).json({ message: "User not found" });
+        return res.status(400).json({ message: "User not found",success: 0});
       }
 
       if (user.phoneOtp !== otp) {
-        return res.status(400).json({ message: "Please check OTP and enter again" });
+        return res.status(400).json({ message: "Please check OTP and enter again" ,success: 0 });
       }
       const accessToken = token.createToken({
         id: user._id,
@@ -259,16 +266,16 @@ const loginWithPhone = async (req, res) => {
         _id: user._id,
         accessToken,
         fullName: user.name,
+        email: user.email,
+        role: "Admin",
         lastUpdate: new Date(),
         name: user.name,
         },
-        settings: {
-          success: 0,
+          success: 1,
           message: `OTP verified successfully`,
-        },
       });
     } catch (error) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(400).json({ success: 1, message: "User not found" });
     }
 
 };
@@ -276,29 +283,31 @@ const loginWithPhone = async (req, res) => {
 const updateUser = async (req, res) => {
   let data;
 
-
     try {
       let user = await userOperations.loginWithMobile(phone);
 
       if (!user) {
-        return res.status(400).json({ message: "User not found" });
+        return res.status(400).json({ success: 0, message: "User not found" });
       }
 
 
       user.phoneOtp = otp;
       await userOperations.updateUser(user._id,user);
     } catch (error) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(400).json({ success: 0, message: "User not found" });
     }
 
 };
 
+
+
 const resetUserPassword = async (req, res) => {
  const { email } = req.body;
   const user = await userOperations.findOneEmail(email);
+  const tokens = {};
   if (!user) {
     res.status(404);
-    res.json({ message: "the email provided was not found" });
+    res.json({ success: 0,message: "the email provided was not found" });
   } else if (user) {
     // const token = AuthToken(user._id);
      const getToken = token.createToken({
@@ -317,21 +326,26 @@ const resetUserPassword = async (req, res) => {
             await userTokens.updateUserToken(tokenData._id,tokens);
 
           }
-    try {
-      let subject = 'Reset Password Link - Amit.com';
-      let html = '<p>You requested for reset password, kindly use this <a href="http://localhost:5000/reset-password?token=' + token + '">link</a> to reset your password</p>';
-      await sendEmail.sendEmail(user.email, subject, html);
-      res.status(200);
-      res.json({
-        message: `a link to reset your password has been sent to: ${user.email}`,
-      });
-    } catch (error) {
-      res.status(500);
-      res.json({ message: error });
-    }
+          res.json({
+            success: 1, message: `a link to reset your password has been sent to: ${user.email} please go with http://localhost:5000/reset-password?token=getToken`,
+            getToken,
+          });
+    // try {
+    //   let subject = 'Reset Password Link - Amit.com';
+    //   let html = '<p>You requested for reset password, kindly use this <a href="http://localhost:5000/reset-password?token=' + token + '">link</a> to reset your password</p>';
+    //   await sendEmail.sendEmail(user.email, subject, html);
+    //   res.status(200);
+    //   res.json({
+    //     success: 1, message: `a link to reset your password has been sent to: ${user.email}`,
+    //   });
+    // } catch (error) {
+    //   res.status(500);
+    //   // res.json({ success: 0, message: error });
+    //   res.json({ success: 0, message: "Internal Server Error" });
+    // }
   } else {
     res.status(500);
-    res.json({ message: "Internal Server Error" });
+    res.json({ success: 0, message: "Internal Server Error" });
   }
 }
 
@@ -347,14 +361,14 @@ const saveResetPassword = async (req, res) => {
       user.password = bcrypt.doEncrypt(req.body.password);;
       await userOperations.updateUser(user._id,user);
       res.status(200);
-      res.json({ message: `Password change Successfully` });
+      res.json({ success: 1, message: `Password change Successfully` });
     } catch (error) {
       res.status(404);
-      res.json({ message: `an error occured: ${error}` });
+      res.json({ success: 0, message: `an error occured: ${error}` });
     }
   }else{
     res.status(500)
-    res.json({message: "an error occured"})
+    res.json({success: 0, message: "an error occured"})
   }
 };
 module.exports = { register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary };
