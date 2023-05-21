@@ -160,11 +160,13 @@ const loginUser = async (req, res) => {
     }
 
     res.status(201).json({
-      type: "success",
-      message: "OTP sended to your registered phone number",
       data: {
         userId: user._id,
       },
+      settings: {
+            success: 1,
+            message: `OTP sended to your registered phone number`,
+          },
     });
 
     const otp = otpGenerator.generate(8, { upperCaseAlphabets: false, specialChars: false });
@@ -198,12 +200,14 @@ const loginUser = async (req, res) => {
           _id: user._id,
           accessToken,
           fullName: user.name,
+          email: user.email,
+          role: 1,
           lastUpdate: new Date(),
           name: user.name,
         };
         data = {
           data: { user },
-          setting: {
+          settings: {
             success: 1,
             message: `Welcome ${user && user.name}`,
           },
@@ -251,14 +255,16 @@ const loginWithPhone = async (req, res) => {
       });
       // console.log(accessToken);
       res.status(201).json({
-        type: "success",
-        message: "OTP verified successfully",
         data: {
         _id: user._id,
         accessToken,
         fullName: user.name,
         lastUpdate: new Date(),
         name: user.name,
+        },
+        settings: {
+          success: 0,
+          message: `OTP verified successfully`,
         },
       });
     } catch (error) {
