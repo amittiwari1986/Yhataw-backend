@@ -1,5 +1,5 @@
 class UserSalaryDeclaration{
-    constructor(userId,PF_no,ESI_no,basic,HRA,medical_allowance,conbeyance_allowance,special_allowance,others,EPF_opt,ESI_opt{
+    constructor(userId,EPF_opt,ESI_opt,EPF_no,ESI_no,basic,HRA,medical_allowance,conbeyance_allowance,special_allowance,others,i_tax){
         this.userId = userId
         this.EPF_opt = EPF_opt
         this.ESI_opt = ESI_opt

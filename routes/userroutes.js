@@ -12,5 +12,7 @@ Routes.get("/findUserBank/:id",verifyTokenAndAuthoreization,userController.getUs
 Routes.get("/findUserLeave/:id",verifyTokenAndAuthoreization,userController.getUserLeaveByIds)
 Routes.get("/findUserOffice/:id",verifyTokenAndAuthoreization,userController.getUserOfficeByIds)
 Routes.get("/getUserAllInfo/:id",verifyTokenAndAuthoreization,userController.getallUserByIds)
+Routes.get("/findUserSalaryDeclaration/:id",verifyTokenAndAuthoreization,userController.getUserSalaryDeclarationByIds)
+Routes.get("/findUserLoanDeclaration/:id",verifyTokenAndAuthoreization,userController.getUserLoanDeclarationByIds)
 
 module.exports = Routes

@@ -2,14 +2,18 @@ const userOperations = require("../services/userService");
 const userOfficeOperations = require("../services/userOfficeService");
 const userBankOperations = require("../services/userBankService");
 const userLeaveOperations = require("../services/userLeaveService");
-//const userSalaryOperations = require("../services/userSalaryService");
+const userSalaryDeclarationOperations = require("../services/userSalaryDeclarationService");
+const userLoanDeclarationOperations = require("../services/userLoanDeclarationService");
+const userAttendanceOperations = require("../services/userAttendanceService");
 const userTokens = require("../services/userTokenService");
 const User = require("../dto/userdto");
 const UserToken = require("../dto/usertokendto");
 const UserOffice = require("../dto/userofficeto");
 const UserBank = require("../dto/userbankto");
 const UserLeave = require("../dto/userleaveto");
-//const UserSalary = require("../dto/usersalaryto");
+const UserSalaryDeclaration = require("../dto/usersalarydeclarationto");
+const UserLoanDeclaration = require("../dto/userloandeclarationto");
+const UserAttendance = require("../dto/userattendanceto");
 const bcrypt = require("../utils/encrypt");
 const token = require("../utils/token");
 const otpGenerator = require('otp-generator');
@@ -87,7 +91,14 @@ const addUserOffice = (req, res) => {
     })
     .catch((err) => {
       // res.status(500).json(err.message);
-      res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+      // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+      var keys = Object.keys(err.keyPattern);
+      var duplicate = keys[0];
+      if(err.keyPattern){
+        res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+      }else{
+        res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+      }
     });
 };
 
@@ -111,7 +122,14 @@ const addUserBank = (req, res) => {
     })
     .catch((err) => {
       // res.status(500).json(err.message);
-      res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+      // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+      var keys = Object.keys(err.keyPattern);
+      var duplicate = keys[0];
+      if(err.keyPattern){
+        res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+      }else{
+        res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+      }
     });
 };
 
@@ -134,29 +152,81 @@ const addUserLeave = (req, res) => {
     })
     .catch((err) => {
       // res.status(500).json(err.message);
-      res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+      // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+      var keys = Object.keys(err.keyPattern);
+      var duplicate = keys[0];
+      if(err.keyPattern){
+        res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+      }else{
+        res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+      }
     });
 };
 
 const addUserSalary = (req, res) => {
-  // const userSalary = new UserSalary(
-  //   req.body.userId,
-  //   req.body.total_leave,
-  //   req.body.earned_leave,
-  //   req.body.sick_leave,
-  //   req.body.casual_leave,
-  // );
-  // const promise = userSalaryperations.addUserSalary(userSalary);
-  // promise
-  //   .then((data) => {
-  //     res.status(201).json({
-  //       message: "Save Successfully",
-  //       data: data,
-  //     });
-  //   })
-  //   .catch((err) => {
-  //     res.status(500).json(err.message);
-  //   });
+  const userSalaryDeclaration = new UserSalaryDeclaration(
+    req.body.userId,
+    req.body.EPF_opt,
+    req.body.ESI_opt,
+    req.body.EPF_no,
+    req.body.ESI_no,
+    req.body.basic,
+    req.body.HRA,
+    req.body.medical_allowance,
+    req.body.conbeyance_allowance,
+    req.body.special_allowance,
+    req.body.others,
+    req.body.i_tax,
+  );
+  const promise = userSalaryDeclarationOperations.addUserSalaryDeclaration(userSalaryDeclaration);
+  promise
+    .then((data) => {
+      res.status(201).json({
+        message: "Save Successfully",
+        data: data,
+      });
+    })
+    .catch((err) => {
+      // res.status(500).json(err.message);
+      var keys = Object.keys(err.keyPattern);
+      var duplicate = keys[0];
+      if(err.keyPattern){
+        res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+      }else{
+        res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+      }
+    });
+};
+const addUserLoan = (req, res) => {
+  const userLoanDeclaration = new UserLoanDeclaration(
+    req.body.userId,
+    req.body.loan_acc,
+    req.body.loan_amt,
+    req.body.loan_emi,
+    req.body.start_from,
+    req.body.updated_amt,
+    req.body.status,
+  );
+  const promise = userLoanDeclarationOperations.addUserLoanDeclaration(userLoanDeclaration);
+  promise
+    .then((data) => {
+      res.status(201).json({
+        message: "Save Successfully",
+        success: 1,
+        data: data,
+      });
+    })
+    .catch((err) => {
+      // res.status(500).json(err.message);
+      // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+      var keys = Object.keys(err.keyPattern);
+      var duplicate = keys[0];
+      if(err.keyPattern){
+        res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+      }else{
+        res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+      }
+    });
 };
 //User Login With JWT and Encrypt Password
 const loginUser = async (req, res) => {
@@ -385,4 +455,93 @@ const saveResetPassword = async (req, res) => {
     res.json({success: 0, message: "an error occured"})
   }
 };
-module.exports = { register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary };
+
+const punchIn = async (req, res) => {
+  const { id, authorization } = req.params;
+  // var datetime = new Date();
+  var dt = new Date();
+
+year  = dt.getFullYear();
+month = (dt.getMonth() + 1).toString().padStart(2, "0");
+day   = dt.getDate().toString().padStart(2, "0");
+// current hours
+let hours = dt.getHours();
+let minutes = dt.getMinutes();
+let seconds = dt.getSeconds();
+// let date = ("0" + dt.getDate()).slice(-2);
+
+var datetime = year + '/' + month + '/' + day  + ' ' + hours  + ':' + minutes;
+
+  const userAttendance = new UserAttendance(
+    req.body.userId,
+    month,
+    day,
+    datetime,
+  );
+  const promise = userAttendanceOperations.addUserAttendance(userAttendance); 
+  promise
+    .then((data) => {
+      res.status(201).json({
+        message: "Punch-in Successfully",
+        success: 1,
+        data: data,
+      });
+    })
+    .catch((err) => {
+        res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+      
+    });
+
+};
+
+const punchOut = async (req, res) => {
+  const { userId, id, authorization, punch_in } = req.params;
+  // var datetime = new Date();
+  var dt = new Date();
+
+year  = dt.getFullYear();
+month = (dt.getMonth() + 1).toString().padStart(2, "0");
+day   = dt.getDate().toString().padStart(2, "0");
+// current hours
+let hours = dt.getHours();
+let minutes = dt.getMinutes();
+let seconds = dt.getSeconds();
+// let date = ("0" + dt.getDate()).slice(-2);
+
+var current_datetime = year + '/' + month + '/' + day  + ' ' + hours  + ':' + minutes;
+
+try {
+  // console.log(req.body.id);
+      let userAtt = await userAttendanceOperations.getUserAttendanceById(req.body.id);
+
+      var startTime = new Date(req.body.punch_in); 
+      var endTime = new Date(current_datetime);
+      var difference = endTime.getTime() - startTime.getTime(); // This will give difference in milliseconds
+      var resultInMinutes = Math.round(difference / 60000);
+      var hourss = Math.round(resultInMinutes / 60);
+      var mint = resultInMinutes % 60;
+
+      if (!userAtt) {
+        return res.status(400).json({ success: 0, message: "User Attendence not found" });
+      }
+      if (userAtt.punch_out) {
+        return res.status(400).json({ success: 0, message: "User Attendence All ready updated" });
+      }
+
+
+      userAtt.punch_out = current_datetime;
+      userAtt.working_hours = hourss+":"+mint;
+      await userAttendanceOperations.updateUserAttendance(userAtt._id,userAtt);
+       res.status(201).json({
+        message: "Punch-out Successfully",
+        success: 1,
+        data: userAtt,
+      });
+    } catch (error) {
+      return res.status(400).json({ success: 0, message: "User Attendence not found" });
+    }
+
+   
+
+};
+module.exports = { register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut };

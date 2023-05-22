@@ -2,6 +2,8 @@ const UserService = require("../services/userService")
 const UserBankService = require("../services/userBankService")
 const UserLeaveService = require("../services/userLeaveService")
 const UserOfficeService = require("../services/userOfficeService")
+const UserSalaryDeclarationService = require("../services/userSalaryDeclarationService")
+const UserLoanDeclarationService = require("../services/userLoanDeclarationService")
 
 const userController = {
     //User Update By Verify Token
@@ -152,6 +154,42 @@ const userController = {
     getUserOfficeByIds(req,res){
         let id = req.params.id
         const promise = UserOfficeService.findOneUserId(id)
+        promise
+        .then((data)=>{
+            console.log(data)
+            const {password,...others} = data._doc
+            res.status(200).json({
+                data: others,
+                success: 1
+            })
+        })
+        .catch((err)=>{
+            // console.log(err.message)
+            res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        })
+    },
+    // Get User salary By userid
+    getUserSalaryDeclarationByIds(req,res){
+        let id = req.params.id
+        const promise = UserSalaryDeclarationService.findOneUserId(id)
+        promise
+        .then((data)=>{
+            console.log(data)
+            const {password,...others} = data._doc
+            res.status(200).json({
+                data: others,
+                success: 1
+            })
+        })
+        .catch((err)=>{
+            // console.log(err.message)
+            res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        })
+    },
+    // Get User Loan By userid
+    getUserLoanDeclarationByIds(req,res){
+        let id = req.params.id
+        const promise = UserLoanDeclarationService.findOneUserId(id)
         promise
         .then((data)=>{
             console.log(data)
