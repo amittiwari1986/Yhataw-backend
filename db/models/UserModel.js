@@ -27,6 +27,8 @@
      state_id:{type:Schema.Types.String,required:true},
      city:{type:Schema.Types.String,required:true},
      zipcode:{type:Schema.Types.String,required:true},
+     doj:{type:Schema.Types.String,required:true},
+     employee_id:{type:Schema.Types.String,required:true},
  },{timestamps:true}); 
  
  const UserModel = connection.model('users',UserSchema);

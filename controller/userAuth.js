@@ -62,6 +62,8 @@ const register = (req, res) => {
       req.body.state_id,
       req.body.city,
       req.body.zipcode,
+      req.body.doj,
+      req.body.employee_id,
     );
 
 
@@ -533,6 +535,8 @@ const updateUserPersonal = async (req, res) => {
         user.state_id = req.body.state_id;
         user.city = req.body.city;
         user.zipcode = req.body.zipcode;
+        user.doj = req.body.doj;
+        user.employee_id = req.body.employee_id;
 
         await userOperations.updateUser(user._id,user);
         return res.status(201).json({ success: 1, message: "User Personal Details Updated Successfully" });
