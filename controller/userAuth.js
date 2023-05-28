@@ -735,7 +735,7 @@ const resetUserPassword = async (req, res) => {
 
           }
           res.json({
-            success: 1, message: `a link to reset your password has been sent to: ${user.email} please go with http://localhost:5000/reset-password?token=getToken`,
+            success: 1, message: `a link to reset your password has been sent to: ${user.email} please go with http://localhost:5000/reset-password?token=${getToken}`,
             getToken,
           });
     // try {
