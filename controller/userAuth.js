@@ -20,7 +20,7 @@ const bcrypt = require("../utils/encrypt");
 const token = require("../utils/token");
 const otpGenerator = require('otp-generator');
 const sendEmail = require("../utils/sendEmail");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
 const {
   PHONE_NOT_FOUND_ERR,
@@ -43,7 +43,7 @@ const register = (req, res) => {
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
   });
-  if(!setdata){
+  if(setdata){
     let hashPassword = bcrypt.doEncrypt(req.body.password);
     let role = 2;
     const user = new User(
