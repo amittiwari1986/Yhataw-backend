@@ -92,7 +92,7 @@ const register = (req, res) => {
             }
         });
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0, error_msg: err.message });
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 };
 
@@ -138,7 +138,7 @@ const addUserOffice = (req, res) => {
         }
       });
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0, error_msg: err.message });
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
 };
 
@@ -183,7 +183,7 @@ const addUserBank = (req, res) => {
         }
       });
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0, error_msg: err.message });
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 };
 
@@ -227,7 +227,7 @@ const addUserLeave = (req, res) => {
         }
       });
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0, error_msg: err.message });
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 };
 
@@ -277,7 +277,7 @@ const addUserSalary = (req, res) => {
         }
       });
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0, error_msg: err.message });
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 };
 const addUserLoan = (req, res) => {
@@ -322,7 +322,7 @@ const addUserLoan = (req, res) => {
         }
       });
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0, error_msg: err.message });
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
 };
 //User Login With JWT and Encrypt Password
@@ -497,7 +497,7 @@ const updateUser = async (req, res) => {
         return res.status(400).json({ success: 0, message: "User not found" });
       }
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0, error_msg: err.message });
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 
 };
@@ -540,7 +540,7 @@ const updateUserPersonal = async (req, res) => {
         return res.status(400).json({ success: 0, message: "Details not found" });
       }
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0, error_msg: err.message });
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 
 };
@@ -580,7 +580,7 @@ const updateUserBank = async (req, res) => {
         return res.status(400).json({ success: 0, message: "Details not found" });
       }
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0, error_msg: err.message });
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 
 };
@@ -618,7 +618,7 @@ const updateUserOffice = async (req, res) => {
         return res.status(400).json({ success: 0, message: "Details not found" });
       }
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0, error_msg: err.message });
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
 
 };
@@ -657,7 +657,7 @@ const updateUserLeave = async (req, res) => {
         return res.status(400).json({ success: 0, message: "Details not found" });
       }
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0, error_msg: err.message });
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
 
 };
@@ -704,7 +704,7 @@ const updateUserSalary = async (req, res) => {
         return res.status(400).json({ success: 0, message: "Details not found" });
       }
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0, error_msg: err.message });
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 
 };
@@ -827,7 +827,7 @@ const punchIn = async (req, res) => {
         
       });
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0, error_msg: err.message });
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
 
 };
@@ -891,7 +891,7 @@ const punchOut = async (req, res) => {
         }
 
    }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0, error_msg: err.message });
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 };
 
@@ -935,7 +935,7 @@ const addUserApplyLeave = async (req, res) => {
         }
       });
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0, error_msg: err.message });
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 };
 
