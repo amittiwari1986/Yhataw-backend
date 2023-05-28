@@ -405,7 +405,7 @@ const userController = {
             })
             .catch((err)=>{
                 // console.log(err.message)
-                res.status(500).json({message: "Internal Server Error", success: 0});
+                res.status(500).json({message: "No Data found", success: 0});
             })
         }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
