@@ -12,6 +12,7 @@
  const UserSchema = new Schema({
      name:{type:Schema.Types.String,required:true,unique:true,min:3,max:200},
      password:{type:Schema.Types.String,required:true,min:8,max:200},
+     userRole:{type:Schema.Types.Number,required:true},
      phone:{type:Schema.Types.String,unique:true,required:true},
      email:{type:Schema.Types.String,unique:true,required:true},
      logintime:{type:Schema.Types.Date,default:new Date().toString()},

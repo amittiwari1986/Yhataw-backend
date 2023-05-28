@@ -24,10 +24,14 @@ const userSerives = {
         const promise = query ? await UserModel.find().sort({_id:-1}).limit(5): await UserModel.find()
         return promise
     },
-    async delete(id){
-        const promise = UserModel.findByIdAndDelete(id);
+    async findOneUserId(userId){
+        const promise = await UserModel.findOne({userId})
         return promise
     },
+    // async delete(id){
+    //     const promise = UserModel.findByIdAndDelete(id);
+    //     return promise
+    // },
     async getUserById(id){
         const promise = await UserModel.findById(id)
         return promise

@@ -15,6 +15,8 @@ const verifyToken = (req,res,next) =>{
     }
 }
 
+
+
 const verifyTokenAndAuthoreization = (req,res,next) =>{
     console.log(req);
     let id = req.params.id

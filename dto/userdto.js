@@ -1,7 +1,8 @@
 class User{
-    constructor(name,password,phone,email,phoneOtp,whatsapp,dob,martial_status,gender,address,country_id,state_id,city,zipcode){
+    constructor(name,password,userRole,phone,email,phoneOtp,whatsapp,dob,martial_status,gender,address,country_id,state_id,city,zipcode){
         this.name = name
         this.password = password
+        this.userRole = userRole
         this.phone = phone
         this.email = email
         this.phoneOtp = phoneOtp

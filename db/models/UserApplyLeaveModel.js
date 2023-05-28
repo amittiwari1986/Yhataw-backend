@@ -6,8 +6,8 @@ const connection  = require('../connect');
      leave_type:{type:Schema.Types.String,required:true},
      from_date:{type:Schema.Types.String,required:true},
      to_date:{type:Schema.Types.String,required:true},
-     total_days:{type:Schema.Types.String,required:true},
      comments:{type:Schema.Types.String,required:true},
+     total_days:{type:Schema.Types.String,required:false},
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
  
