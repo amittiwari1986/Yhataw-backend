@@ -85,12 +85,13 @@ const register = (req, res) => {
         if(err.keyPattern){
           res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
         }else{
-          let isnum = err.message.includes("@");
-        if(isnum == false){
-                res.status(500).json({message: "duplicate data Please check phone", success: 0, error_msg: err.message});
-              }else{
-                res.status(500).json({message: "duplicate data Please check email", success: 0, error_msg: err.message});
-              }
+        //   let isnum = err.message.includes("@");
+        // if(isnum == false){
+        //         res.status(500).json({message: "duplicate data Please check phone", success: 0, error_msg: err.message});
+        //       }else{
+        //         res.status(500).json({message: "duplicate data Please check email", success: 0, error_msg: err.message});
+        //       }
+          res.status(500).json({message: "duplicate data Please check email/phone/username", success: 0});
             }
         });
     }else{
