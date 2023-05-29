@@ -267,6 +267,7 @@ const addUserSalary = (req, res) => {
         res.status(201).json({
           message: "Save Successfully",
           data: data,
+          success: 1,
         });
       })
       .catch((err) => {
