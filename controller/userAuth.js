@@ -80,18 +80,18 @@ const register = (req, res) => {
         //res.status(500).json(err.message);
         // var tset = for (var key in err.keyPattern) { var t = key}
         // console.log(err.keyPattern);
-        // var keys = Object.keys(err.keyPattern);
-        // var duplicate = keys[0];
+        var keys = Object.keys(err.keyPattern);
+        var duplicate = keys[0];
         if(err.keyPattern){
           res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
         }else{
-        //   let isnum = err.message.includes("@");
-        // if(isnum == false){
-        //         res.status(500).json({message: "duplicate data Please check phone", success: 0, error_msg: err.message});
-        //       }else{
-        //         res.status(500).json({message: "duplicate data Please check email", success: 0, error_msg: err.message});
-        //       }
-          res.status(500).json({message: "duplicate data Please check email/phone/username", success: 0});
+          let isnum = err.message.includes("@");
+        if(isnum == false){
+                res.status(500).json({message: "duplicate data Please check phone", success: 0, error_msg: err.message});
+              }else{
+                res.status(500).json({message: "duplicate data Please check email", success: 0, error_msg: err.message});
+              }
+          // res.status(500).json({message: "duplicate data Please check email/phone/username", success: 0});
             }
         });
     }else{
