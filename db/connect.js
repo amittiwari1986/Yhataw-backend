@@ -19,7 +19,7 @@ const dbOptions = {
 //   }
 // });
 
-mongoose.connect("mongodb://3.110.92.156:27017/Yhataw", dbOptions, (err) => {
+mongoose.connect("mongodb://15.206.116.103:27017/Yhataw", dbOptions, (err) => {
   if (err) {
     console.log("DB Error", err);
   } else {
