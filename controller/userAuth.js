@@ -371,11 +371,25 @@ const loginUser = async (req, res) => {
   } else {
 
     let email = req.body.username;
-    let password = req.body.password;
+    
     let user = await userOperations.login(email);
     let role = "";
     // let tokens = await userTokens.checkToken(user._id);
     if (user) {
+      let password = req.body.password;
+      if (!password) {
+        data = {
+          data: email,
+          settings: {
+            success: 1,
+            message: `Email Found`,
+          },
+        };
+        return res.status(200).json({ message: data });
+      }
+    }
+    if (user) {
+      let password = req.body.password;
       let pass = bcrypt.compare(password, user.password);
       if (pass) {
         const { password, ...others } = user._doc;
@@ -390,7 +404,7 @@ const loginUser = async (req, res) => {
         //     );
         //     const promise = userTokens.addUserToken(userT);
         //   }
-        console.log(user);
+        // console.log(user);
         if(user.userRole == 1){
            role = "Admin";
         }else{

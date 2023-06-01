@@ -11,6 +11,7 @@ app.use(morgan('dev'))
 //Routes
 app.use("/",require("./routes/userroutes"))
 app.use("/",require("./routes/auth"))
+app.use("/",require("./routes/masterroute"))
 const server = app.listen(process.env.PORT,()=>{
     console.log("Backend Up",server.address().port)
 })
