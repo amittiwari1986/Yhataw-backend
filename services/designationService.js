@@ -12,8 +12,8 @@ const designationSerives = {
         const promise = designationModel.findByIdAndDelete(id);
         return promise
     },
-    async findOneUserId(userId){
-        const promise = await designationModel.findOne({userId})
+    async findOneDepartmentId(departmentId){
+        const promise = await designationModel.find({departmentId})
         return promise 
     },
     async getdesignationById(id){

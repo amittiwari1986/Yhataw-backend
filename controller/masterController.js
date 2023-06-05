@@ -252,7 +252,23 @@ const getDesignation = (req, res) => {
             setdata = decoded.id.id;
         });
         if(setdata){
-             let id = req.params.id
+             let departmentId = req.params.id
+            if(departmentId){
+              const promise = designationOperations.findOneDepartmentId(departmentId)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  const {others} = data
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                  })
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            }else{
              const query = req.query.new 
             const promise = designationOperations.getAllDesignation(query)
             promise
@@ -268,6 +284,7 @@ const getDesignation = (req, res) => {
                 // console.log(err.message)
                 res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
             });
+          }
         }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
@@ -387,5 +404,65 @@ const addDepartment = async (req, res) => {
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 };
+const deleteDepartment = async (req, res) => {
+        let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+            let id = req.params.id
+            const promise = departmentOperations.delete(id)
+            promise
+            .then((data)=>{
+                console.log(data)
+                res.status(200).json({
+                    message : "Delete Successfully",
+                    success: 1
+                })
+            })
+            .catch((err)=>{
+                // console.log(err.message)
+                res.status(500).json({message: "Internal Server Error", success: 0});
+            })
+        }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+    };
+    const deleteDesignation = async (req, res) => {
+        let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+            let id = req.params.id
+            const promise = designationOperations.delete(id)
+            promise
+            .then((data)=>{
+                console.log(data)
+                res.status(200).json({
+                    message : "Delete Successfully",
+                    success: 1
+                })
+            })
+            .catch((err)=>{
+                // console.log(err.message)
+                res.status(500).json({message: "Internal Server Error", success: 0});
+            })
+        }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+    };
 
-module.exports = { getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
+module.exports = { deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
