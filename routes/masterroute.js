@@ -14,4 +14,6 @@ Routes.get("/getDepartment",mastercontroller.getDepartment)
 Routes.post("/addDepartment",mastercontroller.addDepartment)
 Routes.delete("/deleteDesignation/:id",mastercontroller.deleteDesignation)
 Routes.delete("/deleteDepartment/:id",mastercontroller.deleteDepartment)
+Routes.get("/getCity/:id",mastercontroller.getCity)
+Routes.get("/getState/:id",mastercontroller.getState)
 module.exports = Routes

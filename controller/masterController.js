@@ -100,21 +100,38 @@ const getState = (req, res) => {
         });
         if(setdata){
              let id = req.params.id
-             const query = req.query.new 
-            const promise = stateOperations.getAllState(query)
-            promise
-            .then((data)=>{
-                console.log(data)
-                const {others} = data
-                res.status(200).json({
-                    data: data,
-                    success: 1
-                })
-            })
-            .catch((err)=>{
-                // console.log(err.message)
-                res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
-            });
+             if(id){
+                 const promise = stateOperations.findStateId(id)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  const {others} = data
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                  })
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+             }else{
+               const query = req.query.new 
+              const promise = stateOperations.getAllState(query)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  const {others} = data
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                  })
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            }
         }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
@@ -216,21 +233,38 @@ const getCity = (req, res) => {
         });
         if(setdata){
              let id = req.params.id
-             const query = req.query.new 
-            const promise = cityOperations.getAllCity(query)
-            promise
-            .then((data)=>{
-                console.log(data)
-                const {others} = data
-                res.status(200).json({
-                    data: data,
-                    success: 1
-                })
-            })
-            .catch((err)=>{
-                // console.log(err.message)
-                res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
-            });
+             if(id){
+              const promise = cityOperations.findCityId(id)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  const {others} = data
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                  })
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+             }else{
+               const query = req.query.new 
+              const promise = cityOperations.getAllCity(query)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  const {others} = data
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                  })
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            }
         }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }

@@ -35,15 +35,15 @@ const {
 const register = (req, res) => {
   let token=req.headers.token;
   let setdata = "";
-  // if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
-  //   jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-  //     if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
-  //     // return res.status(200).send(decoded.id.id);
-  //     setdata = decoded.id.id;
-  // });
-  if(!setdata){
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
     let hashPassword = bcrypt.doEncrypt(req.body.password);
     let role = 2;
     const user = new User(

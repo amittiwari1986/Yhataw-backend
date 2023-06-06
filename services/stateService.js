@@ -16,6 +16,10 @@ const stateSerives = {
         const promise = await stateModel.findOne({userId})
         return promise 
     },
+    async findStateId(userId){
+        const promise = await stateModel.find({userId})
+        return promise 
+    },
     async getstateById(id){
         const promise = await stateModel.findById(id)
         return promise

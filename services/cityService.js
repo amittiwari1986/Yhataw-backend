@@ -16,6 +16,10 @@ const citySerives = {
         const promise = await cityModel.findOne({userId})
         return promise 
     },
+    async findCityId(userId){
+        const promise = await cityModel.find({userId})
+        return promise 
+    },
     async getcityById(id){
         const promise = await cityModel.findById(id)
         return promise
