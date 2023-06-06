@@ -24,6 +24,7 @@ const designationSerives = {
         const promise = query ? await designationModel.find().sort({_id:-1}).limit(5): await designationModel.find()
         return promise
     },
+    
 }
 
 module.exports = designationSerives;

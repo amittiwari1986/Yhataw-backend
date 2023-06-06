@@ -24,6 +24,11 @@ const departmentSerives = {
         const promise = query ? await departmentModel.find().sort({_id:-1}).limit(5): await departmentModel.find()
         return promise
     },
+    async getAllDepartment1(query){
+        const promise = await departmentModel.aggregate([{ "$project": { "department_id": { "$toString": "$_id" },"department_name": { "$toString": "$department_name" }}},{$lookup: {from: "designations", localField: "department_id", foreignField: "departmentId", as: "designation"}}])
+        
+        return promise
+    },
 }
 
 module.exports = departmentSerives;

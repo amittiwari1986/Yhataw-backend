@@ -9,6 +9,7 @@ const Designation = require("../dto/designationto");
 const departmentOperations = require("../services/departmentService");
 const Department = require("../dto/departmentto");
 const jwt = require("jsonwebtoken");
+const db  = require('../db/connect');
 
 
 //User countru
@@ -499,4 +500,37 @@ const deleteDepartment = async (req, res) => {
         }
     };
 
-module.exports = { deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
+//get list department meta data
+    const getDepartmentList = async (req, res) => {
+        let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+            let id = req.params.id
+
+            const promise = departmentOperations.getAllDepartment1()
+            console.log(promise)
+            promise
+            .then((data)=>{
+                res.status(200).json({
+                    data: data,
+                    success: 1
+                })
+            })
+            .catch((err)=>{
+                // console.log(err.message)
+                res.status(500).json({message: "Internal Server Error", success: 0});
+            })
+        }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+    };
+
+module.exports = { getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }

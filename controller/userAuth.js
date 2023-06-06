@@ -202,12 +202,20 @@ const addUserLeave = (req, res) => {
       setdata = decoded.id.id;
   });
   if(setdata){
+    var total_leave_available = req.body.total_leave;
+    var earned_leave_available = req.body.earned_leave;
+    var sick_leave_available = req.body.sick_leave;
+    var casual_leave_available = req.body.casual_leave;
     const userLeave = new UserLeave(
       req.body.userId,
       req.body.total_leave,
       req.body.earned_leave,
       req.body.sick_leave,
       req.body.casual_leave,
+      total_leave_available,
+      earned_leave_available,
+      sick_leave_available,
+      casual_leave_available,
     );
     const promise = userLeaveOperations.addUserLeave(userLeave);
     promise
@@ -670,6 +678,10 @@ const updateUserLeave = async (req, res) => {
           user.earned_leave = req.body.earned_leave;
           user.sick_leave = req.body.sick_leave;
           user.casual_leave = req.body.casual_leave;
+          user.total_leave_available = req.body.total_leave;
+          user.earned_leave_available = req.body.earned_leave;
+          user.sick_leave_available = req.body.sick_leave;
+          user.casual_leave_available = req.body.casual_leave;
 
         await userLeaveOperations.updateUserLeave(user._id,user);
         return res.status(201).json({ success: 1, message: "User Leave Details Updated Successfully" });
