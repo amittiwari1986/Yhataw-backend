@@ -209,14 +209,14 @@ const userController = {
             setdata = decoded.id.id;
         });
         if(setdata){
-            let id = req.params.id
-            const promise = UserBankService.findUserId(id)
+            let userId = req.params.id
+            const promise = UserBankService.findOneUserId(userId)
             promise
             .then((data)=>{
                 // console.log(data)
                 const {others} = data._doc
                 res.status(200).json({
-                    data: others,
+                    data: data,
                     success: 1
                     }) 
                 // if(data.length > 0){
@@ -256,7 +256,7 @@ const userController = {
         });
         if(setdata){
             let id = req.params.id
-            const promise = UserLeaveService.findUserId(id)
+            const promise = UserLeaveService.findOneUserId(id)
             promise
             .then((data)=>{
                 // console.log(data)
@@ -302,7 +302,7 @@ const userController = {
         });
         if(setdata){
             let id = req.params.id
-            const promise = UserOfficeService.findUserId(id)
+            const promise = UserOfficeService.findOneUserId(id)
             promise
             .then((data)=>{
                 // console.log(data)
