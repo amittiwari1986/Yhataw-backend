@@ -25,7 +25,13 @@ const userSerives = {
 
         const promise = await UserModel.aggregate(
             [{ "$project": { "user_id": { "$toString": "$_id" },
-                "department_name": { "$toString": "$department_name" }}},
+                "name": { "$toString": "$name" },
+                "phone": { "$toString": "$phone" },
+                "email": { "$toString": "$email" },
+                "whatsapp": { "$toString": "$whatsapp" },
+                "employee_id": { "$toString": "employee_id" },
+                "doj": { "$toString": "doj" },
+            }},
                 {$lookup: 
                     {from: "user_leaves", 
                     localField: "user_id", 
@@ -38,7 +44,7 @@ const userSerives = {
                     foreignField: "userId", 
                     as: "userOffices"}
                 }])
-        
+
         
         return promise
     }, 
