@@ -16,6 +16,10 @@ const userAttendanceSerives = {
         const promise = await UserAttendanceModel.findOne({userId})
         return promise 
     },
+    async findUserId(userId){
+        const promise = await UserAttendanceModel.find({userId})
+        return promise 
+    },
     async getUserAttendanceById(id){
         const promise = await UserAttendanceModel.findById(id)
         return promise

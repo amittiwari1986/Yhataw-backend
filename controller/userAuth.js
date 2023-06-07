@@ -939,12 +939,37 @@ const addUserApplyLeave = async (req, res) => {
       setdata = decoded.id.id;
   });
   if(setdata){
+    let status = 0;
+    let date1 = req.body.from_date;
+    let dates1 = date1.split("-")
+    // console.log(dates1);
+    var date_1 = dates1[2] + '/' + dates1[1] + '/' + dates1[0]  + ' 00:00';
+    let date2 = req.body.to_date;
+    let date1_1 = new Date(date_1);
+
+    let dates2 = date2.split("-")
+    var date_2 = dates2[2] + '/' + dates2[1] + '/' + dates2[0]  + ' 00:00';
+    let date2_2 = new Date(date_2);
+    var dateDiff = date2_2.getTime() - date1_1.getTime();
+    var resultInMinutes = Math.round(dateDiff / 60000);
+          var hourss = Math.round(resultInMinutes / 60);
+          var day = Math.round(hourss / 24);
+          if(hourss < 5){
+            var days = 0.5;
+          }else{
+            var days = day+1;
+          }
+          
+          var mint = resultInMinutes % 60;
+
     const userApplyLeave = new UserApplyLeave(
       req.body.userId,
       req.body.leave_type,
       req.body.from_date,
       req.body.to_date,
       req.body.comments,
+      days,
+      status,
     );
     const promise = userApplyLeaveOperations.addUserApplyLeave(userApplyLeave);
     promise

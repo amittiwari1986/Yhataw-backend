@@ -416,7 +416,7 @@ const userController = {
         });
         if(setdata){
             let id = req.params.id
-            const promise = UserAttendanceService.findOneUserId(id)
+            const promise = UserAttendanceService.findUserId(id)
             promise
             .then((data)=>{
                 // console.log(data)
