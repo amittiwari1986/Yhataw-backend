@@ -32,10 +32,18 @@ const getCountry = (req, res) => {
             .then((data)=>{
                 console.log(data)
                 const {others} = data
-                res.status(200).json({
+               if(data.length > 0){
+                   res.status(200).json({
                     data: data,
                     success: 1
-                })
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: [],
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
             })
             .catch((err)=>{
                 // console.log(err.message)
@@ -123,10 +131,18 @@ const getState = (req, res) => {
               .then((data)=>{
                   console.log(data)
                   const {others} = data
-                  res.status(200).json({
-                      data: data,
-                      success: 1
-                  })
+                  if(data.length > 0){
+                   res.status(200).json({
+                    data: data,
+                    success: 1
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: [],
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
               })
               .catch((err)=>{
                   // console.log(err.message)
@@ -256,10 +272,18 @@ const getCity = (req, res) => {
               .then((data)=>{
                   console.log(data)
                   const {others} = data
-                  res.status(200).json({
-                      data: data,
-                      success: 1
-                  })
+                  if(data.length > 0){
+                   res.status(200).json({
+                    data: data,
+                    success: 1
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: [],
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
               })
               .catch((err)=>{
                   // console.log(err.message)
@@ -294,10 +318,18 @@ const getDesignation = (req, res) => {
               .then((data)=>{
                   console.log(data)
                   const {others} = data
-                  res.status(200).json({
-                      data: data,
-                      success: 1
-                  })
+                 if(data.length > 0){
+                   res.status(200).json({
+                    data: data,
+                    success: 1
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: [],
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
               })
               .catch((err)=>{
                   // console.log(err.message)
@@ -310,10 +342,18 @@ const getDesignation = (req, res) => {
             .then((data)=>{
                 console.log(data)
                 const {others} = data
-                res.status(200).json({
+                if(data.length > 0){
+                   res.status(200).json({
                     data: data,
                     success: 1
-                })
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: [],
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
             })
             .catch((err)=>{
                 // console.log(err.message)
@@ -384,12 +424,18 @@ const getDepartment = (req, res) => {
             const promise = departmentOperations.getAllDepartment(query)
             promise
             .then((data)=>{
-                console.log(data)
-                const {others} = data
-                res.status(200).json({
+                if(data.length > 0){
+                   res.status(200).json({
                     data: data,
                     success: 1
-                })
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: [],
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
             })
             .catch((err)=>{
                 // console.log(err.message)
@@ -519,10 +565,18 @@ const deleteDepartment = async (req, res) => {
             console.log(promise)
             promise
             .then((data)=>{
-                res.status(200).json({
+                if(data.length > 0){
+                   res.status(200).json({
                     data: data,
                     success: 1
-                })
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: [],
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
             })
             .catch((err)=>{
                 // console.log(err.message)

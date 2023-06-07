@@ -179,7 +179,7 @@ const userController = {
                     }) 
                 }else{
                     res.status(200).json({
-                    data: data,
+                    data: [],
                     message: "No Data found",
                     success: 0
                     }) 
@@ -221,7 +221,7 @@ const userController = {
                     }) 
                 }else{
                     res.status(200).json({
-                    data: data,
+                    data: [],
                     message: "No Data found",
                     success: 0
                     }) 
@@ -263,7 +263,7 @@ const userController = {
                     }) 
                 }else{
                     res.status(200).json({
-                    data: data,
+                    data: [],
                     message: "No Data found",
                     success: 0
                     }) 
@@ -305,7 +305,7 @@ const userController = {
                     }) 
                 }else{
                     res.status(200).json({
-                    data: data,
+                    data: [],
                     message: "No Data found",
                     success: 0
                     }) 
@@ -346,7 +346,7 @@ const userController = {
                     }) 
                 }else{
                     res.status(200).json({
-                    data: data,
+                    data: [],
                     message: "No Data found",
                     success: 0
                     }) 
@@ -387,7 +387,7 @@ const userController = {
                     }) 
                 }else{
                     res.status(200).json({
-                    data: data,
+                    data: [],
                     message: "No Data found",
                     success: 0
                     }) 
@@ -428,7 +428,7 @@ const userController = {
                     }) 
                 }else{
                     res.status(200).json({
-                    data: data,
+                    data: [],
                     message: "No Data found",
                     success: 0
                     }) 
@@ -467,7 +467,7 @@ const userController = {
                     }) 
                 }else{
                     res.status(200).json({
-                    data: data,
+                    data: [],
                     message: "No Data found",
                     success: 0
                     }) 
