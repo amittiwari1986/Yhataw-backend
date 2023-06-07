@@ -16,8 +16,8 @@ const stateSerives = {
         const promise = await stateModel.findOne({userId})
         return promise 
     },
-    async findStateId(userId){
-        const promise = await stateModel.find({userId})
+    async findStateId(countryId){
+        const promise = await stateModel.find({countryId})
         return promise 
     },
     async getstateById(id){
