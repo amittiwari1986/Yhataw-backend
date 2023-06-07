@@ -46,6 +46,7 @@ const register = (req, res) => {
   if(setdata){
     let hashPassword = bcrypt.doEncrypt(req.body.password);
     let role = 2;
+    let status = 1;
     const user = new User(
       req.body.name,
       hashPassword,
@@ -64,6 +65,7 @@ const register = (req, res) => {
       req.body.zipcode,
       req.body.doj,
       req.body.employee_id,
+      status,
     );
 
 
@@ -997,4 +999,43 @@ const addUserApplyLeave = async (req, res) => {
 };
 
 
-module.exports = { register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
+const deactivateUser = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    let data;
+
+      try {
+        console.log(req.body.id);
+        let id = req.body.id;
+        let user = await userOperations.getUserById(id);
+
+        if (!user) {
+          return res.status(400).json({ success: 0, message: "User not found" });
+        }
+
+
+        user.status = 0;
+        let don = await userOperations.updateUser(user._id,user);
+        
+        return res.status(200).json({ success: 1, message: "User deactivate Successfully" });
+      } catch (error) {
+        return res.status(400).json({ success: 0, message: "User not found" });
+      }
+    }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+
+};
+
+
+
+module.exports = { deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };

@@ -22,15 +22,17 @@ const userSerives = {
     },
     async getAllUsers(id){
         // const promise = await UserModel.find({ _id: { $ne: id } }).populate({path: 'user_leaves',populate: { path: 'user_offices' } })
-
+        // let ids = mongoose.Types.ObjectId(id);
         const promise = await UserModel.aggregate(
-            [{ "$project": { "user_id": { "$toString": "$_id" },
+            [
+            { "$project": { "user_id": { "$toString": "$_id" },
                 "name": { "$toString": "$name" },
                 "phone": { "$toString": "$phone" },
                 "email": { "$toString": "$email" },
                 "whatsapp": { "$toString": "$whatsapp" },
                 "employee_id": { "$toString": "employee_id" },
                 "doj": { "$toString": "doj" },
+                "status": { "$toString": "status" },
             }},
                 {$lookup: 
                     {from: "user_leaves", 

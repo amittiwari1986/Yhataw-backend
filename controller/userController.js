@@ -214,19 +214,23 @@ const userController = {
             promise
             .then((data)=>{
                 // console.log(data)
-                // const {password,...others} = data._doc
-                if(data.length > 0){
-                   res.status(200).json({
-                    data: data,
+                const {others} = data._doc
+                res.status(200).json({
+                    data: others,
                     success: 1
                     }) 
-                }else{
-                    res.status(200).json({
-                    data: [],
-                    message: "No Data found",
-                    success: 0
-                    }) 
-                }
+                // if(data.length > 0){
+                //    res.status(200).json({
+                //     data: data,
+                //     success: 1
+                //     }) 
+                // }else{
+                //     res.status(200).json({
+                //     data: [],
+                //     message: "No Data found",
+                //     success: 0
+                //     }) 
+                // }
                 
             })
             .catch((err)=>{
@@ -256,19 +260,23 @@ const userController = {
             promise
             .then((data)=>{
                 // console.log(data)
-                // const {password,...others} = data._doc
-                if(data.length > 0){
-                   res.status(200).json({
-                    data: data,
+                const {others} = data._doc
+                res.status(200).json({
+                    data: others,
                     success: 1
                     }) 
-                }else{
-                    res.status(200).json({
-                    data: [],
-                    message: "No Data found",
-                    success: 0
-                    }) 
-                }
+                // if(data.length > 0){
+                //    res.status(200).json({
+                //     data: data,
+                //     success: 1
+                //     }) 
+                // }else{
+                //     res.status(200).json({
+                //     data: [],
+                //     message: "No Data found",
+                //     success: 0
+                //     }) 
+                // }
                 
             })
             .catch((err)=>{
@@ -298,19 +306,23 @@ const userController = {
             promise
             .then((data)=>{
                 // console.log(data)
-                // const {password,...others} = data._doc
-                if(data.length > 0){
-                   res.status(200).json({
-                    data: data,
+                const {others} = data._doc
+                res.status(200).json({
+                    data: others,
                     success: 1
                     }) 
-                }else{
-                    res.status(200).json({
-                    data: [],
-                    message: "No Data found",
-                    success: 0
-                    }) 
-                }
+                // if(data.length > 0){
+                //    res.status(200).json({
+                //     data: data,
+                //     success: 1
+                //     }) 
+                // }else{
+                //     res.status(200).json({
+                //     data: [],
+                //     message: "No Data found",
+                //     success: 0
+                //     }) 
+                // }
                 
             })
             .catch((err)=>{
@@ -339,19 +351,23 @@ const userController = {
             promise
             .then((data)=>{
                 // console.log(data)
-                // const {password,...others} = data._doc
-               if(data.length > 0){
-                   res.status(200).json({
-                    data: data,
+                const {others} = data._doc
+                res.status(200).json({
+                    data: others,
                     success: 1
                     }) 
-                }else{
-                    res.status(200).json({
-                    data: [],
-                    message: "No Data found",
-                    success: 0
-                    }) 
-                }
+               // if(data.length > 0){
+               //     res.status(200).json({
+               //      data: data,
+               //      success: 1
+               //      }) 
+               //  }else{
+               //      res.status(200).json({
+               //      data: [],
+               //      message: "No Data found",
+               //      success: 0
+               //      }) 
+               //  }
                 
             })
             .catch((err)=>{
@@ -380,19 +396,23 @@ const userController = {
             promise
             .then((data)=>{
                 // console.log(data)
-                // const {password,...others} = data._doc
-                if(data.length > 0){
-                   res.status(200).json({
-                    data: data,
+                const {others} = data._doc
+                res.status(200).json({
+                    data: others,
                     success: 1
                     }) 
-                }else{
-                    res.status(200).json({
-                    data: [],
-                    message: "No Data found",
-                    success: 0
-                    }) 
-                }
+                // if(data.length > 0){
+                //    res.status(200).json({
+                //     data: data,
+                //     success: 1
+                //     }) 
+                // }else{
+                //     res.status(200).json({
+                //     data: [],
+                //     message: "No Data found",
+                //     success: 0
+                //     }) 
+                // }
                 
             })
             .catch((err)=>{

@@ -19,4 +19,5 @@ Routes.put("/updateUserPersonal",userAuth.updateUserPersonal)
 Routes.put("/updateUserOffice",userAuth.updateUserOffice)
 Routes.put("/updateUserSalary",userAuth.updateUserSalary)
 Routes.put("/updateUserLeave",userAuth.updateUserLeave)
+Routes.put("/deactivateUser",userAuth.deactivateUser)
 module.exports = Routes
