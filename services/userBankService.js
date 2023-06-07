@@ -16,6 +16,10 @@ const userBankSerives = {
         const promise = await UserBankModel.findOne({userId})
         return promise 
     },
+    async findUserId(userId){
+        const promise = await UserBankModel.find({userId})
+        return promise 
+    },
     async getUserBankById(id){
         const promise = await UserBankModel.findById(id)
         return promise

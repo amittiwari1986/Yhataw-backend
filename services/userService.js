@@ -21,7 +21,25 @@ const userSerives = {
         return promise
     },
     async getAllUsers(id){
-        const promise = await UserModel.find({ _id: { $ne: id } })
+        // const promise = await UserModel.find({ _id: { $ne: id } }).populate({path: 'user_leaves',populate: { path: 'user_offices' } })
+
+        const promise = await UserModel.aggregate(
+            [{ "$project": { "user_id": { "$toString": "$_id" },
+                "department_name": { "$toString": "$department_name" }}},
+                {$lookup: 
+                    {from: "user_leaves", 
+                    localField: "user_id", 
+                    foreignField: "userId", 
+                    as: "leaves"}
+                },
+                {$lookup: 
+                    {from: "user_offices", 
+                    localField: "user_id", 
+                    foreignField: "userId", 
+                    as: "userOffices"}
+                }])
+        
+        
         return promise
     }, 
     async findOneUserId(userId){

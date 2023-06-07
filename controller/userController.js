@@ -210,7 +210,7 @@ const userController = {
         });
         if(setdata){
             let id = req.params.id
-            const promise = UserBankService.findOneUserId(id)
+            const promise = UserBankService.findUserId(id)
             promise
             .then((data)=>{
                 // console.log(data)
