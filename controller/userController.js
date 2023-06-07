@@ -251,7 +251,7 @@ const userController = {
         });
         if(setdata){
             let id = req.params.id
-            const promise = UserLeaveService.findOneUserId(id)
+            const promise = UserLeaveService.findUserId(id)
             promise
             .then((data)=>{
                 // console.log(data)
