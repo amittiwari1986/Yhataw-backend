@@ -203,10 +203,10 @@ const userController = {
             const promise = UserBankService.findOneUserId(id)
             promise
             .then((data)=>{
-                console.log(data)
-                const {password,...others} = data._doc
+                // console.log(data)
+                // const {password,...others} = data._doc
                 res.status(200).json({
-                    data: others,
+                    data: data,
                     success: 1
                 })
             })
@@ -236,10 +236,10 @@ const userController = {
             const promise = UserLeaveService.findOneUserId(id)
             promise
             .then((data)=>{
-                console.log(data)
-                const {password,...others} = data._doc
+                // console.log(data)
+                // const {password,...others} = data._doc
                 res.status(200).json({
-                    data: others,
+                    data: data,
                     success: 1
                 })
             })
@@ -269,10 +269,10 @@ const userController = {
             const promise = UserOfficeService.findOneUserId(id)
             promise
             .then((data)=>{
-                console.log(data)
-                const {password,...others} = data._doc
+                // console.log(data)
+                // const {password,...others} = data._doc
                 res.status(200).json({
-                    data: others,
+                    data: data,
                     success: 1
                 })
             })
@@ -301,10 +301,10 @@ const userController = {
             const promise = UserSalaryDeclarationService.findOneUserId(id)
             promise
             .then((data)=>{
-                console.log(data)
-                const {password,...others} = data._doc
+                // console.log(data)
+                // const {password,...others} = data._doc
                 res.status(200).json({
-                    data: others,
+                    // data: data,
                     success: 1
                 })
             })
@@ -333,10 +333,10 @@ const userController = {
             const promise = UserLoanDeclarationService.findOneUserId(id)
             promise
             .then((data)=>{
-                console.log(data)
-                const {password,...others} = data._doc
+                // console.log(data)
+                // const {password,...others} = data._doc
                 res.status(200).json({
-                    data: others,
+                    data: data,
                     success: 1
                 })
             })
@@ -365,10 +365,10 @@ const userController = {
             const promise = UserAttendanceService.findOneUserId(id)
             promise
             .then((data)=>{
-                console.log(data)
-                const {password,...others} = data._doc
+                // console.log(data)
+                // const {password,...others} = data._doc
                 res.status(200).json({
-                    data: others,
+                    data: data,
                     success: 1
                 })
             })
@@ -392,14 +392,13 @@ const userController = {
             setdata = decoded.id.id;
         });
         if(setdata){
-            let id = req.params.id
-            const promise = UserApplyLeaveService.findOneUserId(id)
+            let userId = req.params.id
+            const promise = UserApplyLeaveService.findUserffgfId(userId)
             promise
             .then((data)=>{
-                console.log(data)
-                const {password,...others} = data._doc
+                // console.log(data)
                 res.status(200).json({
-                    data: others,
+                    data: data,
                     success: 1
                 })
             })
