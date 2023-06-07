@@ -16,7 +16,7 @@ const userApplyLeaveSerives = {
         const promise = await UserApplyLeaveModel.findOne({userId})
         return promise 
     },
-    async findUserffgfId(userId){
+    async findUserId(userId){
         const promise = await UserApplyLeaveModel.find({userId})
         return promise 
     },

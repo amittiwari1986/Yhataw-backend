@@ -172,10 +172,19 @@ const userController = {
             const query = req.query.new 
             const promise = UserService.getAllUsers(query);
             promise.then((data)=>{
-                res.status(200).json({
+                if(data.length > 0){
+                   res.status(200).json({
                     data: data,
                     success: 1
-                })
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: data,
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+                
                 console.log(data)
             }).catch((err)=>{
                 // console.log(err.message)
@@ -205,10 +214,19 @@ const userController = {
             .then((data)=>{
                 // console.log(data)
                 // const {password,...others} = data._doc
-                res.status(200).json({
+                if(data.length > 0){
+                   res.status(200).json({
                     data: data,
                     success: 1
-                })
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: data,
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+                
             })
             .catch((err)=>{
                 // console.log(err.message)
@@ -238,10 +256,19 @@ const userController = {
             .then((data)=>{
                 // console.log(data)
                 // const {password,...others} = data._doc
-                res.status(200).json({
+                if(data.length > 0){
+                   res.status(200).json({
                     data: data,
                     success: 1
-                })
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: data,
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+                
             })
             .catch((err)=>{
                 // console.log(err.message)
@@ -271,10 +298,19 @@ const userController = {
             .then((data)=>{
                 // console.log(data)
                 // const {password,...others} = data._doc
-                res.status(200).json({
+                if(data.length > 0){
+                   res.status(200).json({
                     data: data,
                     success: 1
-                })
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: data,
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+                
             })
             .catch((err)=>{
                 // console.log(err.message)
@@ -303,10 +339,19 @@ const userController = {
             .then((data)=>{
                 // console.log(data)
                 // const {password,...others} = data._doc
-                res.status(200).json({
-                    // data: data,
+               if(data.length > 0){
+                   res.status(200).json({
+                    data: data,
                     success: 1
-                })
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: data,
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+                
             })
             .catch((err)=>{
                 // console.log(err.message)
@@ -335,10 +380,19 @@ const userController = {
             .then((data)=>{
                 // console.log(data)
                 // const {password,...others} = data._doc
-                res.status(200).json({
+                if(data.length > 0){
+                   res.status(200).json({
                     data: data,
                     success: 1
-                })
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: data,
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+                
             })
             .catch((err)=>{
                 // console.log(err.message)
@@ -367,10 +421,19 @@ const userController = {
             .then((data)=>{
                 // console.log(data)
                 // const {password,...others} = data._doc
-                res.status(200).json({
+                if(data.length > 0){
+                   res.status(200).json({
                     data: data,
                     success: 1
-                })
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: data,
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+                
             })
             .catch((err)=>{
                 // console.log(err.message)
@@ -393,14 +456,23 @@ const userController = {
         });
         if(setdata){
             let userId = req.params.id
-            const promise = UserApplyLeaveService.findUserffgfId(userId)
+            const promise = UserApplyLeaveService.findUserId(userId)
             promise
             .then((data)=>{
-                // console.log(data)
-                res.status(200).json({
+                console.log(data)
+                if(data.length > 0){
+                   res.status(200).json({
                     data: data,
                     success: 1
-                })
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: data,
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+                
             })
             .catch((err)=>{
                 // console.log(err.message)
