@@ -262,7 +262,7 @@ const userController = {
                 // console.log(data)
                 const {others} = data._doc
                 res.status(200).json({
-                    data: others,
+                    data: data,
                     success: 1
                     }) 
                 // if(data.length > 0){
@@ -308,7 +308,7 @@ const userController = {
                 // console.log(data)
                 const {others} = data._doc
                 res.status(200).json({
-                    data: others,
+                    data: data,
                     success: 1
                     }) 
                 // if(data.length > 0){
@@ -353,7 +353,7 @@ const userController = {
                 // console.log(data)
                 const {others} = data._doc
                 res.status(200).json({
-                    data: others,
+                    data: data,
                     success: 1
                     }) 
                // if(data.length > 0){
@@ -398,7 +398,7 @@ const userController = {
                 // console.log(data)
                 const {others} = data._doc
                 res.status(200).json({
-                    data: others,
+                    data: data,
                     success: 1
                     }) 
                 // if(data.length > 0){
