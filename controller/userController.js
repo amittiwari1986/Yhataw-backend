@@ -168,9 +168,10 @@ const userController = {
             // return res.status(200).send(decoded.id.id);
             setdata = decoded.id.id;
         });
+          console.log(setdata);
         if(setdata){
             const query = req.query.new 
-            const promise = UserService.getAllUsers(query);
+            const promise = UserService.getAllUsers(setdata);
             promise.then((data)=>{
                 if(data.length > 0){
                    res.status(200).json({
@@ -293,7 +294,7 @@ const userController = {
         });
         if(setdata){
             let id = req.params.id
-            const promise = UserOfficeService.findOneUserId(id)
+            const promise = UserOfficeService.findUserId(id)
             promise
             .then((data)=>{
                 // console.log(data)

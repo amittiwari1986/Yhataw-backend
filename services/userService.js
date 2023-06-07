@@ -20,10 +20,10 @@ const userSerives = {
         const promise = await UserModel.findByIdAndUpdate(id,data,{new:true})
         return promise
     },
-    async getAllUsers(query){
-        const promise = query ? await UserModel.find().sort({_id:-1}).limit(5): await UserModel.find()
+    async getAllUsers(id){
+        const promise = await UserModel.find({ _id: { $ne: id } })
         return promise
-    },
+    }, 
     async findOneUserId(userId){
         const promise = await UserModel.findOne({userId})
         return promise

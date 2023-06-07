@@ -16,6 +16,10 @@ const userOfficeSerives = {
         const promise = await UserOfficeModel.findOne({userId})
         return promise 
     },
+    async findUserId(userId){
+        const promise = await UserOfficeModel.find({userId})
+        return promise 
+    },
     async getUserOfficeById(id){
         const promise = await UserOfficeModel.findById(id)
         return promise
