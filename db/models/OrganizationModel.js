@@ -15,7 +15,6 @@
      imageUrl:{type:Schema.Types.String,unique:true,required:true},
      phone:{type:Schema.Types.String,unique:true,required:true},
      email:{type:Schema.Types.String,unique:true,required:true},
-     phoneOtp:{type:Schema.Types.String,required:false},
      whatsapp:{type:Schema.Types.String,required:true},
      dob:{type:Schema.Types.String,required:true},
      address1:{type:Schema.Types.String,required:true},

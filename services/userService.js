@@ -54,10 +54,6 @@ const userSerives = {
         const promise = await UserModel.findOne({userId})
         return promise
     },
-    // async delete(id){
-    //     const promise = UserModel.findByIdAndDelete(id);
-    //     return promise
-    // },
     async getUserById(id){
         const promise = await UserModel.findById(id)
         return promise

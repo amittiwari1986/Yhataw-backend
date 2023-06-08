@@ -17,5 +17,6 @@ Routes.get("/findUserLoanDeclaration/:id",verifyTokenAndAuthoreization,userContr
 Routes.get("/findUserAttendance/:id",verifyTokenAndAuthoreization,userController.getUserAttendanceByIds)
 
 Routes.get("/getUserApplyLeaveByIds/:id",verifyTokenAndAuthoreization,userController.getUserApplyLeaveByIds)
+Routes.get("/getOrganizationByIds/:id",verifyTokenAndAuthoreization,userController.getOrganizationByIds)
 
 module.exports = Routes

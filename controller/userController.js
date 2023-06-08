@@ -7,6 +7,7 @@ const UserSalaryDeclarationService = require("../services/userSalaryDeclarationS
 const UserLoanDeclarationService = require("../services/userLoanDeclarationService")
 const UserAttendanceService = require("../services/userAttendanceService")
 const UserApplyLeaveService = require("../services/userApplyLeaveService")
+const organizationService = require("../services/organizationService")
 const jwt = require("jsonwebtoken")
 const {verifyTokenAndAuthoreization,verifyTokenAndAdmin,verifyToken,verifyTokenUser} = require("../utils/verifyToken")
 
@@ -502,7 +503,52 @@ const userController = {
         }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
+    },
+    getOrganizationByIds(req,res){
+        let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+            let orgId = req.params.id
+            const promise = organizationService.getOrganizationById(orgId)
+            promise
+            .then((data)=>{
+                // console.log(data)
+                const {others} = data._doc
+                res.status(200).json({
+                    data: data,
+                    success: 1
+                    }) 
+                // if(data.length > 0){
+                //    res.status(200).json({
+                //     data: data,
+                //     success: 1
+                //     }) 
+                // }else{
+                //     res.status(200).json({
+                //     data: [],
+                //     message: "No Data found",
+                //     success: 0
+                //     }) 
+                // }
+                
+            })
+            .catch((err)=>{
+                // console.log(err.message)
+                res.status(500).json({message: "Data not found", success: 0});
+            })
+        }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
     }
+
 }
 
 module.exports = userController

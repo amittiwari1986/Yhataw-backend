@@ -6,6 +6,7 @@ const userApplyLeaveOperations = require("../services/userApplyLeaveService");
 const userSalaryDeclarationOperations = require("../services/userSalaryDeclarationService");
 const userLoanDeclarationOperations = require("../services/userLoanDeclarationService");
 const userAttendanceOperations = require("../services/userAttendanceService");
+const organizationOperations = require("../services/organizationService");
 const userTokens = require("../services/userTokenService");
 const User = require("../dto/userdto");
 const UserToken = require("../dto/usertokendto");
@@ -16,6 +17,7 @@ const UserLeave = require("../dto/userleaveto");
 const UserSalaryDeclaration = require("../dto/usersalarydeclarationto");
 const UserLoanDeclaration = require("../dto/userloandeclarationto");
 const UserAttendance = require("../dto/userattendanceto");
+const Organization = require("../dto/organizationto");
 const bcrypt = require("../utils/encrypt");
 const token = require("../utils/token");
 const otpGenerator = require('otp-generator');
@@ -58,7 +60,8 @@ const register = (req, res) => {
       req.body.dob,
       req.body.martial_status,
       req.body.gender,
-      req.body.address,
+      req.body.address1,
+      req.body.address2,
       req.body.country_id,
       req.body.state_id,
       req.body.city,
@@ -66,6 +69,7 @@ const register = (req, res) => {
       req.body.doj,
       req.body.employee_id,
       status,
+      req.body.profile_image,
     );
 
 
@@ -101,7 +105,11 @@ const register = (req, res) => {
         }
 };
 
-const addUserOffice = (req, res) => {
+const addUserOffice = async (req, res) => {
+  let id = req.body.userId;
+
+     console.log(id);
+     // return res.status(401).send({ auth: false, message: 'No token pffghgrovided.', success: 0});
   let token=req.headers.token;
   let setdata = "";
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
@@ -112,42 +120,56 @@ const addUserOffice = (req, res) => {
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
   });
-  if(setdata){
-    const userOffice = new UserOffice(
-      req.body.userId,
-      req.body.emp_type,
-      req.body.department,
-      req.body.designation,
-      req.body.joining,
-      req.body.working_days,
-      req.body.working_shift,
-    );
-    const promise = userOfficeOperations.addUserOffice(userOffice);
+    if(setdata){
+    const promise = userOperations.getUserById(id);
     promise
       .then((data) => {
-        res.status(201).json({
-          message: "Save Successfully",
-          success: 1,
-          data: data,
-        });
+        console.log(data);
+        if(data){
+          const userOffice = new UserOffice(
+              req.body.userId,
+              req.body.emp_type,
+              req.body.department,
+              req.body.designation,
+              req.body.joining,
+              req.body.working_days,
+              req.body.working_shift,
+            );
+            const promise = userOfficeOperations.addUserOffice(userOffice);
+            promise
+              .then((data) => {
+                res.status(201).json({
+                  message: "Save Successfully",
+                  success: 1,
+                  data: data,
+                });
+              })
+              .catch((err) => {
+                // res.status(500).json(err.message);
+                // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+                // var keys = Object.keys(err.keyPattern);
+                // var duplicate = keys[0];
+                if(err.keyPattern){
+                  res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+                }else{
+                  res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+                }
+              });
+            }else{
+                    return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+                }
+        
       })
       .catch((err) => {
-        // res.status(500).json(err.message);
-        // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-        // var keys = Object.keys(err.keyPattern);
-        // var duplicate = keys[0];
-        if(err.keyPattern){
-          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
-        }else{
-          res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-        }
+          res.status(500).json({message: "Please check userId", success: 0, error_msg: err.message});
       });
-    }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
-        }
-};
+    }
+  };
+    
+
 
 const addUserBank = (req, res) => {
+  let id = req.body.userId;
   let token=req.headers.token;
   let setdata = "";
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
@@ -159,40 +181,53 @@ const addUserBank = (req, res) => {
       setdata = decoded.id.id;
   });
   if(setdata){
-    const userBank = new UserBank(
-      req.body.userId,
-      req.body.bank_name,
-      req.body.branch_name,
-      req.body.holder_name,
-      req.body.account_no,
-      req.body.ifsc,
-    );
-    const promise = userBankOperations.addUserBank(userBank);
+    const promise = userOperations.getUserById(id);
     promise
       .then((data) => {
-        res.status(201).json({
-          message: "Save Successfully",
-          success: 1,
-          data: data,
-        });
+        console.log(data);
+        if(data){
+          const userBank = new UserBank(
+            req.body.userId,
+            req.body.bank_name,
+            req.body.branch_name,
+            req.body.holder_name,
+            req.body.account_no,
+            req.body.ifsc,
+          );
+          const promise = userBankOperations.addUserBank(userBank);
+          promise
+            .then((data) => {
+              res.status(201).json({
+                message: "Save Successfully",
+                success: 1,
+                data: data,
+              });
+            })
+            .catch((err) => {
+              // res.status(500).json(err.message);
+              // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+              // var keys = Object.keys(err.keyPattern);
+              // var duplicate = keys[0];
+              if(err.keyPattern){
+                res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+              }else{
+                res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+              }
+            });
+        }else{
+                return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            }
+        
       })
       .catch((err) => {
-        // res.status(500).json(err.message);
-        // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-        // var keys = Object.keys(err.keyPattern);
-        // var duplicate = keys[0];
-        if(err.keyPattern){
-          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
-        }else{
-          res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-        }
+          res.status(500).json({message: "Please check userId", success: 0, error_msg: err.message});
       });
-    }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
-        }
-};
+    }
+  };
+    
 
 const addUserLeave = (req, res) => {
+  let id = req.body.userId;
   let token=req.headers.token;
   let setdata = "";
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
@@ -204,47 +239,59 @@ const addUserLeave = (req, res) => {
       setdata = decoded.id.id;
   });
   if(setdata){
-    var total_leave_available = req.body.total_leave;
-    var earned_leave_available = req.body.earned_leave;
-    var sick_leave_available = req.body.sick_leave;
-    var casual_leave_available = req.body.casual_leave;
-    const userLeave = new UserLeave(
-      req.body.userId,
-      req.body.total_leave,
-      req.body.earned_leave,
-      req.body.sick_leave,
-      req.body.casual_leave,
-      total_leave_available,
-      earned_leave_available,
-      sick_leave_available,
-      casual_leave_available,
-    );
-    const promise = userLeaveOperations.addUserLeave(userLeave);
+    const promise = userOperations.getUserById(id);
     promise
       .then((data) => {
-        res.status(201).json({
-          message: "Save Successfully",
-          success: 1,
-          data: data,
-        });
+        console.log(data);
+        if(data){
+          var total_leave_available = req.body.total_leave;
+          var earned_leave_available = req.body.earned_leave;
+          var sick_leave_available = req.body.sick_leave;
+          var casual_leave_available = req.body.casual_leave;
+          const userLeave = new UserLeave(
+            req.body.userId,
+            req.body.total_leave,
+            req.body.earned_leave,
+            req.body.sick_leave,
+            req.body.casual_leave,
+            total_leave_available,
+            earned_leave_available,
+            sick_leave_available,
+            casual_leave_available,
+          );
+          const promise = userLeaveOperations.addUserLeave(userLeave);
+          promise
+            .then((data) => {
+              res.status(201).json({
+                message: "Save Successfully",
+                success: 1,
+                data: data,
+              });
+            })
+            .catch((err) => {
+              // res.status(500).json(err.message);
+              // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+              // var keys = Object.keys(err.keyPattern);
+              // var duplicate = keys[0];
+              if(err.keyPattern){
+                res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+              }else{
+                res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+              }
+            });
+         }else{
+                return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            }
+        
       })
       .catch((err) => {
-        // res.status(500).json(err.message);
-        // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-        // var keys = Object.keys(err.keyPattern);
-        // var duplicate = keys[0];
-        if(err.keyPattern){
-          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
-        }else{
-          res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-        }
+          res.status(500).json({message: "Please check userId", success: 0, error_msg: err.message});
       });
-    }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
-        }
-};
+    }
+  };
 
 const addUserSalary = (req, res) => {
+  let id = req.body.userId;
   let token=req.headers.token;
   let setdata = "";
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
@@ -256,45 +303,58 @@ const addUserSalary = (req, res) => {
       setdata = decoded.id.id;
   });
   if(setdata){
-
-    const userSalaryDeclaration = new UserSalaryDeclaration(
-      req.body.userId,
-      req.body.EPF_opt,
-      req.body.ESI_opt,
-      req.body.EPF_no,
-      req.body.ESI_no,
-      req.body.basic,
-      req.body.HRA,
-      req.body.medical_allowance,
-      req.body.conbeyance_allowance,
-      req.body.special_allowance,
-      req.body.others,
-      req.body.i_tax,
-    );
-    const promise = userSalaryDeclarationOperations.addUserSalaryDeclaration(userSalaryDeclaration);
+    const promise = userOperations.getUserById(id);
     promise
       .then((data) => {
-        res.status(201).json({
-          message: "Save Successfully",
-          data: data,
-          success: 1,
-        });
+        console.log(data);
+        if(data){
+
+        const userSalaryDeclaration = new UserSalaryDeclaration(
+          req.body.userId,
+          req.body.EPF_opt,
+          req.body.ESI_opt,
+          req.body.EPF_no,
+          req.body.ESI_no,
+          req.body.basic,
+          req.body.HRA,
+          req.body.medical_allowance,
+          req.body.conbeyance_allowance,
+          req.body.special_allowance,
+          req.body.others,
+          req.body.i_tax,
+        );
+        const promise = userSalaryDeclarationOperations.addUserSalaryDeclaration(userSalaryDeclaration);
+        promise
+          .then((data) => {
+            res.status(201).json({
+              message: "Save Successfully",
+              data: data,
+              success: 1,
+            });
+          })
+          .catch((err) => {
+            // res.status(500).json(err.message);
+            // var keys = Object.keys(err.keyPattern);
+            // var duplicate = keys[0];
+            if(err.keyPattern){
+              res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+            }else{
+              res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+            }
+          });
+        }else{
+              return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+          }
+        
       })
       .catch((err) => {
-        // res.status(500).json(err.message);
-        // var keys = Object.keys(err.keyPattern);
-        // var duplicate = keys[0];
-        if(err.keyPattern){
-          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
-        }else{
-          res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-        }
+          res.status(500).json({message: "Please check userId", success: 0, error_msg: err.message});
       });
-    }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
-        }
-};
+    }
+  };
+
 const addUserLoan = (req, res) => {
+  let id = req.body.userId;
   let token=req.headers.token;
   let setdata = "";
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
@@ -306,39 +366,50 @@ const addUserLoan = (req, res) => {
       setdata = decoded.id.id;
   });
   if(setdata){
-    const userLoanDeclaration = new UserLoanDeclaration(
-      req.body.userId,
-      req.body.loan_acc,
-      req.body.loan_amt,
-      req.body.loan_emi,
-      req.body.start_from,
-      req.body.updated_amt,
-      req.body.status,
-    );
-    const promise = userLoanDeclarationOperations.addUserLoanDeclaration(userLoanDeclaration);
+    const promise = userOperations.getUserById(id);
     promise
       .then((data) => {
-        res.status(201).json({
-          message: "Save Successfully",
-          success: 1,
-          data: data,
-        });
+        console.log(data);
+        if(data){
+          const userLoanDeclaration = new UserLoanDeclaration(
+            req.body.userId,
+            req.body.loan_acc,
+            req.body.loan_amt,
+            req.body.loan_emi,
+            req.body.start_from,
+            req.body.updated_amt,
+            req.body.status,
+          );
+          const promise = userLoanDeclarationOperations.addUserLoanDeclaration(userLoanDeclaration);
+          promise
+            .then((data) => {
+              res.status(201).json({
+                message: "Save Successfully",
+                success: 1,
+                data: data,
+              });
+            })
+            .catch((err) => {
+              // res.status(500).json(err.message);
+              // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+              // var keys = Object.keys(err.keyPattern);
+              // var duplicate = keys[0];
+              if(err.keyPattern){
+                res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+              }else{
+                res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+              }
+            });
+          }else{
+                return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            }
+        
       })
       .catch((err) => {
-        // res.status(500).json(err.message);
-        // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-        // var keys = Object.keys(err.keyPattern);
-        // var duplicate = keys[0];
-        if(err.keyPattern){
-          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
-        }else{
-          res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-        }
+          res.status(500).json({message: "Please check userId", success: 0, error_msg: err.message});
       });
-    }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
-        }
-};
+    }
+  };
 //User Login With JWT and Encrypt Password
 const loginUser = async (req, res) => {
   let data;
@@ -366,7 +437,7 @@ const loginUser = async (req, res) => {
     const otp = Math.floor(100000 + Math.random() * 900000);
     user.phoneOtp = otp;
     
-    res.status(201).json({
+    res.status(200).json({
       data: {
         userId: user._id,
       },
@@ -480,7 +551,7 @@ const loginWithPhone = async (req, res) => {
         isAdmin: false,
       });
       // console.log(accessToken);
-      res.status(201).json({
+      res.status(200).json({
         data: {
         _id: user._id,
         accessToken,
@@ -546,28 +617,31 @@ const updateUserPersonal = async (req, res) => {
   });
   if(setdata){
     let data;
-
+    let id = req.body.userId;
       try {
-        let user = await userOperations.findOneUserId(req.body.userId);
+        let user = await userOperations.getUserById(id);
+        console.log(user);
 
         if (!user) {
-          return res.status(400).json({ success: 0, message: "Details not found" });
+          return res.status(400).json({ success: 0, message: "User Details not found" });
         }
 
         user.userId = req.body.userId;
         user.dob = req.body.dob;
         user.martial_status = req.body.martial_status;
         user.gender = req.body.gender;
-        user.address = req.body.address;
+        user.address1 = req.body.address1;
+        user.address2 = req.body.address2;
         user.country_id = req.body.country_id;
         user.state_id = req.body.state_id;
         user.city = req.body.city;
         user.zipcode = req.body.zipcode;
         user.doj = req.body.doj;
         user.employee_id = req.body.employee_id;
+        user.profile_image = req.body.profile_image;
 
         await userOperations.updateUser(user._id,user);
-        return res.status(201).json({ success: 1, message: "User Personal Details Updated Successfully" });
+        return res.status(200).json({ success: 1, message: "User Personal Details Updated Successfully" });
       } catch (error) {
         return res.status(400).json({ success: 0, message: "Details not found" });
       }
@@ -592,9 +666,10 @@ const updateUserBank = async (req, res) => {
   });
   if(setdata){
     let data;
-
+    let id = req.body.userId;
       try {
-        let user = await userBankOperations.findOneUserId(req.body.userId);
+
+        let user = await userBankOperations.findUserId(id);
 
         if (!user) {
           return res.status(400).json({ success: 0, message: "Details not found" });
@@ -607,7 +682,7 @@ const updateUserBank = async (req, res) => {
         user.account_no = req.body.account_no;
         user.ifsc = req.body.ifsc;
         await userBankOperations.updateUserBank(user._id,user);
-        return res.status(201).json({ success: 1, message: "User Bank Details Updated Successfully" });
+        return res.status(200).json({ success: 1, message: "User Bank Details Updated Successfully" });
       } catch (error) {
         return res.status(400).json({ success: 0, message: "Details not found" });
       }
@@ -630,9 +705,9 @@ const updateUserOffice = async (req, res) => {
   });
   if(setdata){
     let data;
-
+    let id = req.body.userId;
       try {
-        let user = await userOfficeOperations.findOneUserId(req.body.userId);
+        let user = await userOfficeOperations.findUserId(id);
 
         if (!user) {
           return res.status(400).json({ success: 0, message: "Details not found" });
@@ -645,7 +720,7 @@ const updateUserOffice = async (req, res) => {
         user.working_days = req.body.working_days;
         user.working_shift = req.body.working_shift;
         await userOfficeOperations.updateUserOffice(user._id,user);
-        return res.status(201).json({ success: 1, message: "User Office Details Updated Successfully" });
+        return res.status(200).json({ success: 1, message: "User Office Details Updated Successfully" });
       } catch (error) {
         return res.status(400).json({ success: 0, message: "Details not found" });
       }
@@ -669,9 +744,9 @@ const updateUserLeave = async (req, res) => {
   });
   if(setdata){
     let data;
-
+    let id = req.body.userId;
       try {
-        let user = await userLeaveOperations.findOneUserId(req.body.userId);
+        let user = await userLeaveOperations.findUserId(id);
 
         if (!user) {
           return res.status(400).json({ success: 0, message: "Details not found" });
@@ -688,7 +763,7 @@ const updateUserLeave = async (req, res) => {
           user.casual_leave_available = req.body.casual_leave;
 
         await userLeaveOperations.updateUserLeave(user._id,user);
-        return res.status(201).json({ success: 1, message: "User Leave Details Updated Successfully" });
+        return res.status(200).json({ success: 1, message: "User Leave Details Updated Successfully" });
       } catch (error) {
         return res.status(400).json({ success: 0, message: "Details not found" });
       }
@@ -712,9 +787,9 @@ const updateUserSalary = async (req, res) => {
   });
   if(setdata){
     let data;
-
+    let id = req.body.userId;
       try {
-        let user = await userSalaryDeclarationOperations.findOneUserId(req.body.userId);
+        let user = await userSalaryDeclarationOperations.findUserId(id);
 
         if (!user) {
           return res.status(400).json({ success: 0, message: "Details not found" });
@@ -735,7 +810,7 @@ const updateUserSalary = async (req, res) => {
        user.i_tax = req.body.i_tax;
 
         await userSalaryDeclarationOperations.updateUserSalaryDeclaration(user._id,user);
-        return res.status(201).json({ success: 1, message: "User Salary Details Updated Successfully" });
+        return res.status(200).json({ success: 1, message: "User Salary Details Updated Successfully" });
       } catch (error) {
         return res.status(400).json({ success: 0, message: "Details not found" });
       }
@@ -802,7 +877,7 @@ const saveResetPassword = async (req, res) => {
   const payload = await jwt.verify(authorization, private_key);
   if (user._id === id || payload.id) {
     try {
-      user.password = bcrypt.doEncrypt(req.body.password);;
+      user.password = bcrypt.doEncrypt(req.body.password);
       await userOperations.updateUser(user._id,user);
       res.status(200);
       res.json({ success: 1, message: `Password change Successfully` });
@@ -814,6 +889,36 @@ const saveResetPassword = async (req, res) => {
     res.status(500)
     res.json({success: 0, message: "an error occured"})
   }
+};
+
+const saveChangePassword = async (req, res) => {
+  
+  let old_password = req.body.old_password;
+  let id = req.body.id;
+  const user = await userOperations.getUserById(id);
+  if (!user) {
+          return res.status(400).json({ success: 0, message: "User Id not found" });
+        };
+  const pass = bcrypt.compare(old_password, user.password);
+  if (!pass) {
+          return res.status(400).json({ success: 0, message: "old Password not Matched!" });
+        };
+
+  
+  // if (user._id === id ) {
+    try {
+      user.password = bcrypt.doEncrypt(req.body.password);
+      await userOperations.updateUser(user._id,user);
+      res.status(200);
+      res.json({ success: 1, message: `Password change Successfully` });
+    } catch (error) {
+      res.status(404);
+      res.json({ success: 0, message: `an error occured: ${error}` });
+    }
+  // }else{
+  //   res.status(500)
+  //   res.json({success: 0, message: "an error occured"})
+  // }
 };
 
 const punchIn = async (req, res) => {
@@ -831,6 +936,12 @@ const punchIn = async (req, res) => {
     const { id, authorization } = req.params;
     // var datetime = new Date();
     var dt = new Date();
+    let uid = req.body.userId;
+    const user = await userOperations.getUserById(uid);
+      // console.log(user);
+      if (!user) {
+        return res.status(400).json({ message: "User Id not found",success: 0});
+      }
 
   year  = dt.getFullYear();
   month = (dt.getMonth() + 1).toString().padStart(2, "0");
@@ -883,6 +994,12 @@ const punchOut = async (req, res) => {
       const { userId, id, authorization, punch_in } = req.params;
       // var datetime = new Date();
       var dt = new Date();
+       let uid = req.body.userId;
+        const user = await userOperations.getUserById(uid);
+          // console.log(user);
+          if (!user) {
+            return res.status(400).json({ message: "User Id not found",success: 0});
+          }
 
     year  = dt.getFullYear();
     month = (dt.getMonth() + 1).toString().padStart(2, "0");
@@ -943,6 +1060,12 @@ const addUserApplyLeave = async (req, res) => {
       setdata = decoded.id.id;
   });
   if(setdata){
+     let id = req.body.userId;
+    const user = await userOperations.getUserById(id);
+      // console.log(user);
+      if (!user) {
+        return res.status(400).json({ message: "User Id not found",success: 0});
+      }
     let status = 0;
     let date1 = req.body.from_date;
     let dates1 = date1.split("-")
@@ -1018,17 +1141,21 @@ const deactivateUser = async (req, res) => {
       try {
         console.log(req.body.id);
         let id = req.body.id;
-        let user = await userOperations.getUserById(id);
+          const user = await userOperations.getUserById(id);
+            // console.log(user);
+            if (!user) {
+              return res.status(400).json({ message: "User Id not found",success: 0});
+            }
 
-        if (!user) {
-          return res.status(400).json({ success: 0, message: "User not found" });
-        }
 
-
-        user.status = 0;
+        user.status = req.body.status;
         let don = await userOperations.updateUser(user._id,user);
-
-        return res.status(200).json({ success: 1, message: "User deactivate Successfully" });
+        if(req.body.status == 1){
+          return res.status(200).json({ success: 1, message: "User activated Successfully" });
+        }else{
+          return res.status(200).json({ success: 1, message: "User deactivate Successfully" });
+        }
+        
       } catch (error) {
         return res.status(400).json({ success: 0, message: "User not found" });
       }
@@ -1038,6 +1165,114 @@ const deactivateUser = async (req, res) => {
 
 };
 
+//User Registration
+const addOrganiation = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    let role = 2;
+    let status = 1;
+    const organization = new Organization(
+      req.body.companyname,
+      req.body.brandname,
+      req.body.imageUrl,
+      req.body.phone,
+      req.body.email,
+      req.body.whatsapp,
+      req.body.dob,
+      req.body.address1,
+      req.body.address2,
+      req.body.country_id,
+      req.body.state_id,
+      req.body.city,
+      req.body.zipcode,
+      status,
+    );
 
 
-module.exports = { deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
+    const promise = organizationOperations.addOrganization(organization); 
+    promise
+      .then((data) => {
+        res.status(201).json({
+          message: "Organization Registration Done",
+          success: 1,
+          data: data,
+        });
+      })
+      .catch((err) => {
+        //res.status(500).json(err.message);
+        // var tset = for (var key in err.keyPattern) { var t = key}
+        // console.log(err.keyPattern);
+        var keys = Object.keys(err.keyPattern);
+        var duplicate = keys[0];
+        if(err.keyPattern){
+          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+        }else{
+          let isnum = err.message.includes("@");
+        if(isnum == false){
+                res.status(500).json({message: "duplicate data Please check phone", success: 0, error_msg: err.message});
+              }else{
+                res.status(500).json({message: "duplicate data Please check email", success: 0, error_msg: err.message});
+              }
+          // res.status(500).json({message: "duplicate data Please check email/phone/username", success: 0});
+            }
+        });
+    }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
+
+const updateOrganization = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    let data;
+    let id = req.body.organizationId;
+      try {
+        let company = await organizationOperations.getOrganizationById(id);
+        console.log(company);
+
+        if (!company) {
+          return res.status(400).json({ success: 0, message: "Organization Details not found" });
+        }
+
+        company.companyname = req.body.companyname;
+        company.brandname = req.body.brandname;
+        company.dob = req.body.dob;
+        company.address1 = req.body.address1;
+        company.address2 = req.body.address2;
+        company.country_id = req.body.country_id;
+        company.state_id = req.body.state_id;
+        company.city = req.body.city;
+        company.zipcode = req.body.zipcode;
+        company.imageUrl = req.body.imageUrl;
+
+        await organizationOperations.updateOrganization(company._id,company);
+        return res.status(200).json({ success: 1, message: "Organization Details Updated Successfully" });
+      } catch (error) {
+        return res.status(400).json({ success: 0, message: "Details not found" });
+      }
+    }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+
+};
+
+
+module.exports = { updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };

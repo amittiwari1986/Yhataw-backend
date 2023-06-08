@@ -1,4 +1,4 @@
-const organizationModel = require("../db/models/organizationModel");
+const organizationModel = require("../db/models/OrganizationModel");
 const organizationSerives = {
    async addOrganization(UserObject){
         const promise = await organizationModel.create(UserObject);
