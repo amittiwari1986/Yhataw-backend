@@ -417,8 +417,10 @@ const loginUser = async (req, res) => {
         // console.log(user);
         if(user.userRole == 1){
            role = "Admin";
+        }else if(user.userRole == 3){
+           role = "Hr";
         }else{
-           role = "User";
+          role = "User";
         }
         user = {
           _id: user._id,
@@ -1025,7 +1027,7 @@ const deactivateUser = async (req, res) => {
 
         user.status = 0;
         let don = await userOperations.updateUser(user._id,user);
-        
+
         return res.status(200).json({ success: 1, message: "User deactivate Successfully" });
       } catch (error) {
         return res.status(400).json({ success: 0, message: "User not found" });
