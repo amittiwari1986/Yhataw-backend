@@ -30,9 +30,10 @@ const userSerives = {
                 "phone": { "$toString": "$phone" },
                 "email": { "$toString": "$email" },
                 "whatsapp": { "$toString": "$whatsapp" },
-                "employee_id": { "$toString": "employee_id" },
-                "doj": { "$toString": "doj" },
-                "status": { "$toString": "status" },
+                "employee_id": { "$toString": "$employee_id" },
+                "doj": { "$toString": "$doj" },
+                "dob": { "$toString": "$dob" },
+                "status": { "$toString": "$status" },
             }},
                 {$lookup: 
                     {from: "user_leaves", 
