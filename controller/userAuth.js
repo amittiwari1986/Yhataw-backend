@@ -49,6 +49,7 @@ const register = (req, res) => {
     let hashPassword = bcrypt.doEncrypt(req.body.password);
     let role = 2;
     let status = 1;
+    let inComplete = 0;
     const user = new User(
       req.body.name,
       hashPassword,
@@ -70,6 +71,7 @@ const register = (req, res) => {
       req.body.employee_id,
       status,
       req.body.profile_image,
+      inComplete,
     );
 
 
@@ -290,7 +292,7 @@ const addUserLeave = (req, res) => {
     }
   };
 
-const addUserSalary = (req, res) => {
+const addUserSalary = async (req, res) => {
   let id = req.body.userId;
   let token=req.headers.token;
   let setdata = "";
@@ -303,6 +305,9 @@ const addUserSalary = (req, res) => {
       setdata = decoded.id.id;
   });
   if(setdata){
+    let user = await userOperations.getUserById(id);
+        user.in_complete = "1";
+         await userOperations.updateUser(user._id,user);
     const promise = userOperations.getUserById(id);
     promise
       .then((data) => {
@@ -326,6 +331,8 @@ const addUserSalary = (req, res) => {
         const promise = userSalaryDeclarationOperations.addUserSalaryDeclaration(userSalaryDeclaration);
         promise
           .then((data) => {
+            
+
             res.status(201).json({
               message: "Save Successfully",
               data: data,
@@ -1034,7 +1041,7 @@ const punchOut = async (req, res) => {
           userAtt.punch_out = current_datetime;
           userAtt.working_hours = hourss+":"+mint;
           await userAttendanceOperations.updateUserAttendance(userAtt._id,userAtt);
-           res.status(201).json({
+           res.status(200).json({
             message: "Punch-out Successfully",
             success: 1,
             data: userAtt,

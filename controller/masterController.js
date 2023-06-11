@@ -558,6 +558,61 @@ const deleteDepartment = async (req, res) => {
             // return res.status(200).send(decoded.id.id);
             setdata = decoded.id.id;
         });
+        //   if(setdata){
+        //     let id = req.params.id
+
+        //     const promise = departmentOperations.getAllDepartment1()
+        //     console.log(promise)
+        //     promise
+        //     .then((data)=>{
+              
+        //       var finalData = [];
+        //       obj = data;
+        //       obj.forEach(element => {
+
+        //         var index = 0
+        //          obj1.data.push({
+        //                 id: element._id,
+        //                 department_name: element.department_name,
+        //                 designation: []
+        //             });
+               
+        //       }); 
+        //       var index1 = 0
+        //        obj.forEach(element => {
+        //         var designationData = element.designation;
+        //         designationData.forEach(ele => {
+        //           //var designationData = ele.designationData
+        //           if(ele.designation_name){
+        //            obj1.data[index1].designation.push(ele.designation_name);
+                   
+        //           }
+                   
+        //         });
+        //         index1++;
+        //       }); 
+        //        data = obj1.data;
+
+        //         if(data.length > 0){
+        //            res.status(200).json({
+        //             data: data,
+        //             success: 1
+        //             }) 
+        //         }else{
+        //             res.status(200).json({
+        //             data: [],
+        //             message: "No Data found",
+        //             success: 0
+        //             }) 
+        //         }
+        //     })
+        //     .catch((err)=>{
+        //         console.log(err.message)
+        //         res.status(500).json({message: "Internal Server Error", success: 0});
+        //     })
+        // }else{
+        //     return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        // }
         if(setdata){
             let id = req.params.id
 

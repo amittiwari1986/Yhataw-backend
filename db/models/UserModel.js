@@ -32,6 +32,7 @@
      employee_id:{type:Schema.Types.String,required:true},
      status:{type:Schema.Types.String,required:true},
      profile_image:{type:Schema.Types.String,required:true},
+     in_complete:{type:Schema.Types.String,required:true},
  },{timestamps:true}); 
  
  const UserModel = connection.model('users',UserSchema);
