@@ -147,8 +147,8 @@ const addUserOffice = async (req, res) => {
               .catch((err) => {
                 // res.status(500).json(err.message);
                 // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-                // var keys = Object.keys(err.keyPattern);
-                // var duplicate = keys[0];
+                var keys = Object.keys(err.keyPattern);
+                var duplicate = keys[0];
                 if(err.keyPattern){
                   res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
                 }else{
@@ -206,8 +206,8 @@ const addUserBank = (req, res) => {
             .catch((err) => {
               // res.status(500).json(err.message);
               // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-              // var keys = Object.keys(err.keyPattern);
-              // var duplicate = keys[0];
+              var keys = Object.keys(err.keyPattern);
+              var duplicate = keys[0];
               if(err.keyPattern){
                 res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
               }else{
@@ -271,8 +271,8 @@ const addUserLeave = (req, res) => {
             .catch((err) => {
               // res.status(500).json(err.message);
               // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-              // var keys = Object.keys(err.keyPattern);
-              // var duplicate = keys[0];
+              var keys = Object.keys(err.keyPattern);
+              var duplicate = keys[0];
               if(err.keyPattern){
                 res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
               }else{
@@ -334,8 +334,8 @@ const addUserSalary = (req, res) => {
           })
           .catch((err) => {
             // res.status(500).json(err.message);
-            // var keys = Object.keys(err.keyPattern);
-            // var duplicate = keys[0];
+            var keys = Object.keys(err.keyPattern);
+            var duplicate = keys[0];
             if(err.keyPattern){
               res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
             }else{
@@ -392,8 +392,8 @@ const addUserLoan = (req, res) => {
             .catch((err) => {
               // res.status(500).json(err.message);
               // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-              // var keys = Object.keys(err.keyPattern);
-              // var duplicate = keys[0];
+              var keys = Object.keys(err.keyPattern);
+              var duplicate = keys[0];
               if(err.keyPattern){
                 res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
               }else{
