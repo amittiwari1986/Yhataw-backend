@@ -1185,9 +1185,15 @@ const addOrganiation = async (req, res) => {
       setdata = decoded.id.id;
   });
   if(setdata){
+    const org = await organizationOperations.findOrganizationId(setdata);
+            console.log(org);
+      if (org.length > 0) {
+        return res.status(200).json({ message: "Organization Allready added for this user",success: 0});
+      }
     let role = 2;
     let status = 1;
     const organization = new Organization(
+      setdata,
       req.body.companyname,
       req.body.brandname,
       req.body.imageUrl,

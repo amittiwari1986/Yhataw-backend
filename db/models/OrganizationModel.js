@@ -10,6 +10,7 @@
  const connection  = require('../connect');
  const {Schema} = require('mongoose');
  const OrganizationSchema = new Schema({
+    userId:{type:Schema.Types.String,required:true,ref: "users"},
      companyname:{type:Schema.Types.String,required:true,unique:true,min:3,max:200},
      brandname:{type:Schema.Types.String,required:true,min:3,max:200},
      imageUrl:{type:Schema.Types.String,unique:true,required:true},

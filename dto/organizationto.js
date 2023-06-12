@@ -1,5 +1,6 @@
 class Organization{
-    constructor(companyname,brandname,imageUrl,phone,email,whatsapp,dob,address1,address2,country_id,state_id,city,zipcode,status){
+    constructor(userId,companyname,brandname,imageUrl,phone,email,whatsapp,dob,address1,address2,country_id,state_id,city,zipcode,status){
+        this.userId = userId
         this.companyname = companyname
         this.brandname = brandname
         this.imageUrl = imageUrl

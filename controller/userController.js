@@ -516,12 +516,12 @@ const userController = {
             setdata = decoded.id.id;
         });
         if(setdata){
-            let orgId = req.params.id
-            const promise = organizationService.getOrganizationById(orgId)
+            // let orgId = req.params.id
+            const promise = organizationService.findOrganizationId(setdata)
             promise
             .then((data)=>{
-                // console.log(data)
-                const {others} = data._doc
+                console.log(data)
+                // const {others} = data._doc
                 res.status(200).json({
                     data: data,
                     success: 1
