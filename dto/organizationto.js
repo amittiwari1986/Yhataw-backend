@@ -1,13 +1,9 @@
 class Organization{
-    constructor(userId,companyname,brandname,imageUrl,phone,email,whatsapp,dob,address1,address2,country_id,state_id,city,zipcode,status){
+    constructor(userId,companyname,brandname,imageUrl,address1,address2,country_id,state_id,city,zipcode,status,time_zone,website){
         this.userId = userId
         this.companyname = companyname
         this.brandname = brandname
         this.imageUrl = imageUrl
-        this.phone = phone
-        this.email = email
-        this.whatsapp = whatsapp
-        this.dob = dob
         this.address1 = address1
         this.address2 = address2
         this.country_id = country_id
@@ -15,6 +11,8 @@ class Organization{
         this.city = city
         this.zipcode = zipcode
         this.status = status
+        this.time_zone = time_zone
+        this.website = website
     }
 }
 

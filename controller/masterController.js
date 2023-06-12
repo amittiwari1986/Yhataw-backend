@@ -8,6 +8,8 @@ const designationOperations = require("../services/designationService");
 const Designation = require("../dto/designationto");
 const departmentOperations = require("../services/departmentService");
 const Department = require("../dto/departmentto");
+const timezoneOperations = require("../services/timezoneService");
+const Timezone = require("../dto/timezoneto");
 const jwt = require("jsonwebtoken");
 const db  = require('../db/connect');
 
@@ -642,4 +644,62 @@ const deleteDepartment = async (req, res) => {
         }
     };
 
-module.exports = { getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
+    const getTimezone = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             let id = req.params.id
+             if(id){
+                 const promise = timezoneOperations.findtimezoneId(id)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  const {others} = data
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                  })
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+             }else{
+               const query = req.query.new 
+              const promise = timezoneOperations.getAllTimezone(query)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  const {others} = data
+                  if(data.length > 0){
+                   res.status(200).json({
+                    data: data,
+                    success: 1
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: [],
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            }
+        }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
+
+module.exports = { getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }

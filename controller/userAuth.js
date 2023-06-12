@@ -1197,10 +1197,6 @@ const addOrganiation = async (req, res) => {
       req.body.companyname,
       req.body.brandname,
       req.body.imageUrl,
-      req.body.phone,
-      req.body.email,
-      req.body.whatsapp,
-      req.body.dob,
       req.body.address1,
       req.body.address2,
       req.body.country_id,
@@ -1208,6 +1204,8 @@ const addOrganiation = async (req, res) => {
       req.body.city,
       req.body.zipcode,
       status,
+      req.body.time_zone,
+      req.body.website,
     );
 
 
@@ -1267,7 +1265,6 @@ const updateOrganization = async (req, res) => {
 
         company.companyname = req.body.companyname;
         company.brandname = req.body.brandname;
-        company.dob = req.body.dob;
         company.address1 = req.body.address1;
         company.address2 = req.body.address2;
         company.country_id = req.body.country_id;
@@ -1275,6 +1272,8 @@ const updateOrganization = async (req, res) => {
         company.city = req.body.city;
         company.zipcode = req.body.zipcode;
         company.imageUrl = req.body.imageUrl;
+        company.time_zone = req.body.time_zone;
+        company.website = req.body.website;
 
         await organizationOperations.updateOrganization(company._id,company);
         return res.status(200).json({ success: 1, message: "Organization Details Updated Successfully" });
