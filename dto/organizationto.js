@@ -1,5 +1,5 @@
 class Organization{
-    constructor(userId,companyname,brandname,imageUrl,address1,address2,country_id,state_id,city,zipcode,status,time_zone,website){
+    constructor(userId,companyname,brandname,imageUrl,address1,address2,country_id,state_id,city,zipcode,status,time_zone,website,company_type){
         this.userId = userId
         this.companyname = companyname
         this.brandname = brandname
@@ -13,6 +13,7 @@ class Organization{
         this.status = status
         this.time_zone = time_zone
         this.website = website
+        this.company_type = company_type
     }
 }
 

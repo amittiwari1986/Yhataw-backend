@@ -23,6 +23,7 @@
      status:{type:Schema.Types.String,required:true},
      time_zone:{type:Schema.Types.String,required:true},
      website:{type:Schema.Types.String,required:true},
+     company_type:{type:Schema.Types.String,required:true},
  },{timestamps:true}); 
  
  const OrganizationModel = connection.model('organizations',OrganizationSchema);

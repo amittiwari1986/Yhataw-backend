@@ -1192,6 +1192,7 @@ const addOrganiation = async (req, res) => {
       }
     let role = 2;
     let status = 1;
+    let company_type = "Real State";
     const organization = new Organization(
       setdata,
       req.body.companyname,
@@ -1206,6 +1207,7 @@ const addOrganiation = async (req, res) => {
       status,
       req.body.time_zone,
       req.body.website,
+      company_type,
     );
 
 
