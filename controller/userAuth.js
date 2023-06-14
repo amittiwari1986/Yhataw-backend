@@ -673,29 +673,29 @@ const updateUserBank = async (req, res) => {
       setdata = decoded.id.id;
   });
   if(setdata){
+    const mongo = require('mongodb');
     let data;
-    let id = req.body.userId;
-    let user1 = "";
-       try {
+    let id = req.body.id;
+      // try {
 
-        let user = await userBankOperations.findUserId(id);
-        // console.log(user);
+        let user = await userBankOperations.getUserBankById(id);
+        // console.log(user[0]._id);
 
         if (!user) {
           return res.status(400).json({ success: 0, message: "Details not found" });
         }
 
-        user1.userId = req.body.userId;
-        user1.bank_name = req.body.bank_name;
-        user1.branch_name = req.body.branch_name;
-        user1.holder_name = req.body.holder_name;
-        user1.account_no = req.body.account_no;
-        user1.ifsc = req.body.ifsc;
-        await userBankOperations.updateUserBank(user._id,user1);
+        user.userId = req.body.userId;
+        user.bank_name = req.body.bank_name;
+        user.branch_name = req.body.branch_name;
+        user.holder_name = req.body.holder_name;
+        user.account_no = req.body.account_no;
+        user.ifsc = req.body.ifsc;
+        await userBankOperations.updateUserBank(user._id,user);
         return res.status(200).json({ success: 1, message: "User Bank Details Updated Successfully" });
-      } catch (error) {
-        return res.status(400).json({ success: 0, message: "Details not found" });
-      }
+      // } catch (error) {
+      //   return res.status(400).json({ success: 0, message: "Details not found" });
+      // }
     }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
@@ -717,7 +717,7 @@ const updateUserOffice = async (req, res) => {
     let data;
     let id = req.body.userId;
       try {
-        let user = await userOfficeOperations.findUserId(id);
+        let user = await userOfficeOperations.getUserOfficeById(id);
 
         if (!user) {
           return res.status(400).json({ success: 0, message: "Details not found" });
@@ -756,7 +756,7 @@ const updateUserLeave = async (req, res) => {
     let data;
     let id = req.body.userId;
       try {
-        let user = await userLeaveOperations.findUserId(id);
+        let user = await userLeaveOperations.getUserLeaveById(id);
 
         if (!user) {
           return res.status(400).json({ success: 0, message: "Details not found" });
