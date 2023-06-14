@@ -635,6 +635,7 @@ const updateUserPersonal = async (req, res) => {
 
         user.userId = req.body.userId;
         user.dob = req.body.dob;
+        user.phone = req.body.phone;
         user.martial_status = req.body.martial_status;
         user.gender = req.body.gender;
         user.address1 = req.body.address1;
@@ -674,21 +675,23 @@ const updateUserBank = async (req, res) => {
   if(setdata){
     let data;
     let id = req.body.userId;
-      try {
+    let user1 = "";
+       try {
 
         let user = await userBankOperations.findUserId(id);
+        // console.log(user);
 
         if (!user) {
           return res.status(400).json({ success: 0, message: "Details not found" });
         }
 
-        user.userId = req.body.userId;
-        user.bank_name = req.body.bank_name;
-        user.branch_name = req.body.branch_name;
-        user.holder_name = req.body.holder_name;
-        user.account_no = req.body.account_no;
-        user.ifsc = req.body.ifsc;
-        await userBankOperations.updateUserBank(user._id,user);
+        user1.userId = req.body.userId;
+        user1.bank_name = req.body.bank_name;
+        user1.branch_name = req.body.branch_name;
+        user1.holder_name = req.body.holder_name;
+        user1.account_no = req.body.account_no;
+        user1.ifsc = req.body.ifsc;
+        await userBankOperations.updateUserBank(user._id,user1);
         return res.status(200).json({ success: 1, message: "User Bank Details Updated Successfully" });
       } catch (error) {
         return res.status(400).json({ success: 0, message: "Details not found" });
