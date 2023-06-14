@@ -715,7 +715,7 @@ const updateUserOffice = async (req, res) => {
   });
   if(setdata){
     let data;
-    let id = req.body.userId;
+    let id = req.body.id;
       try {
         let user = await userOfficeOperations.getUserOfficeById(id);
 
@@ -754,7 +754,7 @@ const updateUserLeave = async (req, res) => {
   });
   if(setdata){
     let data;
-    let id = req.body.userId;
+    let id = req.body.id;
       try {
         let user = await userLeaveOperations.getUserLeaveById(id);
 
@@ -797,9 +797,9 @@ const updateUserSalary = async (req, res) => {
   });
   if(setdata){
     let data;
-    let id = req.body.userId;
+    let id = req.body.id;
       try {
-        let user = await userSalaryDeclarationOperations.findUserId(id);
+        let user = await userSalaryDeclarationOperations.getUserSalaryDeclarationById(id);
 
         if (!user) {
           return res.status(400).json({ success: 0, message: "Details not found" });
