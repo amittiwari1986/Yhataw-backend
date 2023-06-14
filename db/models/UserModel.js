@@ -33,7 +33,7 @@
      status:{type:Schema.Types.String,required:true},
      profile_image:{type:Schema.Types.String,required:true},
      in_complete:{type:Schema.Types.String,required:true},
-     time_zone:{type:Schema.Types.String,required:true},
+     time_zone:{type:Schema.Types.String,required:false},
  },{timestamps:true}); 
  
  const UserModel = connection.model('users',UserSchema);
