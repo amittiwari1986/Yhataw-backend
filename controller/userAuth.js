@@ -85,22 +85,23 @@ const register = (req, res) => {
         });
       })
       .catch((err) => {
+        res.status(400).json({message: err.message, success: 0, error_msg: err.message});
         //res.status(500).json(err.message);
         // var tset = for (var key in err.keyPattern) { var t = key}
         // console.log(err.keyPattern);
-        var keys = Object.keys(err.keyPattern);
-        var duplicate = keys[0];
-        if(err.keyPattern){
-          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
-        }else{
-          let isnum = err.message.includes("@");
-        if(isnum == false){
-                res.status(500).json({message: "duplicate data Please check phone", success: 0, error_msg: err.message});
-              }else{
-                res.status(500).json({message: "duplicate data Please check email", success: 0, error_msg: err.message});
-              }
-          // res.status(500).json({message: "duplicate data Please check email/phone/username", success: 0});
-            }
+        // var keys = Object.keys(err.keyPattern);
+        // var duplicate = keys[0];
+        // if(err.keyPattern){
+        //   res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+        // }else{
+        //   let isnum = err.message.includes("@");
+        // if(isnum == false){
+        //         res.status(500).json({message: "duplicate data Please check phone", success: 0, error_msg: err.message});
+        //       }else{
+        //         res.status(500).json({message: "duplicate data Please check email", success: 0, error_msg: err.message});
+        //       }
+        //   // res.status(500).json({message: "duplicate data Please check email/phone/username", success: 0});
+        //     }
         });
     }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
@@ -110,7 +111,7 @@ const register = (req, res) => {
 const addUserOffice = async (req, res) => {
   let id = req.body.userId;
 
-     console.log(id);
+     // console.log(id);
      // return res.status(401).send({ auth: false, message: 'No token pffghgrovided.', success: 0});
   let token=req.headers.token;
   let setdata = "";
@@ -126,7 +127,7 @@ const addUserOffice = async (req, res) => {
     const promise = userOperations.getUserById(id);
     promise
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if(data){
           const userOffice = new UserOffice(
               req.body.userId,
@@ -147,15 +148,16 @@ const addUserOffice = async (req, res) => {
                 });
               })
               .catch((err) => {
+                res.status(400).json({message: err.message, success: 0, error_msg: err.message});
                 // res.status(500).json(err.message);
                 // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-                var keys = Object.keys(err.keyPattern);
-                var duplicate = keys[0];
-                if(err.keyPattern){
-                  res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
-                }else{
-                  res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-                }
+                // var keys = Object.keys(err.keyPattern);
+                // var duplicate = keys[0];
+                // if(err.keyPattern){
+                //   res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+                // }else{
+                //   res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+                // }
               });
             }else{
                     return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
@@ -186,7 +188,7 @@ const addUserBank = (req, res) => {
     const promise = userOperations.getUserById(id);
     promise
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if(data){
           const userBank = new UserBank(
             req.body.userId,
@@ -206,15 +208,16 @@ const addUserBank = (req, res) => {
               });
             })
             .catch((err) => {
+              res.status(400).json({message: err.message, success: 0, error_msg: err.message});
               // res.status(500).json(err.message);
               // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-              var keys = Object.keys(err.keyPattern);
-              var duplicate = keys[0];
-              if(err.keyPattern){
-                res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
-              }else{
-                res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-              }
+              // var keys = Object.keys(err.keyPattern);
+              // var duplicate = keys[0];
+              // if(err.keyPattern){
+              //   res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+              // }else{
+              //   res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+              // }
             });
         }else{
                 return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
@@ -244,7 +247,7 @@ const addUserLeave = (req, res) => {
     const promise = userOperations.getUserById(id);
     promise
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if(data){
           var total_leave_available = req.body.total_leave;
           var earned_leave_available = req.body.earned_leave;
@@ -271,15 +274,16 @@ const addUserLeave = (req, res) => {
               });
             })
             .catch((err) => {
+              res.status(400).json({message: err.message, success: 0, error_msg: err.message});
               // res.status(500).json(err.message);
               // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-              var keys = Object.keys(err.keyPattern);
-              var duplicate = keys[0];
-              if(err.keyPattern){
-                res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
-              }else{
-                res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-              }
+              // var keys = Object.keys(err.keyPattern);
+              // var duplicate = keys[0];
+              // if(err.keyPattern){
+              //   res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+              // }else{
+              //   res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+              // }
             });
          }else{
                 return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
@@ -340,14 +344,15 @@ const addUserSalary = async (req, res) => {
             });
           })
           .catch((err) => {
+            res.status(400).json({message: err.message, success: 0, error_msg: err.message});
             // res.status(500).json(err.message);
-            var keys = Object.keys(err.keyPattern);
-            var duplicate = keys[0];
-            if(err.keyPattern){
-              res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
-            }else{
-              res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-            }
+            // var keys = Object.keys(err.keyPattern);
+            // var duplicate = keys[0];
+            // if(err.keyPattern){
+            //   res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+            // }else{
+            //   res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+            // }
           });
         }else{
               return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
@@ -376,7 +381,7 @@ const addUserLoan = (req, res) => {
     const promise = userOperations.getUserById(id);
     promise
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if(data){
           const userLoanDeclaration = new UserLoanDeclaration(
             req.body.userId,
@@ -397,15 +402,16 @@ const addUserLoan = (req, res) => {
               });
             })
             .catch((err) => {
+              res.status(400).json({message: err.message, success: 0, error_msg: err.message});
               // res.status(500).json(err.message);
               // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-              var keys = Object.keys(err.keyPattern);
-              var duplicate = keys[0];
-              if(err.keyPattern){
-                res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
-              }else{
-                res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-              }
+              // var keys = Object.keys(err.keyPattern);
+              // var duplicate = keys[0];
+              // if(err.keyPattern){
+              //   res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+              // }else{
+              //   res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+              // }
             });
           }else{
                 return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
@@ -627,7 +633,7 @@ const updateUserPersonal = async (req, res) => {
     let id = req.body.userId;
       try {
         let user = await userOperations.getUserById(id);
-        console.log(user);
+        // console.log(user);
 
         if (!user) {
           return res.status(400).json({ success: 0, message: "User Details not found" });
@@ -650,8 +656,9 @@ const updateUserPersonal = async (req, res) => {
 
         await userOperations.updateUser(user._id,user);
         return res.status(200).json({ success: 1, message: "User Personal Details Updated Successfully" });
-      } catch (error) {
-        return res.status(400).json({ success: 0, message: "Details not found" });
+      } catch (err) {
+        return res.status(400).json({message: err.message, success: 0, error_msg: err.message});
+        // return res.status(400).json({ success: 0, message: "Details not found" });
       }
     }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
@@ -676,7 +683,7 @@ const updateUserBank = async (req, res) => {
     const mongo = require('mongodb');
     let data;
     let id = req.body.id;
-      // try {
+      try {
 
         let user = await userBankOperations.getUserBankById(id);
         // console.log(user[0]._id);
@@ -693,9 +700,9 @@ const updateUserBank = async (req, res) => {
         user.ifsc = req.body.ifsc;
         await userBankOperations.updateUserBank(user._id,user);
         return res.status(200).json({ success: 1, message: "User Bank Details Updated Successfully" });
-      // } catch (error) {
-      //   return res.status(400).json({ success: 0, message: "Details not found" });
-      // }
+      } catch (err) {
+        return res.status(400).json({message: err.message, success: 0, error_msg: err.message});
+      }
     }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
@@ -731,8 +738,8 @@ const updateUserOffice = async (req, res) => {
         user.working_shift = req.body.working_shift;
         await userOfficeOperations.updateUserOffice(user._id,user);
         return res.status(200).json({ success: 1, message: "User Office Details Updated Successfully" });
-      } catch (error) {
-        return res.status(400).json({ success: 0, message: "Details not found" });
+      } catch (err) {
+        return res.status(400).json({message: err.message, success: 0, error_msg: err.message});
       }
     }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
@@ -774,8 +781,8 @@ const updateUserLeave = async (req, res) => {
 
         await userLeaveOperations.updateUserLeave(user._id,user);
         return res.status(200).json({ success: 1, message: "User Leave Details Updated Successfully" });
-      } catch (error) {
-        return res.status(400).json({ success: 0, message: "Details not found" });
+      } catch (err) {
+        return res.status(400).json({message: err.message, success: 0, error_msg: err.message});
       }
     }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
@@ -821,8 +828,8 @@ const updateUserSalary = async (req, res) => {
 
         await userSalaryDeclarationOperations.updateUserSalaryDeclaration(user._id,user);
         return res.status(200).json({ success: 1, message: "User Salary Details Updated Successfully" });
-      } catch (error) {
-        return res.status(400).json({ success: 0, message: "Details not found" });
+      } catch (err) {
+        return res.status(400).json({message: err.message, success: 0, error_msg: err.message});
       }
     }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
@@ -980,7 +987,7 @@ const punchIn = async (req, res) => {
         });
       })
       .catch((err) => {
-          res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+          res.status(400).json({message: "Internal Server Error", success: 0, error_msg: err.message});
         
       });
     }else{
@@ -1118,15 +1125,16 @@ const addUserApplyLeave = async (req, res) => {
         });
       })
       .catch((err) => {
+        return res.status(400).json({message: err.message, success: 0, error_msg: err.message});
         // res.status(500).json(err.message);
         // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
         // var keys = Object.keys(err.keyPattern);
         // var duplicate = keys[0];
-        if(err.keyPattern){
-          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
-        }else{
-          res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-        }
+        // if(err.keyPattern){
+        //   res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+        // }else{
+        //   res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        // }
       });
     }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
@@ -1224,22 +1232,23 @@ const addOrganiation = async (req, res) => {
         });
       })
       .catch((err) => {
+        return res.status(400).json({message: err.message, success: 0, error_msg: err.message});
         //res.status(500).json(err.message);
         // var tset = for (var key in err.keyPattern) { var t = key}
         // console.log(err.keyPattern);
-        var keys = Object.keys(err.keyPattern);
-        var duplicate = keys[0];
-        if(err.keyPattern){
-          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
-        }else{
-          let isnum = err.message.includes("@");
-        if(isnum == false){
-                res.status(500).json({message: "duplicate data Please check phone", success: 0, error_msg: err.message});
-              }else{
-                res.status(500).json({message: "duplicate data Please check email", success: 0, error_msg: err.message});
-              }
-          // res.status(500).json({message: "duplicate data Please check email/phone/username", success: 0});
-            }
+        // var keys = Object.keys(err.keyPattern);
+        // var duplicate = keys[0];
+        // if(err.keyPattern){
+        //   res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+        // }else{
+        //   let isnum = err.message.includes("@");
+        // if(isnum == false){
+        //         res.status(500).json({message: "duplicate data Please check phone", success: 0, error_msg: err.message});
+        //       }else{
+        //         res.status(500).json({message: "duplicate data Please check email", success: 0, error_msg: err.message});
+        //       }
+        //   // res.status(500).json({message: "duplicate data Please check email/phone/username", success: 0});
+        //     }
         });
     }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});

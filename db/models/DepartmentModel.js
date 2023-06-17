@@ -2,7 +2,7 @@
 const connection  = require('../connect');
  const {Schema} = require('mongoose');
  const DepartmentSchema = new Schema({
-     department_name:{type:Schema.Types.String,required:true},
+     department_name:{type:Schema.Types.String,required:[true, 'Please add department name']},
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
  
