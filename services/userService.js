@@ -16,6 +16,10 @@ const userSerives = {
         const promise = await UserModel.findOne({phone})
         return promise 
     },
+    async checkName(name){
+        const promise = await UserModel.findOne({name})
+        return promise 
+    },
     async updateUser(id,data){
         const promise = await UserModel.findByIdAndUpdate(id,data,{new:true})
         return promise

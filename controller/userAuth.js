@@ -34,7 +34,7 @@ const {
 } = require("../messages/errors");
 
 //User Registration
-const register = (req, res) => {
+const register = async (req, res) => {
   let token=req.headers.token;
   let setdata = "";
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
@@ -46,6 +46,23 @@ const register = (req, res) => {
       setdata = decoded.id.id;
   });
   if(setdata){
+
+    let nameCheck = await userOperations.checkName(req.body.name);
+    if(nameCheck){
+      return res.status(400).json({message: "duplicate data Please check name", success: 0});
+    }
+
+    let emailCheck = await userOperations.login(req.body.email);
+    if(emailCheck){
+      return res.status(400).json({message: "duplicate data Please check email", success: 0});
+    }
+
+    let phoneCheck = await userOperations.loginWithMobile(req.body.phone);
+    if(phoneCheck){
+      return res.status(400).json({message: "duplicate data Please check phone", success: 0});
+    }
+    
+
     let hashPassword = bcrypt.doEncrypt(req.body.password);
     let role = 2;
     let status = 1;
@@ -78,14 +95,14 @@ const register = (req, res) => {
     const promise = userOperations.addUser(user); 
     promise
       .then((data) => {
-        res.status(201).json({
+       return res.status(201).json({
           message: "Registration Successfully",
           success: 1,
           data: data,
         });
       })
       .catch((err) => {
-        res.status(400).json({message: err.message, success: 0, error_msg: err.message});
+      return  res.status(400).json({message: err.message, success: 0, error_msg: err.message});
         //res.status(500).json(err.message);
         // var tset = for (var key in err.keyPattern) { var t = key}
         // console.log(err.keyPattern);
@@ -630,7 +647,12 @@ const updateUserPersonal = async (req, res) => {
   });
   if(setdata){
     let data;
-    let id = req.body.userId;
+    if(!req.body.userId){
+      let id = req.body.id;
+    }else{
+      let id = req.body.userId;
+    }
+    
       try {
         let user = await userOperations.getUserById(id);
         // console.log(user);
@@ -688,9 +710,9 @@ const updateUserBank = async (req, res) => {
         let user = await userBankOperations.getUserBankById(id);
         // console.log(user[0]._id);
 
-        if (!user) {
-          return res.status(400).json({ success: 0, message: "Details not found" });
-        }
+        // if (!user) {
+        //   return res.status(400).json({ success: 0, message: "Details not found" });
+        // }
 
         user.userId = req.body.userId;
         user.bank_name = req.body.bank_name;

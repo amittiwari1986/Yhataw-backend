@@ -30,7 +30,7 @@ module.exports = Routes
 
 function registerValidationSchema(req, res, next) {
     const schema = Joi.object({
-        name: Joi.string().max(3).message("Name cannot be less than 3 characters").max(30).message("Name cannot be more than 30 characters").required(),
+        name: Joi.string().min(3).message("Name cannot be less than 3 characters").max(30).message("Name cannot be more than 30 characters").required(),
 		email: Joi.string().email().required(),
 		userRole: Joi.string(),
 		gender: Joi.string().valid("Male","Female").required(),
@@ -83,10 +83,10 @@ function userBankValidationSchema(req, res, next) {
 function userLeaveValidationSchema(req, res, next) {
     const schema = Joi.object({
 		 userId:Joi.string().required(),
-	     total_leave:Joi.string().required(),
-	     earned_leave:Joi.string().required(),
-	     sick_leave:Joi.string().required(),
-	     casual_leave:Joi.string().required(),
+	     total_leave:Joi.number().integer().required(),
+	     earned_leave:Joi.number().integer().required(),
+	     sick_leave:Joi.number().integer().required(),
+	     casual_leave:Joi.number().integer().required(),
     });
     validateRequest(req, res, schema, next);
 }
@@ -125,8 +125,8 @@ function userSalaryValidationSchema(req, res, next) {
 function addOrganizationValidationSchema(req, res, next) {
     const schema = Joi.object({
 		 userId:Joi.string().required(),
-	     companyname:Joi.string().max(3).message("Name cannot be less than 3 characters").max(150).message("Name cannot be more than 30 characters").required(),
-	     brandname:Joi.string().max(3).message("Name cannot be less than 3 characters").max(150).message("Name cannot be more than 30 characters").required(),
+	     companyname:Joi.string().min(3).message("company name cannot be less than 3 characters").max(150).message("company name cannot be more than 30 characters").required(),
+	     brandname:Joi.string().min(3).message("brand name cannot be less than 3 characters").max(150).message("brand name cannot be more than 30 characters").required(),
 	     imageUrl:Joi.string().required(),
 	     address1:Joi.string().required(),
 	     address2:Joi.string(),
@@ -142,7 +142,24 @@ function addOrganizationValidationSchema(req, res, next) {
     validateRequest(req, res, schema, next);
 }
 
-function validateRequest(req, res, schema, next) {
+
+/// for update details
+
+function updateAccountSchema(req, res, next) {
+    const schemaRules = {
+         userId:Joi.string().empty(''),
+	     bank_name:Joi.string().empty(''),
+	     branch_name:Joi.string().empty(''),
+	     holder_name:Joi.string().empty(''),
+	     account_no:Joi.string().empty(''),
+	     ifsc:Joi.string().empty(''),
+    };
+    const schema = Joi.object(schemaRules);
+
+    validateRequest(req, res, schema, next);
+}
+
+function validateRequest(req, res, schema, next) {	
     const options = {
         abortEarly: false, // include all errors
         allowUnknown: true, // ignore unknown props
@@ -150,9 +167,10 @@ function validateRequest(req, res, schema, next) {
     };
     const { error, value } = schema.validate(req.body, options);
     if (error) {
+    	console.log();
     	res.status(400).json({
 				success: 0,
-				message: `error: ${error.details.map(x => x.message).join(', ')}`
+				message: `error: ${error.details[0].message}`
 			});
         //next(`Validation error: ${error.details.map(x => x.message).join(', ')}`);
     } else {
