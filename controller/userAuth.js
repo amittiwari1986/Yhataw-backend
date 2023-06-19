@@ -647,11 +647,11 @@ const updateUserPersonal = async (req, res) => {
   });
   if(setdata){
     let data;
-    if(!req.body.userId){
+    // if(!req.body.userId){
       let id = req.body.id;
-    }else{
-      let id = req.body.userId;
-    }
+    // }else{
+    //   let id = req.body.userId;
+    // }
     
       try {
         let user = await userOperations.getUserById(id);
