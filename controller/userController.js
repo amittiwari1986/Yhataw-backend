@@ -517,7 +517,7 @@ const userController = {
         });
         if(setdata){
             // let orgId = req.params.id
-            const promise = organizationService.findOrganizationId(setdata)
+            const promise = organizationService.findOneUserId(setdata)
             promise
             .then((data)=>{
                 console.log(data)
