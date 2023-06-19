@@ -1241,6 +1241,8 @@ const addOrganiation = async (req, res) => {
       req.body.time_zone,
       req.body.website,
       company_type,
+      req.body.country_code,
+      req.body.currency,
     );
 
 
@@ -1310,6 +1312,8 @@ const updateOrganization = async (req, res) => {
         company.imageUrl = req.body.imageUrl;
         company.time_zone = req.body.time_zone;
         company.website = req.body.website;
+        company.country_code = req.body.country_code;
+        company.currency = req.body.currency;
 
         await organizationOperations.updateOrganization(company._id,company);
         return res.status(200).json({ success: 1, message: "Organization Details Updated Successfully" });

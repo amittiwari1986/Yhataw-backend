@@ -9,7 +9,7 @@
 
  const connection  = require('../connect');
  const {Schema} = require('mongoose');
- const OrganizationSchema = new Schema({
+ const OrganizationSchema = new Schema({ 
     userId:{type:Schema.Types.String,required:[true, 'Please add user id'],ref: "users"},
      companyname:{type:Schema.Types.String,required:[true, 'Please add company name'],unique:true,min:3,max:200},
      brandname:{type:Schema.Types.String,required:[true, 'Please add brand name'],min:3,max:200},
@@ -24,6 +24,8 @@
      time_zone:{type:Schema.Types.String,required:[true, 'Please add time zone']},
      website:{type:Schema.Types.String,required:[true, 'Please add website']},
      company_type:{type:Schema.Types.String,required:[true, 'Please add company type']},
+     currency:{type:Schema.Types.String,required:false},
+     country_code:{type:Schema.Types.String,required:false},
  },{timestamps:true}); 
  
  const OrganizationModel = connection.model('organizations',OrganizationSchema);
