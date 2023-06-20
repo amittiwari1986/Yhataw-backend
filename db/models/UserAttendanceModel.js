@@ -6,10 +6,10 @@ const connection  = require('../connect');
      month:{type:Schema.Types.String,required:[true, 'Please add month']},
      date:{type:Schema.Types.String,required:[true, 'Please add date']},
      punch_in:{type:Schema.Types.String,unique:true,required:[true, 'Please add punch in']},
-     punch_out:{type:Schema.Types.String,unique:true,required:[true, 'Please add punch out']},
-     working_hours:{type:Schema.Types.String,required:[true, 'Please add working hours']},
-     leave_applied:{type:Schema.Types.String,required:[true, 'Please add leave applied']},
-     work_type:{type:Schema.Types.String,required:[true, 'Please add work type']},
+     punch_out:{type:Schema.Types.String,unique:true,required:[false, 'Please add punch out']},
+     working_hours:{type:Schema.Types.String,required:[false, 'Please add working hours']},
+     leave_applied:{type:Schema.Types.String,required:[false, 'Please add leave applied']},
+     work_type:{type:Schema.Types.String,required:[false, 'Please add work type']},
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
  
