@@ -40,7 +40,7 @@ const register = async (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -121,7 +121,7 @@ const register = async (req, res) => {
         //     }
         });
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 };
 
@@ -135,7 +135,7 @@ const addUserOffice = async (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -177,7 +177,7 @@ const addUserOffice = async (req, res) => {
                 // }
               });
             }else{
-                    return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+                    return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
                 }
         
       })
@@ -196,7 +196,7 @@ const addUserBank = (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -237,7 +237,7 @@ const addUserBank = (req, res) => {
               // }
             });
         }else{
-                return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+                return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
             }
         
       })
@@ -255,7 +255,7 @@ const addUserLeave = (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -303,7 +303,7 @@ const addUserLeave = (req, res) => {
               // }
             });
          }else{
-                return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+                return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
             }
         
       })
@@ -320,7 +320,7 @@ const addUserSalary = async (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -372,7 +372,7 @@ const addUserSalary = async (req, res) => {
             // }
           });
         }else{
-              return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+              return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
           }
         
       })
@@ -389,7 +389,7 @@ const addUserLoan = (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -431,7 +431,7 @@ const addUserLoan = (req, res) => {
               // }
             });
           }else{
-                return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+                return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
             }
         
       })
@@ -606,7 +606,7 @@ const updateUser = async (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -628,7 +628,7 @@ const updateUser = async (req, res) => {
         return res.status(400).json({ success: 0, message: "User not found" });
       }
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 
 };
@@ -640,7 +640,7 @@ const updateUserPersonal = async (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -683,7 +683,7 @@ const updateUserPersonal = async (req, res) => {
         // return res.status(400).json({ success: 0, message: "Details not found" });
       }
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 
 };
@@ -696,7 +696,7 @@ const updateUserBank = async (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -726,7 +726,7 @@ const updateUserBank = async (req, res) => {
         return res.status(400).json({message: err.message, success: 0, error_msg: err.message});
       }
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 
 };
@@ -737,7 +737,7 @@ const updateUserOffice = async (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -764,7 +764,7 @@ const updateUserOffice = async (req, res) => {
         return res.status(400).json({message: err.message, success: 0, error_msg: err.message});
       }
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
 
 };
@@ -776,7 +776,7 @@ const updateUserLeave = async (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -807,7 +807,7 @@ const updateUserLeave = async (req, res) => {
         return res.status(400).json({message: err.message, success: 0, error_msg: err.message});
       }
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
 
 };
@@ -819,7 +819,7 @@ const updateUserSalary = async (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -854,7 +854,7 @@ const updateUserSalary = async (req, res) => {
         return res.status(400).json({message: err.message, success: 0, error_msg: err.message});
       }
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 
 };
@@ -966,7 +966,7 @@ const punchIn = async (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -1013,7 +1013,7 @@ const punchIn = async (req, res) => {
         
       });
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
 
 };
@@ -1024,7 +1024,7 @@ const punchOut = async (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -1083,7 +1083,7 @@ const punchOut = async (req, res) => {
         }
 
    }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 };
 
@@ -1093,7 +1093,7 @@ const addUserApplyLeave = async (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -1159,7 +1159,7 @@ const addUserApplyLeave = async (req, res) => {
         // }
       });
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 };
 
@@ -1170,7 +1170,7 @@ const deactivateUser = async (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -1200,7 +1200,7 @@ const deactivateUser = async (req, res) => {
         return res.status(400).json({ success: 0, message: "User not found" });
       }
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 
 };
@@ -1212,7 +1212,7 @@ const addOrganiation = async (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -1275,7 +1275,7 @@ const addOrganiation = async (req, res) => {
         //     }
         });
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 };
 
@@ -1285,7 +1285,7 @@ const updateOrganization = async (req, res) => {
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
     jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
@@ -1321,7 +1321,7 @@ const updateOrganization = async (req, res) => {
         return res.status(400).json({ success: 0, message: "Details not found" });
       }
     }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 
 };

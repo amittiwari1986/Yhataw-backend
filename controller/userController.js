@@ -39,7 +39,7 @@ const userController = {
                 res.status(500).json({message: "Internal Server Error", success: 0});
             })
         }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
     },
     // Delete User
@@ -70,7 +70,7 @@ const userController = {
                 res.status(500).json({message: "Internal Server Error", success: 0});
             })
         }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
     },
     
@@ -121,7 +121,7 @@ const userController = {
                     })
                 });
         }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
         
     },
@@ -154,7 +154,7 @@ const userController = {
                 res.status(500).json({message: "Internal Server Error", success: 0});
             })
         }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
     },
     // fetch All Users
@@ -193,7 +193,7 @@ const userController = {
                 res.status(500).json({message: "Internal Server Error", success: 0});
             })
         }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
     },
 
@@ -239,7 +239,7 @@ const userController = {
                 res.status(500).json({message: "Data not found", success: 0});
             })
         }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
     },
 
@@ -285,7 +285,7 @@ const userController = {
                 res.status(500).json({message: "Data not found", success: 0});
             })
         }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
     },
 
@@ -331,7 +331,7 @@ const userController = {
                 res.status(500).json({message: "Data not found", success: 0});
             })
         }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
     },
     // Get User salary By userid
@@ -376,7 +376,7 @@ const userController = {
                 res.status(500).json({message: "Data not found", success: 0});
             })
         }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
     },
     // Get User Loan By userid
@@ -421,7 +421,7 @@ const userController = {
                 res.status(500).json({message: "Data not found", success: 0});
             })
         }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
     },
     // Get User Loan By userid
@@ -462,7 +462,7 @@ const userController = {
                 res.status(500).json({message: "Internal Server Error", success: 0});
             })
         }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
     },
     getUserApplyLeaveByIds(req,res){
@@ -501,7 +501,7 @@ const userController = {
                 res.status(500).json({message: "No Data found", success: 0});
             })
         }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
     },
     getOrganizationByIds(req,res){
@@ -545,7 +545,7 @@ const userController = {
                 res.status(500).json({message: "Data not found", success: 0});
             })
         }else{
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
     }
 
