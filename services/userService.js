@@ -39,6 +39,7 @@ const userSerives = {
                 "dob": { "$toString": "$dob" },
                 "status": { "$toString": "$status" },
                 "in_complete": { "$toString": "$in_complete" },
+                "updatedAt": { "$toString": "$updatedAt" },
             }},
                 {$lookup: 
                     {from: "user_leaves", 
@@ -51,7 +52,8 @@ const userSerives = {
                     localField: "user_id", 
                     foreignField: "userId", 
                     as: "userOffices"}
-                }])
+                },
+                { $sort : { updatedAt : -1} }])
 
         
         return promise
