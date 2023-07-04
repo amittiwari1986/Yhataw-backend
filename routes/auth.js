@@ -44,7 +44,7 @@ function registerValidationSchema(req, res, next) {
 	     state_id:Joi.string().required(),
 	     city:Joi.string().required(),
 	     zipcode:Joi.string().required(),
-	     doj:Joi.string().required(),
+	     doj:Joi.string(),
 	     employee_id:Joi.string().required(),
 	     status:Joi.string(),
 	     profile_image:Joi.string().required(),
