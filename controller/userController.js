@@ -438,29 +438,56 @@ const userController = {
         });
         if(setdata){
             let id = req.params.id
-            const promise = UserAttendanceService.findUserId(id)
-            promise
-            .then((data)=>{
-                // console.log(data)
-                // const {password,...others} = data._doc
-                if(data.length > 0){
-                   res.status(200).json({
-                    data: data,
-                    success: 1
-                    }) 
-                }else{
-                    res.status(200).json({
-                    data: [],
-                    message: "No Data found",
-                    success: 0
-                    }) 
-                }
-                
-            })
-            .catch((err)=>{
-                // console.log(err.message)
-                res.status(500).json({message: "Internal Server Error", success: 0});
-            })
+            if(id){
+                const promise = UserAttendanceService.findUserId(id)
+                promise
+                .then((data)=>{
+                    // console.log(data)
+                    // const {password,...others} = data._doc
+                    if(data.length > 0){
+                       res.status(200).json({
+                        data: data,
+                        success: 1
+                        }) 
+                    }else{
+                        res.status(200).json({
+                        data: [],
+                        message: "No Data found",
+                        success: 0
+                        }) 
+                    }
+                    
+                })
+                .catch((err)=>{
+                    // console.log(err.message)
+                    res.status(500).json({message: "Internal Server Error", success: 0});
+                })
+            }else{
+                const query = req.query.new 
+                const promise = UserAttendanceService.getAllAttendance(query)
+                promise
+                .then((data)=>{
+                    // console.log(data)
+                    // const {password,...others} = data._doc
+                    if(data.length > 0){
+                       res.status(200).json({
+                        data: data,
+                        success: 1
+                        }) 
+                    }else{
+                        res.status(200).json({
+                        data: [],
+                        message: "No Data found",
+                        success: 0
+                        }) 
+                    }
+                    
+                })
+                .catch((err)=>{
+                    // console.log(err.message)
+                    res.status(500).json({message: "Internal Server Error", success: 0});
+                })
+            }
         }else{
             return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
