@@ -40,8 +40,8 @@ const userAttendanceSerives = {
             }},
                 {$lookup: 
                     {from: "users", 
-                    localField: "_id", 
-                    foreignField: "userId", 
+                    localField: "userId", 
+                    foreignField: "uid", 
                     as: "users"}
                 },
                 { $sort : { updatedAt : -1} }])
