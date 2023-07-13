@@ -25,6 +25,7 @@ Routes.put("/updateUserSalary",userAuth.updateUserSalary)
 Routes.put("/updateUserLeave",userAuth.updateUserLeave)
 Routes.put("/userStatusUpdate",userAuth.deactivateUser)
 Routes.put("/updateOrganization",userAuth.updateOrganization)
+Routes.put("/addAttendenceSheetMonthWise",userAuth.addAttendanceDummy)
 module.exports = Routes
 
 

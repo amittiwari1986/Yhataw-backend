@@ -20,6 +20,10 @@ const userAttendanceSerives = {
         const promise = await UserAttendanceModel.find({userId})
         return promise 
     },
+    async findUserByMultipleData(userId,date){
+        const promise = await UserAttendanceModel.find({userId: userId,date: date})
+        return promise 
+    },
     async getUserAttendanceById(id){
         const promise = await UserAttendanceModel.findById(id)
         return promise
@@ -30,7 +34,7 @@ const userAttendanceSerives = {
         const promise = await UserAttendanceModel.aggregate(
             [
             { "$project": {
-                "userId": { "$toString": "$userId" },
+                "userId": { "$toObjectId": "$userId" },
                 "month": { "$toString": "$month" },
                 "date": { "$toString": "$date" },
                 "punch_in": { "$toString": "$punch_in" },
@@ -41,7 +45,7 @@ const userAttendanceSerives = {
                 {$lookup: 
                     {from: "users", 
                     localField: "userId", 
-                    foreignField: "uid", 
+                    foreignField: "_id", 
                     as: "users"}
                 },
                 { $sort : { updatedAt : -1} }])
