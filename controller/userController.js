@@ -463,7 +463,11 @@ const userController = {
                     res.status(500).json({message: "Internal Server Error", success: 0});
                 })
             }else{
-                const query = req.query.new 
+                var dt = new Date();
+                 year  = dt.getFullYear();
+                  month = (dt.getMonth() + 1).toString().padStart(2, "0");
+                  day   = dt.getDate().toString().padStart(2, "0");
+                const query = day + '/' + month + '/' + year;
                 const promise = UserAttendanceService.getAllAttendance(query)
                 promise
                 .then((data)=>{

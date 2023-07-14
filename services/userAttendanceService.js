@@ -33,6 +33,9 @@ const userAttendanceSerives = {
         // return promise
         const promise = await UserAttendanceModel.aggregate(
             [
+            {
+                "$match": {"date": query}
+            },
             { "$project": {
                 "userId": { "$toObjectId": "$userId" },
                 "month": { "$toString": "$month" },
@@ -40,6 +43,9 @@ const userAttendanceSerives = {
                 "punch_in": { "$toString": "$punch_in" },
                 "punch_out": { "$toString": "$punch_out" },
                 "working_hours": { "$toString": "$working_hours" },
+                "work_type": { "$toString": "$work_type" },
+                "approver": { "$toString": "$approver" },
+                "status": { "$toString": "$status" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
                 {$lookup: 
