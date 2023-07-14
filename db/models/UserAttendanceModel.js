@@ -10,6 +10,8 @@ const connection  = require('../connect');
      working_hours:{type:Schema.Types.String,required:[false, 'Please add working hours']},
      leave_applied:{type:Schema.Types.String,required:[false, 'Please add leave applied']},
      work_type:{type:Schema.Types.String,required:[false, 'Please add work type']},
+     approver:{type:Schema.Types.String,required:[false, 'Please add work type']},
+     status:{type:Schema.Types.Number,required:[false, 'Please add status']},
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
  

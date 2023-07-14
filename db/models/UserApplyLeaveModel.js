@@ -8,7 +8,8 @@ const connection  = require('../connect');
      to_date:{type:Schema.Types.String,required:[true, 'Please add to date']},
      comments:{type:Schema.Types.String,required:[true, 'Please add comments']},
      total_days:{type:Schema.Types.String,required:false},
-     is_status:{type:Schema.Types.String,required:false},
+     status:{type:Schema.Types.Number,required:false},
+     approver:{type:Schema.Types.String,required:false},
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
  

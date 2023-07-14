@@ -1000,6 +1000,7 @@ const punchIn = async (req, res) => {
           }
     
     userAtt[0].punch_in = datetime;
+    userAtt[0].work_type = "Present";
     const myJSON = userAtt[0]._id; 
     const updateId = myJSON.toString().replace(/ObjectId\("(.*)"\)/, "$1");
     await userAttendanceOperations.updateUserAttendance(updateId,userAtt[0]);
@@ -1047,14 +1048,16 @@ const punchOut = async (req, res) => {
     // let date = ("0" + dt.getDate()).slice(-2);
 
     var current_datetime = hours  + ':' + minutes;
-    // var current_datetime = day + '/' + month + '/' + year  + ' ' + hours  + ':' + minutes;
+    var current_datetimecheck = year + '/' + month + '/' + day  + ' ' + hours  + ':' + minutes;
+    var getpunch_in = year + '/' + month + '/' + day  + ' ' + req.body.punch_in;
+    // console.log(getpunch_in);
 
     try {
       // console.log(req.body.id);
           let userAtt = await userAttendanceOperations.getUserAttendanceById(req.body.id);
 
-          var startTime = new Date(req.body.punch_in); 
-          var endTime = new Date(current_datetime);
+          var startTime = new Date(getpunch_in); 
+          var endTime = new Date(current_datetimecheck);
           var difference = endTime.getTime() - startTime.getTime(); // This will give difference in milliseconds
           var resultInMinutes = Math.round(difference / 60000);
           var hourss = Math.round(resultInMinutes / 60);
@@ -1063,10 +1066,9 @@ const punchOut = async (req, res) => {
           if (!userAtt) {
             return res.status(400).json({ success: 0, message: "User Attendence not found" });
           }
-          if (userAtt.punch_out) {
+          if (userAtt.punch_out != "00:00") {
             return res.status(400).json({ success: 0, message: "User Attendence All ready updated" });
           }
-
 
           userAtt.punch_out = current_datetime;
           userAtt.working_hours = hourss+":"+mint;
@@ -1380,6 +1382,12 @@ const addAttendanceDummy = async (req, res) => {
             month,
             day1,
             datetime,
+            datetime,
+            datetime,
+            '',
+            '',
+            '',
+            0,
           );
           
           await userAttendanceOperations.addUserAttendance(userAttendance);
@@ -1396,6 +1404,107 @@ const addAttendanceDummy = async (req, res) => {
 
 };
 
+const leaveApprove = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+      const { userId, id, status, authorization } = req.params;
+      // var datetime = new Date();
+      var dt = new Date();
+       let uid = req.body.userId;
+       let statusId = req.body.status;
+        const user = await userOperations.getUserById(uid);
+          // console.log(user);
+          if (!user) {
+            return res.status(400).json({ message: "User Id not found",success: 0});
+          }
+
+    
+
+    try {
+      // console.log(req.body.id);
+          let userApplyLeave = await userApplyLeaveOperations.getUserApplyLeaveById(req.body.id);
+
+          if (!userApplyLeave) {
+            return res.status(400).json({ success: 0, message: "User Leave not found" });
+          }
+
+          userApplyLeave.status = statusId;
+          userApplyLeave.approver = uid;
+          await userApplyLeaveOperations.updateUserApplyLeave(userApplyLeave._id,userApplyLeave);
+           res.status(200).json({
+            message: "Leave Approved Successfully",
+            success: 1,
+            data: updateUserApplyLeave,
+          });
+        } catch (error) {
+          return res.status(400).json({ success: 0, message: "User Leave not found" });
+        }
+
+   }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
+
+const attendanceApprove = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+      //const { userId, id, status, authorization } = req.params;
+      // var datetime = new Date();
+      var dt = new Date();
+       let uid = req.body.userId;
+       let statusId = req.body.status;
+        const user = await userOperations.getUserById(uid);
+          // console.log(user);
+          if (!user) {
+            return res.status(400).json({ message: "User Id not found",success: 0});
+          }
+
+    
+
+    try {
+      // console.log(req.body.id);
+          let userAttendance = await userAttendanceOperations.getUserAttendanceById(req.body.id);
+          console.log(userAttendance);
+          if (!userAttendance) {
+            return res.status(400).json({ success: 0, message: "User Attendence not found1" });
+          }
+
+          userAttendance.status = statusId;
+          userAttendance.approver = uid;
+          await userAttendanceOperations.updateUserAttendance(userAttendance._id,userAttendance);
+            res.status(200).json({
+            message: "Attendence Approved Successfully",
+            success: 1,
+            data: userAttendance,
+          });
+        } catch (error) {
+          return res.status(400).json({ success: 0, message: "User Attendence not found2", err: error });
+        }
+
+   }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
 
 
-module.exports = { addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
+
+
+module.exports = { attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
