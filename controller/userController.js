@@ -437,37 +437,47 @@ const userController = {
             setdata = decoded.id.id;
         });
         if(setdata){
-            let id = req.params.id
-            if(id){
-                const promise = UserAttendanceService.findUserId(id)
-                promise
-                .then((data)=>{
-                    // console.log(data)
-                    // const {password,...others} = data._doc
-                    if(data.length > 0){
-                       res.status(200).json({
-                        data: data,
-                        success: 1
-                        }) 
-                    }else{
-                        res.status(200).json({
-                        data: [],
-                        message: "No Data found",
-                        success: 0
-                        }) 
-                    }
-                    
-                })
-                .catch((err)=>{
-                    // console.log(err.message)
-                    res.status(500).json({message: "Internal Server Error", success: 0});
-                })
+            let id = req.query.id
+            let start_date = req.query.start_date
+            let end_date = req.query.end_date
+
+            var dt = new Date();
+            year  = dt.getFullYear();
+            month = (dt.getMonth() + 1).toString().padStart(2, "0");
+            day   = dt.getDate().toString().padStart(2, "0");
+            var query = {};
+            if(id != ''){
+                if(start_date == ''){
+                    start_date = '01/' + month + '/' + year;
+                }
+                if(end_date == ''){
+                    end_date = '31/' + month + '/' + year;
+                }
+                 query = {"userId":id,"start_date": start_date, "end_date": end_date};
             }else{
-                var dt = new Date();
-                 year  = dt.getFullYear();
-                  month = (dt.getMonth() + 1).toString().padStart(2, "0");
-                  day   = dt.getDate().toString().padStart(2, "0");
-                const query = day + '/' + month + '/' + year;
+
+                if(start_date == ''){
+                    start_date = day + '/' + month + '/' + year;
+                }
+                if(end_date == ''){
+                    end_date = day + '/' + month + '/' + year;
+                }
+                 query = {"userId":"","start_date": start_date, "end_date": end_date};
+                 console.log(query);
+            }
+
+            if(id == undefined){
+                if(start_date == '' || start_date == undefined){
+                    start_date = day + '/' + month + '/' + year;
+                }
+                if(end_date == '' || end_date == undefined){
+                    end_date = day + '/' + month + '/' + year;
+                }
+                 query = {"userId":"","start_date": start_date, "end_date": end_date};
+                 console.log(query);
+            }
+                
+             
                 const promise = UserAttendanceService.getAllAttendance(query)
                 promise
                 .then((data)=>{
@@ -491,7 +501,6 @@ const userController = {
                     // console.log(err.message)
                     res.status(500).json({message: "Internal Server Error", success: 0});
                 })
-            }
         }else{
             return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }

@@ -31,33 +31,67 @@ const userAttendanceSerives = {
     async getAllAttendance(query){
         // const promise = query ? await UserAttendanceModel.find().sort({_id:-1}).limit(5): await UserAttendanceModel.find()
         // return promise
-        const promise = await UserAttendanceModel.aggregate(
-            [
-            {
-                "$match": {"date": query}
-            },
-            { "$project": {
-                "userId": { "$toObjectId": "$userId" },
-                "month": { "$toString": "$month" },
-                "date": { "$toString": "$date" },
-                "punch_in": { "$toString": "$punch_in" },
-                "punch_out": { "$toString": "$punch_out" },
-                "working_hours": { "$toString": "$working_hours" },
-                "work_type": { "$toString": "$work_type" },
-                "approver": { "$toString": "$approver" },
-                "status": { "$toString": "$status" },
-                "updatedAt": { "$toString": "$updatedAt" },
-            }},
-                {$lookup: 
-                    {from: "users", 
-                    localField: "userId", 
-                    foreignField: "_id", 
-                    as: "users"}
-                },
-                { $sort : { updatedAt : -1} }])
+         // console.log(query);
+        if(query.userId != ''){
 
-        
-        return promise
+            const promise = await UserAttendanceModel.aggregate(
+                [
+                {
+                    "$match": {"userId":query.userId,"date": {"$gte": query.start_date, "$lte": query.end_date}}
+                },
+                { "$project": {
+                    "userId": { "$toObjectId": "$userId" },
+                    "month": { "$toString": "$month" },
+                    "date": { "$toString": "$date" },
+                    "punch_in": { "$toString": "$punch_in" },
+                    "punch_out": { "$toString": "$punch_out" },
+                    "working_hours": { "$toString": "$working_hours" },
+                    "work_type": { "$toString": "$work_type" },
+                    "approver": { "$toString": "$approver" },
+                    "status": { "$toString": "$status" },
+                    "updatedAt": { "$toString": "$updatedAt" },
+                }},
+                    {$lookup: 
+                        {from: "users", 
+                        localField: "userId", 
+                        foreignField: "_id", 
+                        as: "users"}
+                    },
+                    { $sort : { updatedAt : -1} }])
+            return promise
+
+
+        }else{
+
+            const promise = await UserAttendanceModel.aggregate(
+                [
+                {
+                    "$match": {"date": {"$gte": query.start_date, "$lte": query.end_date}}
+                },
+                { "$project": {
+                    "userId": { "$toObjectId": "$userId" },
+                    "month": { "$toString": "$month" },
+                    "date": { "$toString": "$date" },
+                    "punch_in": { "$toString": "$punch_in" },
+                    "punch_out": { "$toString": "$punch_out" },
+                    "working_hours": { "$toString": "$working_hours" },
+                    "work_type": { "$toString": "$work_type" },
+                    "approver": { "$toString": "$approver" },
+                    "status": { "$toString": "$status" },
+                    "updatedAt": { "$toString": "$updatedAt" },
+                }},
+                    {$lookup: 
+                        {from: "users", 
+                        localField: "userId", 
+                        foreignField: "_id", 
+                        as: "users"}
+                    },
+                    { $sort : { updatedAt : -1} }])
+            return promise
+
+        }   
+
+    
     },
 }
 
