@@ -1440,8 +1440,13 @@ const leaveApprove = async (req, res) => {
           userApplyLeave.status = statusId;
           userApplyLeave.approver = uid;
           await userApplyLeaveOperations.updateUserApplyLeave(userApplyLeave._id,userApplyLeave);
+          if(statusId == 1){
+              message = "Leave Approved Successfully";
+            }else{
+              message = "Leave Rejected Successfully";
+            }
            res.status(200).json({
-            message: "Leave Approved Successfully",
+            message: message,
             success: 1,
             data: updateUserApplyLeave,
           });
@@ -1490,8 +1495,14 @@ const attendanceApprove = async (req, res) => {
           userAttendance.status = statusId;
           userAttendance.approver = uid;
           await userAttendanceOperations.updateUserAttendance(userAttendance._id,userAttendance);
+          var message = "";
+            if(statusId == 1){
+              message = "Attendence Approved Successfully";
+            }else{
+              message = "Attendence Rejected Successfully";
+            }
             res.status(200).json({
-            message: "Attendence Approved Successfully",
+            message: message,
             success: 1,
             data: userAttendance,
           });
