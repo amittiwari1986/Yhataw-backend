@@ -1184,4 +1184,6 @@ const getProject = (req, res) => {
         }
 };
 
+
+
 module.exports = { addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation,getPropertyType,getPropertyUnitType,getPropertyStatus,getPropertyFor }

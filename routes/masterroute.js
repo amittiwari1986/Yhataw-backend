@@ -27,4 +27,5 @@ Routes.post("/addProject",mastercontroller.addProject)
 Routes.post("/addDeveloper",mastercontroller.addDeveloper)
 Routes.get("/getDeveloper",mastercontroller.getDeveloper)
 Routes.get("/getProject",mastercontroller.getProject)
+Routes.get("/getProject/:id",mastercontroller.getProject)
 module.exports = Routes
