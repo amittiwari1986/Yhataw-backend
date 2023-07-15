@@ -1432,6 +1432,7 @@ const leaveApprove = async (req, res) => {
     try {
       // console.log(req.body.id);
           let userApplyLeave = await userApplyLeaveOperations.getUserApplyLeaveById(req.body.id);
+          // console.log(userApplyLeave);
 
           if (!userApplyLeave) {
             return res.status(400).json({ success: 0, message: "User Leave not found" });
@@ -1439,7 +1440,7 @@ const leaveApprove = async (req, res) => {
 
           userApplyLeave.status = statusId;
           userApplyLeave.approver = uid;
-          await userApplyLeaveOperations.updateUserApplyLeave(userApplyLeave._id,userApplyLeave);
+          let updatedata = await userApplyLeaveOperations.updateUserApplyLeave(userApplyLeave._id,userApplyLeave);
           if(statusId == 1){
               message = "Leave Approved Successfully";
             }else{
@@ -1448,7 +1449,7 @@ const leaveApprove = async (req, res) => {
            res.status(200).json({
             message: message,
             success: 1,
-            data: updateUserApplyLeave,
+            data: updatedata,
           });
         } catch (error) {
           return res.status(400).json({ success: 0, message: "User Leave not found" });
