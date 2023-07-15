@@ -8,6 +8,7 @@ const userLoanDeclarationOperations = require("../services/userLoanDeclarationSe
 const userAttendanceOperations = require("../services/userAttendanceService");
 const organizationOperations = require("../services/organizationService");
 const userTokens = require("../services/userTokenService");
+const userDocumentOperations = require("../services/userDocumentService");
 const User = require("../dto/userdto");
 const UserToken = require("../dto/usertokendto");
 const UserOffice = require("../dto/userofficeto");
@@ -18,6 +19,7 @@ const UserSalaryDeclaration = require("../dto/usersalarydeclarationto");
 const UserLoanDeclaration = require("../dto/userloandeclarationto");
 const UserAttendance = require("../dto/userattendanceto");
 const Organization = require("../dto/organizationto");
+const UserDocument = require("../dto/userocumentto");
 const bcrypt = require("../utils/encrypt");
 const token = require("../utils/token");
 const otpGenerator = require('otp-generator');
@@ -1517,6 +1519,96 @@ const attendanceApprove = async (req, res) => {
 };
 
 
+const addUserDoc = (req, res) => {
+  let id = req.body.userId;
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    const promise = userOperations.getUserById(id);
+    promise
+      .then((data) => {
+        // console.log(data);
+        if(data){
+          const userDoc = new UserDocument(
+            req.body.userId,
+            req.body.aadhar,
+            req.body.pan,
+            req.body.passport,
+            req.body.medical,
+            req.body.voterId,
+            req.body.others,
+          );
+          const promise = userDocumentOperations.addUserBank(userDoc);
+          promise
+            .then((data) => {
+              res.status(201).json({
+                message: "Save Successfully",
+                success: 1,
+                data: data,
+              });
+            })
+            .catch((err) => {
+              res.status(400).json({message: err.message, success: 0, error_msg: err.message});
+              
+            });
+        }else{
+                return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            }
+        
+      })
+      .catch((err) => {
+          res.status(500).json({message: "Please check userId", success: 0, error_msg: err.message});
+      });
+    }
+  };
+
+const updateUserDoc= async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    let data;
+    let id = req.body.userId;
+      try {
+        let userDoc = await userDocumentOperations.getUserDocumentById(id);
+        console.log(userDoc);
+
+        if (!userDoc) {
+          return res.status(400).json({ success: 0, message: "User Document not found" });
+        }
+
+        userDoc.aadhar = req.body.aadhar;
+        userDoc.pan = req.body.pan;
+        userDoc.passport = req.body.passport;
+        userDoc.medical = req.body.medical;
+        userDoc.voterId = req.body.voterId;
+        userDoc.others = req.body.others;
+
+        await userDocumentOperations.updateOrganization(userDoc._id,userDoc);
+        return res.status(200).json({ success: 1, message: "Documents Updated Successfully" });
+      } catch (error) {
+        return res.status(400).json({ success: 0, message: "Details not found" });
+      }
+    }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+
+};
 
 
-module.exports = { attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
+module.exports = { addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
