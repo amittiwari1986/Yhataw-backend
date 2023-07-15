@@ -1,6 +1,7 @@
 const express = require("express")
 const Routes = express.Router()
 const userController = require("../controller/userController")
+const uploadController = require("../controller/uploadController")
 const {verifyTokenAndAuthoreization,verifyTokenAndAdmin,verifyToken} = require("../utils/verifyToken")
 Routes.put("/updateUser/:id",verifyTokenAndAuthoreization,userController.updateUser)
 Routes.delete("/deleteUser/:id",verifyTokenAndAuthoreization,userController.deleteUser)
@@ -19,5 +20,6 @@ Routes.get("/findUserAttendance",verifyToken,userController.getUserAttendanceByI
 
 Routes.get("/getUserApplyLeaveByIds/:id",verifyTokenAndAuthoreization,userController.getUserApplyLeaveByIds)
 Routes.get("/getOrganizationByIds",userController.getOrganizationByIds)
+Routes.post("/upload-image",uploadController.uploadImage)
 
 module.exports = Routes
