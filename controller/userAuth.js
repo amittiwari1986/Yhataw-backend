@@ -7,6 +7,8 @@ const userSalaryDeclarationOperations = require("../services/userSalaryDeclarati
 const userLoanDeclarationOperations = require("../services/userLoanDeclarationService");
 const userAttendanceOperations = require("../services/userAttendanceService");
 const organizationOperations = require("../services/organizationService");
+const userSalaryOperations = require("../services/userSalaryService");
+const roleOperations = require("../services/roleService");
 const userTokens = require("../services/userTokenService");
 const userDocumentOperations = require("../services/userDocumentService");
 const User = require("../dto/userdto");
@@ -20,6 +22,8 @@ const UserLoanDeclaration = require("../dto/userloandeclarationto");
 const UserAttendance = require("../dto/userattendanceto");
 const Organization = require("../dto/organizationto");
 const UserDocument = require("../dto/userdocumentto");
+const UserSalary = require("../dto/usersalaryto");
+const Role = require("../dto/roleto");
 const bcrypt = require("../utils/encrypt");
 const token = require("../utils/token");
 const otpGenerator = require('otp-generator');
@@ -1655,5 +1659,280 @@ const getUserDoc= async (req, res) => {
         }
     };
 
+    const addRole = (req, res) => {
+  // let id = req.body.userId;
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
-module.exports = { getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    const promise = userOperations.getUserById(setdata);
+    promise
+      .then((data) => {
+        // console.log(data);
+        if(data){
+          const role = new Role(
+            req.body.role_name,
+            req.body.description,
+          );
+          const promise = roleOperations.addRole(role);
+          promise
+            .then((data) => {
+              res.status(201).json({
+                message: "Save Successfully",
+                success: 1,
+                data: data,
+              });
+            })
+            .catch((err) => {
+              res.status(400).json({message: err.message, success: 0, error_msg: err.message});
+              
+            });
+        }else{
+                return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+            }
+        
+      })
+      .catch((err) => {
+          res.status(500).json({message: "Please check userId", success: 0, error_msg: err.message});
+      });
+    }
+  };
+
+const updateRole= async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    let data;
+    let id = req.body.id;
+      try {
+        let userDoc = await roleOperations.getRoleById(id);
+        console.log(userDoc);
+
+        if (!userDoc) {
+          return res.status(400).json({ success: 0, message: "User Document not found" });
+        }
+        if(req.body.role_name != '' || req.body.role_name != undefined){
+          userDoc.role_name = req.body.role_name;
+        }
+        if(req.body.description != '' || req.body.description != undefined){
+          userDoc.description = req.body.description;
+        }
+        if(req.body.info != '' || req.body.info != undefined){
+          userDoc.info = req.body.info;
+        }
+        
+        
+        await roleOperations.updateRole(userDoc._id,userDoc);
+        return res.status(200).json({ success: 1, message: "Role Updated Successfully" });
+      } catch (error) {
+        return res.status(400).json({ success: 0, message: "Details not found" });
+      }
+    }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+
+};
+
+const getRole= async (req, res) => {
+        let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+            let id = req.params.id
+            if(id){
+              const promise = roleOperations.getRoleById(id)
+              promise
+              .then((data)=>{
+                  // console.log(data)
+                  const {others} = data._doc
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                      }) 
+                 
+                  
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Data not found", success: 0});
+              })
+            }else{
+              const query = req.query.new;
+              const promise = roleOperations.getAllRole(query)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  //const {others} = data._doc
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                      }) 
+                 
+                  
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Data not found", success: 0});
+              })
+
+            }
+            
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+    };
+
+    const createSalary = (req, res) => {
+    // let id = req.body.userId;
+    let token=req.headers.token;
+    let setdata = "";
+    if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+      jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+        if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        
+        // return res.status(200).send(decoded.id.id);
+        setdata = decoded.id.id;
+    });
+    if(setdata){
+      const promise = userOperations.getUserById(setdata);
+      promise
+        .then((data) => {
+          // console.log(data);
+          if(data){
+            // const userSalary = new UserSalary(
+            //   req.body.userId,
+            //   req.body.basic,
+            //   req.body.HRA,
+            //   req.body.medical_allowance,
+            //   req.body.conbeyance_allowance,
+            //   req.body.special_allowance,
+            //   req.body.others,
+            //   req.body.EPF_deduction,
+            //   req.body.ESI_deduction,
+            //   req.body.i_tax,
+            //   req.body.loan_deduction, 
+            //   req.body.total_salary,
+            //   req.body.total_deduction,
+            //   req.body.net_pay,
+            // );
+             const userSalary = new UserSalary(
+              "6480c4358c11a8d727f73fbb",
+              20000.00,
+              20000.00,
+              10000.00,
+              0.00,
+              1000.00,
+              0.00,
+              1200.00,
+              200.00,
+              0.00,
+              2000.00, 
+              50000.00,
+              3400.00,
+              46600.00,
+            );
+            const promise = userSalaryOperations.addUserSalary(userSalary);
+            promise
+              .then((data) => {
+                res.status(201).json({
+                  message: "Save Successfully",
+                  success: 1,
+                  data: data,
+                });
+              })
+              .catch((err) => {
+                res.status(400).json({message: err.message, success: 0, error_msg: err.message});
+                
+              });
+          }else{
+                  return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+              }
+          
+        })
+        .catch((err) => {
+            res.status(500).json({message: "Please check userId", success: 0, error_msg: err.message});
+        });
+      }
+    };
+
+    const getSalary= async (req, res) => {
+        let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+            let id = req.params.id
+            if(id){
+              const promise = userSalaryOperations.getUserSalaryById(id)
+              promise
+              .then((data)=>{
+                  // console.log(data)
+                  const {others} = data._doc
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                      }) 
+                 
+                  
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Data not found", success: 0});
+              })
+            }else{
+              const query = req.query.new;
+              const promise = userSalaryOperations.getAllUserSalary(query)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  //const {others} = data._doc
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                      }) 
+                 
+                  
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Data not found", success: 0});
+              })
+
+            }
+            
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+    };
+
+
+module.exports = { createSalary,getSalary,getRole,addRole,updateRole,getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };

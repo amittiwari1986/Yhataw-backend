@@ -12,14 +12,18 @@ const userSalarySerives = {
         const promise = UserSalaryModel.findByIdAndDelete(id);
         return promise
     },
-    async findOneUserId(userId){
+    async findOneUserSalaryId(userId){
         const promise = await UserSalaryModel.findOne({userId})
         return promise 
     },
     async getUserSalaryById(id){
         const promise = await UserSalaryModel.findById(id)
         return promise
-    }
+    },
+    async getAllUserSalary(query){
+        const promise = query ? await UserSalaryModel.find().sort({_id:-1}).limit(5): await UserSalaryModel.find()
+        return promise
+    },
 }
 
 module.exports = userSalarySerives;

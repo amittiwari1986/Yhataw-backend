@@ -32,6 +32,15 @@ Routes.post("/addUserDoc",userAuth.addUserDoc)
 Routes.put("/updateUserDoc",userAuth.updateUserDoc)
 Routes.get("/getUserDoc/:id",userAuth.getUserDoc)
 
+Routes.post("/addRole",userAuth.addRole)
+Routes.put("/updateRole",userAuth.updateRole)
+Routes.get("/getRole/:id",userAuth.getRole)
+Routes.get("/getRole",userAuth.getRole)
+
+Routes.post("/createSalary",userAuth.createSalary)
+Routes.get("/getSalary",userAuth.getSalary)
+Routes.get("/getSalary/:id",userAuth.getSalary)
+
 module.exports = Routes
 
 
