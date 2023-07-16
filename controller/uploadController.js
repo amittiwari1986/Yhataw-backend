@@ -3,6 +3,7 @@ const aws = require("aws-sdk");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
+const uploadfile = multer({ dest: 'uploads/' })
 
 aws.config.update({
 	secretAccessKey: 'pSD+OEcgsCzItA1bVzIuDICxg/bM+U1hps19638Q',
@@ -32,9 +33,9 @@ var upload = multer({
 
 const uploadImage = async (req, res) => {
 
+var dg = uploadfile.single('file')
 
-
-	console.log(req);
+	console.log(dg.file);
 return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
 	// upload.single('file')
 

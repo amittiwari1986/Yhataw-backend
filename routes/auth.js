@@ -28,6 +28,10 @@ Routes.put("/updateOrganization",userAuth.updateOrganization)
 Routes.put("/addAttendenceSheetMonthWise",userAuth.addAttendanceDummy)
 Routes.put("/attendanceApprove",userAuth.attendanceApprove)
 Routes.put("/leaveApprove",userAuth.leaveApprove)
+Routes.post("/addUserDoc",userAuth.addUserDoc)
+Routes.put("/updateUserDoc",userAuth.updateUserDoc)
+Routes.get("/getUserDoc/:id",userAuth.getUserDoc)
+
 module.exports = Routes
 
 

@@ -1,6 +1,6 @@
 class UserDocument{
     constructor(userId,aadhar,pan,passport,medical,voterId,others){
-        this.stateId = stateId
+        this.userId = userId
         this.aadhar = aadhar
         this.pan = pan
         this.passport = passport
