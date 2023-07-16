@@ -31,9 +31,9 @@ const addProjectDetail = async (req, res) => {
 
     let projectCheck = await projectDetailOperations.findOneProjectId(req.body.projectId);
     console.log(projectCheck);
-    if(projectCheck){
-      return res.status(400).json({message: "duplicate data Please check name", success: 0});
-    }
+    // if(projectCheck){
+    //   return res.status(400).json({message: "duplicate data Please check name", success: 0});
+    // }
 
     let status = 1;
     const projectDetail = new ProjectDetail(
