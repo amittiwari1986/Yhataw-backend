@@ -16,6 +16,8 @@ const connection  = require('../connect');
      total_salary:{type:Schema.Types.Number,required:true},
      total_deduction:{type:Schema.Types.Number,required:true},
      net_pay:{type:Schema.Types.Number,required:true},
+     month:{type:Schema.Types.Number,required:true},
+     year:{type:Schema.Types.Number,required:true},
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
  

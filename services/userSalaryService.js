@@ -16,6 +16,10 @@ const userSalarySerives = {
         const promise = await UserSalaryModel.findOne({userId})
         return promise 
     },
+    async findUserSalaryId(userId){
+        const promise = await UserSalaryModel.find({"userId": userId})
+        return promise 
+    },
     async getUserSalaryById(id){
         const promise = await UserSalaryModel.findById(id)
         return promise

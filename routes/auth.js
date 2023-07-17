@@ -38,8 +38,8 @@ Routes.get("/getRole/:id",userAuth.getRole)
 Routes.get("/getRole",userAuth.getRole)
 
 Routes.post("/createSalary",userAuth.createSalary)
-Routes.get("/getSalary",userAuth.getSalary)
-Routes.get("/getSalary/:id",userAuth.getSalary)
+Routes.get("/getSalary/:userId",userAuth.getSalary)
+Routes.get("/getSalary/:userId/:id",userAuth.getSalary)
 
 module.exports = Routes
 

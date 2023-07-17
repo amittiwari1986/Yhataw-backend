@@ -1680,6 +1680,7 @@ const getUserDoc= async (req, res) => {
           const role = new Role(
             req.body.role_name,
             req.body.description,
+            JSON.stringify(req.body.info),
           );
           const promise = roleOperations.addRole(role);
           promise
@@ -1687,6 +1688,7 @@ const getUserDoc= async (req, res) => {
               res.status(201).json({
                 message: "Save Successfully",
                 success: 1,
+                info: JSON.parse(data.info),
                 data: data,
               });
             })
@@ -1719,9 +1721,10 @@ const updateRole= async (req, res) => {
   if(setdata){
     let data;
     let id = req.body.id;
-      try {
+      // try {
         let userDoc = await roleOperations.getRoleById(id);
-        console.log(userDoc);
+        console.log(req.body.info);
+        // console.log(JSON.stringify(req.body.info));
 
         if (!userDoc) {
           return res.status(400).json({ success: 0, message: "User Document not found" });
@@ -1733,15 +1736,15 @@ const updateRole= async (req, res) => {
           userDoc.description = req.body.description;
         }
         if(req.body.info != '' || req.body.info != undefined){
-          userDoc.info = req.body.info;
+          userDoc.info = JSON.stringify(req.body.info);
         }
         
         
         await roleOperations.updateRole(userDoc._id,userDoc);
         return res.status(200).json({ success: 1, message: "Role Updated Successfully" });
-      } catch (error) {
-        return res.status(400).json({ success: 0, message: "Details not found" });
-      }
+      // } catch (error) {
+      //   return res.status(400).json({ success: 0, message: "Details not found" });
+      // }
     }else{
             return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
@@ -1767,8 +1770,25 @@ const getRole= async (req, res) => {
               .then((data)=>{
                   // console.log(data)
                   const {others} = data._doc
+                  // const dfg = JSON.parse(data);
+                  // console.log(data)
+                  //   data1 =  data.map(function(element){
+                  //   console.log(element);
+                  //     return JSON.parse(element.info);
+                  // });
+                  // console.log(data1);
+                  // const objectToArray = Object.keys(data)
+                  // objectToArray.map( function(key, index){
+                  //   console.log(key); 
+                  //   //objectToArray[key] = JSON.parse(objectToArray[key])
+                  // } ) 
+                  // data.forEach(element => {
+                  //    console.log(element);
+                  // });
+                   // console.log(data.info); 
                   res.status(200).json({
-                      data: data,
+                     data: data,
+                      info: JSON.parse(data.info),
                       success: 1
                       }) 
                  
@@ -1839,7 +1859,7 @@ const getRole= async (req, res) => {
             //   req.body.net_pay,
             // );
              const userSalary = new UserSalary(
-              "6480c4358c11a8d727f73fbb",
+              "64807274ee4348490a2181e1",
               20000.00,
               20000.00,
               10000.00,
@@ -1853,6 +1873,8 @@ const getRole= async (req, res) => {
               50000.00,
               3400.00,
               46600.00,
+              2,
+              2023,
             );
             const promise = userSalaryOperations.addUserSalary(userSalary);
             promise
@@ -1891,12 +1913,16 @@ const getRole= async (req, res) => {
         });
         if(setdata){
             let id = req.params.id
-            if(id){
-              const promise = userSalaryOperations.getUserSalaryById(id)
+            let uid = req.params.userId
+            if(!uid){
+              res.status(500).json({message: "User Id not found", success: 0});
+            }
+            if(!id){
+              const promise = userSalaryOperations.findUserSalaryId(uid)
               promise
               .then((data)=>{
                   // console.log(data)
-                  const {others} = data._doc
+                  // const {others} = data._doc
                   res.status(200).json({
                       data: data,
                       success: 1
@@ -1910,7 +1936,7 @@ const getRole= async (req, res) => {
               })
             }else{
               const query = req.query.new;
-              const promise = userSalaryOperations.getAllUserSalary(query)
+              const promise = userSalaryOperations.getUserSalaryById(id)
               promise
               .then((data)=>{
                   console.log(data)
