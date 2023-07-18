@@ -1751,6 +1751,17 @@ const updateRole= async (req, res) => {
 
 };
 
+function someFunction(parameter) {
+  // create array of promises
+  return parameter.info.map((info) =>
+    fetch(info)
+      // parse JSON
+      .then((res) => res.json())
+      // Merge data with url property
+      .then((data) => ({ ...data, info }))
+  );
+}
+
 const getRole= async (req, res) => {
         let token=req.headers.token;
         let setdata = "";
@@ -1768,31 +1779,13 @@ const getRole= async (req, res) => {
               const promise = roleOperations.getRoleById(id)
               promise
               .then((data)=>{
-                  // console.log(data)
-                  const {others} = data._doc
-                  // const dfg = JSON.parse(data);
-                  // console.log(data)
-                  //   data1 =  data.map(function(element){
-                  //   console.log(element);
-                  //     return JSON.parse(element.info);
-                  // });
-                  // console.log(data1);
-                  // const objectToArray = Object.keys(data)
-                  // objectToArray.map( function(key, index){
-                  //   console.log(key); 
-                  //   //objectToArray[key] = JSON.parse(objectToArray[key])
-                  // } ) 
-                  // data.forEach(element => {
-                  //    console.log(element);
-                  // });
-                   // console.log(data.info); 
+                let sendData = {};
+                sendData = {"_id": data._id,"role_name": data.role_name,"description": data.description,"info": JSON.parse(data.info)}
                   res.status(200).json({
-                     data: data,
-                      info: JSON.parse(data.info),
+                     data: sendData,
                       success: 1
                       }) 
-                 
-                  
+               
               })
               .catch((err)=>{
                   // console.log(err.message)
