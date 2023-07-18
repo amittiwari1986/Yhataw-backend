@@ -12,8 +12,8 @@ const roleServices = {
         const promise = roleModel.findByIdAndDelete(id);
         return promise
     },
-    async findOneRoleId(userId){
-        const promise = await roleModel.findOne({userId})
+    async findOneRoleId(roleId){
+        const promise = await roleModel.findOne({roleId})
         return promise 
     },
     async findRoleId(stateId){

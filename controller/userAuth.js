@@ -529,6 +529,8 @@ const loginUser = async (req, res) => {
         }else{
           role = "User";
         }
+        const userRole = await roleOperations.findOneRoleId(user.userRole);
+        // console.log(userRole);
         user = {
           _id: user._id,
           accessToken,
@@ -537,6 +539,7 @@ const loginUser = async (req, res) => {
           role: role,
           lastUpdate: new Date(),
           name: user.name,
+          role_privileges: JSON.parse(userRole.info),
         };
         data = {
           data: { user },
