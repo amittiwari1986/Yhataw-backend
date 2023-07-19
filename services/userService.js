@@ -39,7 +39,7 @@ const userSerives = {
                 "dob": { "$toString": "$dob" },
                 "status": { "$toString": "$status" },
                 "country": { "$toString": "$country_id" },
-                "state": { "$toString": "state_id" },
+                "state": { "$toString": "$state_id" },
                 "city": { "$toString": "$city" },
                 "in_complete": { "$toString": "$in_complete" },
                 "updatedAt": { "$toString": "$updatedAt" },
