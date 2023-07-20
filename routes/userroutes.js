@@ -40,9 +40,9 @@ var upload = multer({
         s3: s3,
         acl: 'public-read',
         bucket: 'team-document',
-        
+        contentType: multerS3.AUTO_CONTENT_TYPE,
          metadata: function (req, file, cb) {
-	      cb(null, { fieldName: file.fieldname });
+	      cb(null, { fieldName: file.fieldname});
 	    },
 	    key: function (req, file, cb) {
 	      cb(null, shortId.generate() + '-' + file.originalname);

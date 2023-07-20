@@ -71,4 +71,42 @@ const userSerives = {
     }
 }
 
+
 module.exports = userSerives;
+
+// [
+//             { "$project": { "user_id": { "$toString": "$_id" },
+//                 "name": { "$toString": "$name" },
+//                 "phone": { "$toString": "$phone" },
+//                 "email": { "$toString": "$email" },
+//                 "whatsapp": { "$toString": "$whatsapp" },
+//                 "employee_id": { "$toString": "$employee_id" },
+//                 "doj": { "$toString": "$doj" },
+//                 "dob": { "$toString": "$dob" },
+//                 "status": { "$toString": "$status" },
+//                 "country": { "$toString": "$country_id" },
+//                 "state": { "$toString": "$state_id" },
+//                 "city": { "$toString": "$city" },
+//                 "in_complete": { "$toString": "$in_complete" },
+//                 "updatedAt": { "$toString": "$updatedAt" },
+//             }},
+//                 {$lookup: 
+//                     {from: "user_leaves", 
+//                     localField: "user_id", 
+//                     foreignField: "userId", 
+//                     as: "leaves"}
+//                 },
+//                 {$lookup: 
+//                     {from: "user_offices", 
+//                     localField: "user_id", 
+//                     foreignField: "userId", 
+//                     as: "userOffices"}
+//                 },
+//                 {
+//                     $set: {
+//                       emp_type: { "$arrayElemAt": ["$userOffices.emp_type", 0] },
+//                       total_leave: { "$arrayElemAt": ["$leaves.total_leave", 0] },
+//                       earned_leave: { "$arrayElemAt": ["$leaves.earned_leave", 0] },
+//                     }
+//                   },
+//                 { $sort : { updatedAt : -1} }])
