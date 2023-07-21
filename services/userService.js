@@ -71,7 +71,6 @@ const userSerives = {
     }
 }
 
-
 module.exports = userSerives;
 
 // [

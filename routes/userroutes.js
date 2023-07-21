@@ -50,7 +50,6 @@ var upload = multer({
     })
 });
 
-
 Routes.put("/updateUser/:id",verifyTokenAndAuthoreization,userController.updateUser)
 Routes.delete("/deleteUser/:id",verifyTokenAndAuthoreization,userController.deleteUser)
 Routes.get("/allUser",userController.fetchAllUser)
