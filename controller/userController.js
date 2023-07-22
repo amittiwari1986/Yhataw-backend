@@ -260,25 +260,57 @@ const userController = {
             const promise = UserLeaveService.findOneUserId(id)
             promise
             .then((data)=>{
-                // console.log(data)
-                const {others} = data._doc
-                res.status(200).json({
-                    data: data,
-                    success: 1
-                    }) 
-                // if(data.length > 0){
-                //    res.status(200).json({
+                console.log(data)
+                // const {others} = data._doc
+
+                  let convertData = [];
+                    convertData.push(data);
+                    data = convertData;
+                  let arr = [];
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+
+                    var dataArray = {};
+                    dataArray['_id'] = req._id;
+                    dataArray['total_leave'] = req.total_leave; 
+                    dataArray['earned_leave'] = req.earned_leave; 
+                    dataArray['sick_leave'] = req.sick_leave; 
+                    dataArray['casual_leave'] = req.casual_leave;  
+                    dataArray['total_leave_available'] = req.total_leave_available; 
+                    dataArray['earned_leave_available'] = req.earned_leave_available;
+                    dataArray['sick_leave_available'] = req.sick_leave_available; 
+                    dataArray['casual_leave_available'] = req.casual_leave_available; 
+                    dataArray['createdAt'] = req.createdAt;
+                    dataArray['updatedAt'] = req.updatedAt;    
+
+                    if(req.userId){
+                      var userData = await UserService.getUserById(req.userId);
+                      dataArray['userId'] = req.userId;
+                      dataArray['user_name'] = userData.name;
+                    }
+
+                     arr.push(dataArray);
+                    return arr;
+
+                 })).then((responseText) => {
+                  // console.log(responseText[0][0]);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0][0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+                // res.status(200).json({
                 //     data: data,
                 //     success: 1
                 //     }) 
-                // }else{
-                //     res.status(200).json({
-                //     data: [],
-                //     message: "No Data found",
-                //     success: 0
-                //     }) 
-                // }
-                
             })
             .catch((err)=>{
                 // console.log(err.message)
@@ -518,28 +550,131 @@ const userController = {
         });
         if(setdata){
             let userId = req.params.id
-            const promise = UserApplyLeaveService.findUserId(userId)
-            promise
-            .then((data)=>{
-                console.log(data)
-                if(data.length > 0){
-                   res.status(200).json({
-                    data: data,
-                    success: 1
-                    }) 
+           
+                if(userId){
+                    // console.log(userId)
+                const promise = UserApplyLeaveService.findUserApplyLeaveId(userId)
+                    promise
+                    .then((data)=>{
+                        // console.log(data)
+
+                  let arr = [];
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+
+
+                    var dataArray = {};
+                    dataArray['_id'] = req._id;
+                    dataArray['leave_type'] = req.leave_type; 
+                    dataArray['from_date'] = req.from_date; 
+                    dataArray['to_date'] = req.to_date; 
+                    dataArray['comments'] = req.comments;  
+                    dataArray['total_days'] = req.total_days; 
+                    dataArray['is_status'] = req.is_status;
+                    dataArray['createdAt'] = req.createdAt;
+                    dataArray['updatedAt'] = req.updatedAt;    
+
+                    if(req.userId){
+                      var userData = await UserService.getUserById(req.userId);
+                      dataArray['userId'] = req.userId;
+                      dataArray['user_name'] = userData.name;
+                    }
+
+                     arr.push(dataArray);
+                    return arr;
+
+                 })).then((responseText) => {
+                  // console.log(responseText);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+                 })
+                .catch((err)=>{
+                    // console.log(err.message)
+                    res.status(500).json({message: "No Data found", success: 0});
+                })
                 }else{
-                    res.status(200).json({
-                    data: [],
-                    message: "No Data found",
-                    success: 0
-                    }) 
-                }
-                
-            })
+                    const query = req.query.new 
+                const promise = UserApplyLeaveService.getAllUserApplyLeave(query)
+                    promise
+                    .then((data)=>{
+                        console.log(data)
+
+
+                    // let convertData = [];
+                    // convertData.push(data);
+                    // data = convertData;
+                  let arr = [];
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+
+                    var dataArray = {};
+                    dataArray['_id'] = req._id;
+                    dataArray['leave_type'] = req.leave_type; 
+                    dataArray['from_date'] = req.from_date; 
+                    dataArray['to_date'] = req.to_date; 
+                    dataArray['comments'] = req.comments;  
+                    dataArray['total_days'] = req.total_days; 
+                    dataArray['is_status'] = req.is_status;
+                    dataArray['createdAt'] = req.createdAt;
+                    dataArray['updatedAt'] = req.updatedAt;    
+
+                    if(req.userId){
+                      var userData = await UserService.getUserById(req.userId);
+                      dataArray['userId'] = req.userId;
+                      dataArray['user_name'] = userData.name;
+                    }
+
+                     arr.push(dataArray);
+                    return arr;
+
+                 })).then((responseText) => {
+                  // console.log(responseText[0][0]);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+                 })
             .catch((err)=>{
                 // console.log(err.message)
                 res.status(500).json({message: "No Data found", success: 0});
             })
+
+                }
+                
+                // if(data.length > 0){
+                //    res.status(200).json({
+                //     data: data,
+                //     success: 1
+                //     }) 
+                // }else{
+                //     res.status(200).json({
+                //     data: [],
+                //     message: "No Data found",
+                //     success: 0
+                //     }) 
+                // }
+                
+            
         }else{
             return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }

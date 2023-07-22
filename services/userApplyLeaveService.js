@@ -12,18 +12,22 @@ const userApplyLeaveSerives = {
         const promise = UserApplyLeaveModel.findByIdAndDelete(id);
         return promise
     },
-    async findOneUserId(userId){
+    async findOneUserApplyLeaveId(userId){
         const promise = await UserApplyLeaveModel.findOne({userId})
         return promise 
     },
-    async findUserId(userId){
+    async findUserApplyLeaveId(userId){
         const promise = await UserApplyLeaveModel.find({userId})
         return promise 
     },
     async getUserApplyLeaveById(id){
         const promise = await UserApplyLeaveModel.findById(id)
         return promise
-    }
+    },
+     async getAllUserApplyLeave(query){
+        const promise = query ? await UserApplyLeaveModel.find().sort({_id:-1}).limit(5): await UserApplyLeaveModel.find()
+        return promise
+     }
 }
 
 module.exports = userApplyLeaveSerives;

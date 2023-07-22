@@ -1919,10 +1919,89 @@ const getRole= async (req, res) => {
               .then((data)=>{
                   // console.log(data)
                   // const {others} = data._doc
-                  res.status(200).json({
-                      data: data,
-                      success: 1
-                      }) 
+
+                 // let convertData = [];
+                 //    convertData.push(data);
+                 //    data = convertData;
+                  let arr = [];
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+
+                    var dataArray = {};
+                    dataArray['_id'] = req._id;
+                    dataArray['userId'] = req.userId; 
+                    dataArray['basic'] = req.basic; 
+                    dataArray['HRA'] = req.HRA; 
+                    dataArray['medical_allowance'] = req.medical_allowance; 
+                    dataArray['conbeyance_allowance'] = req.conbeyance_allowance;  
+                    dataArray['special_allowance'] = req.special_allowance; 
+                    dataArray['others'] = req.others;
+                    dataArray['EPF_deduction'] = req.EPF_deduction; 
+                    dataArray['ESI_deduction'] = req.ESI_deduction;
+                    dataArray['i_tax'] = req.i_tax;
+                    dataArray['loan_deduction'] = req.loan_deduction;
+                    dataArray['total_salary'] = req.total_salary;
+                    dataArray['total_salary'] = req.total_salary; 
+                    dataArray['net_pay'] = req.net_pay;
+                    dataArray['month'] = req.month;
+                    dataArray['year'] = req.year;
+                    dataArray['createdAt'] = req.createdAt;
+                    dataArray['updatedAt'] = req.updatedAt;    
+
+                    if(req.userId){
+                      var userData = await userOperations.getUserById(req.userId);
+                      dataArray['user_name'] = userData.name;
+                      var userOfficeData = await userOfficeOperations.getUserOfficeById(req.userId);
+                      console.log(userOfficeData);
+                      if(userOfficeData){
+                        dataArray['emp_type'] = userOfficeData.emp_type;
+                        dataArray['department'] = userOfficeData.department;
+                        dataArray['designation'] = userOfficeData.designation;
+                        dataArray['joining'] = userOfficeData.joining;
+                      }else{
+                        dataArray['emp_type'] = '';
+                        dataArray['department'] = '';
+                        dataArray['designation'] = '';
+                        dataArray['joining'] = '';
+                      }
+                      
+                      var userSalaryDeclarationData = await userSalaryDeclarationOperations.getUserSalaryDeclarationById(req.userId);
+                      
+                      if(userSalaryDeclarationData){
+                        dataArray['EPF_no'] = userSalaryDeclarationData.EPF_no;
+                        dataArray['ESI_no'] = userSalaryDeclarationData.ESI_no;
+                      }else{
+                        dataArray['EPF_no'] = '';
+                        dataArray['ESI_no'] = '';
+                      }
+                      dataArray['working_days'] = '';
+                      dataArray['absence'] = '';
+                      dataArray['leave'] = '';
+                    }
+                    // console.log(dataArray);
+
+                     arr.push(dataArray);
+                    return arr;
+
+                 })).then((responseText) => {
+                  // console.log(responseText[0][0]);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0][0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+                  // res.status(200).json({
+                  //     data: data,
+                  //     success: 1
+                  //     }) 
                  
                   
               })

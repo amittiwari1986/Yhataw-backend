@@ -65,7 +65,8 @@ Routes.get("/findUserLoanDeclaration/:id",verifyTokenAndAuthoreization,userContr
 Routes.get("/findUserAttendance/:id",verifyToken,userController.getUserAttendanceByIds)
 Routes.get("/findUserAttendance",verifyToken,userController.getUserAttendanceByIds)
 
-Routes.get("/getUserApplyLeaveByIds/:id",verifyTokenAndAuthoreization,userController.getUserApplyLeaveByIds)
+Routes.get("/getUserApplyLeaveByIds/:id",verifyToken,userController.getUserApplyLeaveByIds)
+Routes.get("/getUserApplyLeaveByIds",verifyToken,userController.getUserApplyLeaveByIds)
 Routes.get("/getOrganizationByIds",userController.getOrganizationByIds)
 // Routes.post("/upload-image",uploadController.uploadImage)
 
