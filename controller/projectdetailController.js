@@ -1,5 +1,29 @@
 const projectDetailOperations = require("../services/projectDetailsService");
 const ProjectDetail = require("../dto/projectdetailsto");
+const countryOperations = require("../services/countryService");
+const Country = require("../dto/countryto");
+const stateOperations = require("../services/stateService");
+const State = require("../dto/stateto");
+const cityOperations = require("../services/cityService");
+const City = require("../dto/cityto");
+const designationOperations = require("../services/designationService");
+const Designation = require("../dto/designationto");
+const departmentOperations = require("../services/departmentService");
+const Department = require("../dto/departmentto");
+const timezoneOperations = require("../services/timezoneService");
+const Timezone = require("../dto/timezoneto");
+const propertyTypeOperations = require("../services/propertyTypeService");
+const PropertyType = require("../dto/propertytypeto");
+const propertyUnitTypeOperations = require("../services/propertyUnitTypeService");
+const PropertyUnitType = require("../dto/propertyunittypeto");
+const propertyStatusOperations = require("../services/propertyStatusService");
+const PropertyStatus = require("../dto/propertystatusto");
+const propertyForOperations = require("../services/propertyForService");
+const PropertyFor = require("../dto/propertyforto");
+const developerOperations = require("../services/developerService");
+const Developer = require("../dto/developerto");
+const projectOperations = require("../services/projectService");
+const Project = require("../dto/projectto");
 const bcrypt = require("../utils/encrypt");
 const token = require("../utils/token");
 const otpGenerator = require('otp-generator');
@@ -45,6 +69,12 @@ const addProjectDetail = async (req, res) => {
       req.body.description,
       req.body.location,
       status,
+      'NA',
+      'NA',
+      'NA',
+      'NA',
+      '',
+      '',
     );
 
 
@@ -152,6 +182,88 @@ const updateProjectDetail = async (req, res) => {
 
 };
 
+
+   // function updateUser(req){
+
+   //  var dataArray = {}; 
+   //  if(req.projectId != '' || req.projectId != undefined){
+   //    var projectData = await projectOperations.getProjectById(req.projectId);
+   //    dataArray['projectId'] = req.projectId;
+   //    dataArray['project_name'] = projectData.project_name;
+   //  }else{
+   //    dataArray['projectId'] = '';
+   //    dataArray['project_name'] = '';
+   //  }
+   //  if(req.developerId != '' || req.developerId != undefined){
+   //    var developerData = await developerOperations.getDeveloperById(req.developerId);
+   //    dataArray['developerId'] = req.developerId;
+   //    dataArray['developer_name'] = developerData.developer_name;
+   //  }else{
+   //    dataArray['developerId'] = '';
+   //    dataArray['developer_name'] = '';
+   //  }
+   //  if(req.countryId != '' || req.countryId != undefined){
+   //    var countryData = await countryOperations.getcountryById(req.countryId);
+   //    dataArray['countryId'] = req.countryId;
+   //    dataArray['country_name'] = countryData.country_name;
+   //  }else{
+   //    dataArray['countryId'] = '';
+   //    dataArray['country_name'] = '';
+   //  }
+   //  if(req.stateId != '' || req.stateId != undefined){
+   //    var stateData = await stateOperations.getstateById(req.stateId);
+   //    dataArray['stateId'] = req.stateId;
+   //    dataArray['state_name'] = stateData.state_name;
+   //  }else{
+   //    dataArray['stateId'] = '';
+   //    dataArray['state_name'] = '';
+   //  }
+   //  dataArray['city'] = req.city;
+   //  dataArray['description'] = req.description;
+   //  dataArray['status'] = req.status;
+
+   //   if(req.projectforId != '' || req.projectforId != undefined){
+   //    var projectForData = await propertyForOperations.getPropertyForById(req.projectforId);
+   //    dataArray['projectforId'] = req.projectforId;
+   //    dataArray['property_for_name'] = projectForData.name;
+   //  }else{
+   //    dataArray['projectforId'] = '';
+   //    dataArray['property_for_name'] = '';
+   //  }
+   //   if(req.projectstatusId != '' || req.projectstatusId != undefined){
+   //    var projectStatusData = await propertyStatusOperations.getPropertyStatusById(req.projectstatusId);
+   //    dataArray['projectstatusId'] = req.projectstatusId;
+   //    dataArray['projectstatus_name'] = projectStatusData.name;
+   //  }else{
+   //    dataArray['projectstatusId'] = '';
+   //    dataArray['projectstatus_name'] = '';
+   //  }
+   //   if(req.projectunittypeId != '' || req.projectunittypeId != undefined){
+   //    var projectUnitTypeData = await propertyUnitTypeOperations.getPropertyUnitTypeById(req.projectunittypeId);
+   //    dataArray['projectunittypeId'] = req.projectunittypeId;
+   //    dataArray['projectunittype_name'] = projectUnitTypeData.name;
+   //  }else{
+   //    dataArray['projectunittypeId'] = '';
+   //    dataArray['projectunittype_name'] = '';
+   //  }
+   //   if(req.projectypeId != '' || req.projectypeId != undefined){
+   //    var projectTypeData = await propertyTypeOperations.getPropertyTypeById(req.projectypeId);
+   //    dataArray['projecttypeId'] = req.projectypeId;
+   //    dataArray['projecttype_name'] = projectTypeData.name;
+   //  }else{
+   //    dataArray['projecttypeId'] = '';
+   //    dataArray['projecttype_name'] = '';
+   //  }
+
+   //  dataArray['washroom'] = req.washroom;
+   //  dataArray['bathroom'] = req.bathroom;
+    
+   //  console.log(dataArray);
+        
+   //          return { data: dataArray, message: 'No token provided.', success: 0};
+        
+   //  };
+
 const getProjectDetail = (req, res) => {
   let token=req.headers.token;
         let setdata = "";
@@ -169,7 +281,6 @@ const getProjectDetail = (req, res) => {
                  const promise = projectDetailOperations.getProjectDetailById(id)
               promise
               .then((data)=>{
-                  console.log(data)
                   const {others} = data
                   res.status(200).json({
                       data: data,
@@ -181,24 +292,111 @@ const getProjectDetail = (req, res) => {
                   res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
               });
              }else{
+              
                const query = req.query.new 
               const promise = projectDetailOperations.getAllProjectDetail(query)
               promise
               .then((data)=>{
-                  console.log(data)
-                  const {others} = data
-                  if(data.length > 0){
-                   res.status(200).json({
-                    data: data,
-                    success: 1
-                    }) 
-                }else{
-                    res.status(200).json({
-                    data: [],
-                    message: "No Data found",
-                    success: 0
-                    }) 
-                }
+
+               
+                  let arr = [];
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+
+                    var dataArray = {}; 
+                    if(req.projectId != 'NA'){
+                      var projectData = await projectOperations.getProjectById(req.projectId);
+                      dataArray['projectId'] = req.projectId;
+                      dataArray['project_name'] = projectData.project_name;
+                    }else{
+                      dataArray['projectId'] = '';
+                      dataArray['project_name'] = '';
+                    }
+                    if(req.developerId != 'NA'){
+                      var developerData = await developerOperations.getDeveloperById(req.developerId);
+                      dataArray['developerId'] = req.developerId;
+                      dataArray['developer_name'] = developerData.developer_name;
+                    }else{
+                      dataArray['developerId'] = '';
+                      dataArray['developer_name'] = '';
+                    }
+                    if(req.countryId != 'NA'){
+                      var countryData = await countryOperations.getcountryById(req.countryId);
+                      dataArray['countryId'] = req.countryId;
+                      dataArray['country_name'] = countryData.country_name;
+                    }else{
+                      dataArray['countryId'] = '';
+                      dataArray['country_name'] = '';
+                    }
+                    if(req.stateId != 'NA'){
+                      var stateData = await stateOperations.getstateById(req.stateId);
+                      dataArray['stateId'] = req.stateId;
+                      dataArray['state_name'] = stateData.state_name;
+                    }else{
+                      dataArray['stateId'] = '';
+                      dataArray['state_name'] = '';
+                    }
+                    dataArray['city'] = req.city;
+                    dataArray['description'] = req.description;
+                    dataArray['status'] = req.status;
+
+                     if(req.projectforId != 'NA'){
+                      var projectForData = await propertyForOperations.getPropertyForById(req.projectforId);
+                      dataArray['projectforId'] = req.projectforId;
+                      dataArray['property_for_name'] = projectForData.name;
+                    }else{
+                      dataArray['projectforId'] = '';
+                      dataArray['property_for_name'] = '';
+                    }
+                    // console.log(req.projectstatusId);
+                     if(req.projectstatusId != 'NA'){
+                      var projectStatusData = await propertyStatusOperations.getPropertyStatusById(req.projectstatusId);
+                      dataArray['projectstatusId'] = req.projectstatusId;
+                      dataArray['projectstatus_name'] = projectStatusData.name;
+                    }else{
+                      dataArray['projectstatusId'] = '';
+                      dataArray['projectstatus_name'] = '';
+                    }
+                     if(req.projectunittypeId != 'NA'){
+                      var projectUnitTypeData = await propertyUnitTypeOperations.getPropertyUnitTypeById(req.projectunittypeId);
+                      dataArray['projectunittypeId'] = req.projectunittypeId;
+                      dataArray['projectunittype_name'] = projectUnitTypeData.name;
+                    }else{
+                      dataArray['projectunittypeId'] = '';
+                      dataArray['projectunittype_name'] = '';
+                    }
+                     if(req.projectypeId != 'NA'){
+                      var projectTypeData = await propertyTypeOperations.getPropertyTypeById(req.projectypeId);
+                      dataArray['projecttypeId'] = req.projectypeId;
+                      dataArray['projecttype_name'] = projectTypeData.name;
+                    }else{
+                      dataArray['projecttypeId'] = '';
+                      dataArray['projecttype_name'] = '';
+                    }
+
+                    dataArray['washroom'] = req.washroom;
+                    dataArray['bathroom'] = req.bathroom;
+                    
+                    arr.push(dataArray);
+                    return arr;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                  
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
               })
               .catch((err)=>{
                   // console.log(err.message)
@@ -208,6 +406,7 @@ const getProjectDetail = (req, res) => {
         }else{
             return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
+        //64ad9c7381d27d514b01e22c
 };
 
 module.exports = { addProjectDetail,updateProjectDetail,getProjectDetail };
