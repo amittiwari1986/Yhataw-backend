@@ -369,10 +369,10 @@ const getProjectDetail = (req, res) => {
                     }
                   )
                 ).then((responseText) => {
-                  
+                  // console.log(responseText[0][0]);
                     if(responseText.length > 0){
                          res.status(200).json({
-                          data: responseText[0],
+                          data: responseText[0][0],
                           success: 1
                           }) 
                       }else{
