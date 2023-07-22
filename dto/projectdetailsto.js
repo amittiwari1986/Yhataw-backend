@@ -1,5 +1,5 @@
 class ProjectDetails{
-    constructor(developerId,projectId,countryId,stateId,city,description,location,zipcode,status,projectforId,projectypeId,projectunittypeId,projectstatusId,bathroom,washroom,property_image,edm_image,property_broucher){
+    constructor(developerId,projectId,countryId,stateId,city,description,location,zipcode,status,projectforId,projecttypeId,projectunittypeId,projectstatusId,bathroom,washroom,property_image,edm_image,property_broucher){
         this.developerId = developerId
         this.projectId = projectId
         this.countryId = countryId
@@ -10,7 +10,7 @@ class ProjectDetails{
         this.zipcode = zipcode
         this.status = status
         this.projectforId = projectforId
-        this.projectypeId = projectypeId
+        this.projecttypeId = projecttypeId
         this.projectunittypeId = projectunittypeId
         this.projectstatusId = projectstatusId
         this.bathroom = bathroom

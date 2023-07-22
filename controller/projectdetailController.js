@@ -150,8 +150,8 @@ const updateProjectDetail = async (req, res) => {
         if(req.body.projectforId != '' || req.body.projectforId != undefined){
         	pDetails.projectforId = req.body.projectforId;
         }
-        if(req.body.projectypeId != '' || req.body.projectypeId != undefined){
-        	pDetails.projectypeId = req.body.projectypeId;
+        if(req.body.projecttypeId != '' || req.body.projecttypeId != undefined){
+        	pDetails.projecttypeId = req.body.projecttypeId;
         }
         if(req.body.projectunittypeId != '' || req.body.projectunittypeId != undefined){
         	pDetails.projectunittypeId = req.body.projectunittypeId;
@@ -355,9 +355,9 @@ const getProjectDetail = (req, res) => {
                       dataArray['projectunittypeId'] = '';
                       dataArray['projectunittype_name'] = '';
                     }
-                     if(req.projectypeId != 'NA'){
-                      var projectTypeData = await propertyTypeOperations.getPropertyTypeById(req.projectypeId);
-                      dataArray['projecttypeId'] = req.projectypeId;
+                     if(req.projecttypeId != 'NA'){
+                      var projectTypeData = await propertyTypeOperations.getPropertyTypeById(req.projecttypeId);
+                      dataArray['projecttypeId'] = req.projecttypeId;
                       dataArray['projecttype_name'] = projectTypeData.name;
                     }else{
                       dataArray['projecttypeId'] = '';
@@ -366,6 +366,10 @@ const getProjectDetail = (req, res) => {
 
                     dataArray['washroom'] = req.washroom;
                     dataArray['bathroom'] = req.bathroom;
+                    dataArray['zipcode'] = req.zipcode;
+                    dataArray['edm_image'] = req.edm_image;
+                    dataArray['property_broucher'] = req.property_broucher;
+                    dataArray['property_image'] = req.property_image;
                     
                     arr.push(dataArray);
                     return arr;
@@ -398,7 +402,7 @@ const getProjectDetail = (req, res) => {
               const promise = projectDetailOperations.getAllProjectDetail(query)
               promise
               .then((data)=>{
-               
+                // console.log(data);
                   let arr = [];
                  Promise.all(data.map(async (element) => {
                     var req = element;
@@ -466,9 +470,9 @@ const getProjectDetail = (req, res) => {
                       dataArray['projectunittypeId'] = '';
                       dataArray['projectunittype_name'] = '';
                     }
-                     if(req.projectypeId != 'NA'){
-                      var projectTypeData = await propertyTypeOperations.getPropertyTypeById(req.projectypeId);
-                      dataArray['projecttypeId'] = req.projectypeId;
+                     if(req.projecttypeId != 'NA'){
+                      var projectTypeData = await propertyTypeOperations.getPropertyTypeById(req.projecttypeId);
+                      dataArray['projecttypeId'] = req.projecttypeId;
                       dataArray['projecttype_name'] = projectTypeData.name;
                     }else{
                       dataArray['projecttypeId'] = '';
@@ -477,6 +481,8 @@ const getProjectDetail = (req, res) => {
 
                     dataArray['washroom'] = req.washroom;
                     dataArray['bathroom'] = req.bathroom;
+                    dataArray['zipcode'] = req.zipcode;
+                    dataArray['createdAt'] = req.createdAt;
                     
                     arr.push(dataArray);
                     return arr;

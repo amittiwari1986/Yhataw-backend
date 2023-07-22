@@ -12,7 +12,7 @@ const connection  = require('../connect');
      zipcode:{type:Schema.Types.String,required:[false, 'Please add location']},
      status:{type:Schema.Types.Number,required:[true, 'Please add status']},
      projectforId:{type:Schema.Types.String,required:[false, 'Please add projectforId']},
-     projectypeId:{type:Schema.Types.String,required:[false, 'Please add projectypeId']},
+     projecttypeId:{type:Schema.Types.String,required:[false, 'Please add projecttypeId']},
      projectunittypeId:{type:Schema.Types.String,required:[false, 'Please add projectunittypeId']},
      projectstatusId:{type:Schema.Types.String,required:[false, 'Please add projectstatusId']},
      bathroom:{type:Schema.Types.Number,required:[false, 'Please add bathroom']},
