@@ -288,7 +288,8 @@ const getProjectDetail = (req, res) => {
                  var arrrr = Promise.all(data.map(async (element) => {
                     var req = element;
 
-                    var dataArray = {}; 
+                    var dataArray = {};
+                    dataArray['_id'] = req._id; 
                     if(req.projectId != 'NA'){
                       var projectData = await projectOperations.getProjectById(req.projectId);
                       dataArray['projectId'] = req.projectId;
