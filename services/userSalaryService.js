@@ -12,8 +12,8 @@ const userSalarySerives = {
         const promise = UserSalaryModel.findByIdAndDelete(id);
         return promise
     },
-    async findOneUserSalaryId(userId){
-        const promise = await UserSalaryModel.findOne({userId})
+    async findOneUserSalaryId(id){
+        const promise = await UserSalaryModel.findOne({id})
         return promise 
     },
     async findUserSalaryId(userId){
