@@ -9,6 +9,7 @@ const connection  = require('../connect');
      city:{type:Schema.Types.String,required:[true, 'Please add city']},
      description:{type:Schema.Types.String,required:[false, 'Please add designation']},
      location:{type:Schema.Types.String,required:[false, 'Please add location']},
+     zipcode:{type:Schema.Types.String,required:[false, 'Please add location']},
      status:{type:Schema.Types.Number,required:[true, 'Please add status']},
      projectforId:{type:Schema.Types.String,required:[false, 'Please add projectforId']},
      projectypeId:{type:Schema.Types.String,required:[false, 'Please add projectypeId']},

@@ -68,6 +68,7 @@ const addProjectDetail = async (req, res) => {
       req.body.city,
       req.body.description,
       req.body.location,
+      req.body.zipcode,
       status,
       'NA',
       'NA',
@@ -139,6 +140,9 @@ const updateProjectDetail = async (req, res) => {
         }
         if(req.body.location != '' || req.body.location != undefined){
         	pDetails.location = req.body.location;
+        }
+        if(req.body.zipcode != '' || req.body.zipcode != undefined){
+          pDetails.zipcode = req.body.zipcode;
         }
         if(req.body.status != '' || req.body.status != undefined){
         	pDetails.status = req.body.status;
