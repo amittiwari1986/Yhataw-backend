@@ -281,11 +281,107 @@ const getProjectDetail = (req, res) => {
                  const promise = projectDetailOperations.getProjectDetailById(id)
               promise
               .then((data)=>{
-                  const {others} = data
-                  res.status(200).json({
-                      data: data,
-                      success: 1
-                  })
+                let convertData = [];
+                convertData.push(data);
+                data = convertData;
+                  let arr = [];
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+
+                    var dataArray = {}; 
+                    if(req.projectId != 'NA'){
+                      var projectData = await projectOperations.getProjectById(req.projectId);
+                      dataArray['projectId'] = req.projectId;
+                      dataArray['project_name'] = projectData.project_name;
+                    }else{
+                      dataArray['projectId'] = '';
+                      dataArray['project_name'] = '';
+                    }
+                    if(req.developerId != 'NA'){
+                      var developerData = await developerOperations.getDeveloperById(req.developerId);
+                      dataArray['developerId'] = req.developerId;
+                      dataArray['developer_name'] = developerData.developer_name;
+                    }else{
+                      dataArray['developerId'] = '';
+                      dataArray['developer_name'] = '';
+                    }
+                    if(req.countryId != 'NA'){
+                      var countryData = await countryOperations.getcountryById(req.countryId);
+                      dataArray['countryId'] = req.countryId;
+                      dataArray['country_name'] = countryData.country_name;
+                    }else{
+                      dataArray['countryId'] = '';
+                      dataArray['country_name'] = '';
+                    }
+                    if(req.stateId != 'NA'){
+                      var stateData = await stateOperations.getstateById(req.stateId);
+                      dataArray['stateId'] = req.stateId;
+                      dataArray['state_name'] = stateData.state_name;
+                    }else{
+                      dataArray['stateId'] = '';
+                      dataArray['state_name'] = '';
+                    }
+                    dataArray['city'] = req.city;
+                    dataArray['description'] = req.description;
+                    dataArray['status'] = req.status;
+
+                     if(req.projectforId != 'NA'){
+                      var projectForData = await propertyForOperations.getPropertyForById(req.projectforId);
+                      dataArray['projectforId'] = req.projectforId;
+                      dataArray['property_for_name'] = projectForData.name;
+                    }else{
+                      dataArray['projectforId'] = '';
+                      dataArray['property_for_name'] = '';
+                    }
+                    // console.log(req.projectstatusId);
+                     if(req.projectstatusId != 'NA'){
+                      var projectStatusData = await propertyStatusOperations.getPropertyStatusById(req.projectstatusId);
+                      dataArray['projectstatusId'] = req.projectstatusId;
+                      dataArray['projectstatus_name'] = projectStatusData.name;
+                    }else{
+                      dataArray['projectstatusId'] = '';
+                      dataArray['projectstatus_name'] = '';
+                    }
+                     if(req.projectunittypeId != 'NA'){
+                      var projectUnitTypeData = await propertyUnitTypeOperations.getPropertyUnitTypeById(req.projectunittypeId);
+                      dataArray['projectunittypeId'] = req.projectunittypeId;
+                      dataArray['projectunittype_name'] = projectUnitTypeData.name;
+                    }else{
+                      dataArray['projectunittypeId'] = '';
+                      dataArray['projectunittype_name'] = '';
+                    }
+                     if(req.projectypeId != 'NA'){
+                      var projectTypeData = await propertyTypeOperations.getPropertyTypeById(req.projectypeId);
+                      dataArray['projecttypeId'] = req.projectypeId;
+                      dataArray['projecttype_name'] = projectTypeData.name;
+                    }else{
+                      dataArray['projecttypeId'] = '';
+                      dataArray['projecttype_name'] = '';
+                    }
+
+                    dataArray['washroom'] = req.washroom;
+                    dataArray['bathroom'] = req.bathroom;
+                    
+                    arr.push(dataArray);
+                    return arr;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                  
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
               })
               .catch((err)=>{
                   // console.log(err.message)
@@ -297,13 +393,13 @@ const getProjectDetail = (req, res) => {
               const promise = projectDetailOperations.getAllProjectDetail(query)
               promise
               .then((data)=>{
-
                
                   let arr = [];
-                 var arrrr = Promise.all(data.map(async (element) => {
+                 Promise.all(data.map(async (element) => {
                     var req = element;
 
                     var dataArray = {}; 
+                    dataArray['_id'] = req._id;
                     if(req.projectId != 'NA'){
                       var projectData = await projectOperations.getProjectById(req.projectId);
                       dataArray['projectId'] = req.projectId;
