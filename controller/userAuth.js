@@ -1641,7 +1641,7 @@ const getUserDoc= async (req, res) => {
         });
         if(setdata){
             let id = req.params.id
-            const promise = userDocumentOperations.getUserDocumentById(id)
+            const promise = userDocumentOperations.findOneUserDocumentId(id)
             promise
             .then((data)=>{
                 // console.log(data)
