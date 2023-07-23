@@ -714,237 +714,7 @@ const deleteDepartment = async (req, res) => {
         }
 };
 
-const getPropertyType = (req, res) => {
-  let token=req.headers.token;
-        let setdata = "";
-        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
-  
-          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
-            
-            // return res.status(200).send(decoded.id.id);
-            setdata = decoded.id.id;
-        });
-        if(setdata){
-             let id = req.params.id
-             if(id){
-                 const promise = propertyTypeOperations.findPropertyTypeId(id)
-              promise
-              .then((data)=>{
-                  console.log(data)
-                  const {others} = data
-                  res.status(200).json({
-                      data: data,
-                      success: 1
-                  })
-              })
-              .catch((err)=>{
-                  // console.log(err.message)
-                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
-              });
-             }else{
-               const query = req.query.new 
-              const promise = propertyTypeOperations.getAllPropertyType(query)
-              promise
-              .then((data)=>{
-                  console.log(data)
-                  const {others} = data
-                  if(data.length > 0){
-                   res.status(200).json({
-                    data: data,
-                    success: 1
-                    }) 
-                }else{
-                    res.status(200).json({
-                    data: [],
-                    message: "No Data found",
-                    success: 0
-                    }) 
-                }
-              })
-              .catch((err)=>{
-                  // console.log(err.message)
-                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
-              });
-            }
-        }else{
-            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
-        }
-};
 
-const getPropertyUnitType = (req, res) => {
-  let token=req.headers.token;
-        let setdata = "";
-        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
-  
-          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
-            
-            // return res.status(200).send(decoded.id.id);
-            setdata = decoded.id.id;
-        });
-        if(setdata){
-             let id = req.params.id
-             if(id){
-                 const promise = propertyUnitTypeOperations.findPropertyUnitTypeId(id)
-              promise
-              .then((data)=>{
-                  console.log(data)
-                  const {others} = data
-                  res.status(200).json({
-                      data: data,
-                      success: 1
-                  })
-              })
-              .catch((err)=>{
-                  // console.log(err.message)
-                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
-              });
-             }else{
-               const query = req.query.new 
-              const promise = propertyUnitTypeOperations.getAllPropertyUnitType(query)
-              promise
-              .then((data)=>{
-                  console.log(data)
-                  const {others} = data
-                  if(data.length > 0){
-                   res.status(200).json({
-                    data: data,
-                    success: 1
-                    }) 
-                }else{
-                    res.status(200).json({
-                    data: [],
-                    message: "No Data found",
-                    success: 0
-                    }) 
-                }
-              })
-              .catch((err)=>{
-                  // console.log(err.message)
-                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
-              });
-            }
-        }else{
-            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
-        }
-};
-
-const getPropertyFor = (req, res) => {
-  let token=req.headers.token;
-        let setdata = "";
-        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
-  
-          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
-            
-            // return res.status(200).send(decoded.id.id);
-            setdata = decoded.id.id;
-        });
-        if(setdata){
-             let id = req.params.id
-             if(id){
-                 const promise = propertyForOperations.findPropertyForId(id)
-              promise
-              .then((data)=>{
-                  console.log(data)
-                  const {others} = data
-                  res.status(200).json({
-                      data: data,
-                      success: 1
-                  })
-              })
-              .catch((err)=>{
-                  // console.log(err.message)
-                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
-              });
-             }else{
-               const query = req.query.new 
-              const promise = propertyForOperations.getAllPropertyFor(query)
-              promise
-              .then((data)=>{
-                  console.log(data)
-                  const {others} = data
-                  if(data.length > 0){
-                   res.status(200).json({
-                    data: data,
-                    success: 1
-                    }) 
-                }else{
-                    res.status(200).json({
-                    data: [],
-                    message: "No Data found",
-                    success: 0
-                    }) 
-                }
-              })
-              .catch((err)=>{
-                  // console.log(err.message)
-                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
-              });
-            }
-        }else{
-            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
-        }
-};
-
-const getPropertyStatus = (req, res) => {
-  let token=req.headers.token;
-        let setdata = "";
-        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
-  
-          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
-            
-            // return res.status(200).send(decoded.id.id);
-            setdata = decoded.id.id;
-        });
-        if(setdata){
-             let id = req.params.id
-             if(id){
-                 const promise = propertyStatusOperations.findPropertyStatusId(id)
-              promise
-              .then((data)=>{
-                  console.log(data)
-                  const {others} = data
-                  res.status(200).json({
-                      data: data,
-                      success: 1
-                  })
-              })
-              .catch((err)=>{
-                  // console.log(err.message)
-                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
-              });
-             }else{
-               const query = req.query.new 
-              const promise = propertyStatusOperations.getAllPropertyStatus(query)
-              promise
-              .then((data)=>{
-                  console.log(data)
-                  const {others} = data
-                  if(data.length > 0){
-                   res.status(200).json({
-                    data: data,
-                    success: 1
-                    }) 
-                }else{
-                    res.status(200).json({
-                    data: [],
-                    message: "No Data found",
-                    success: 0
-                    }) 
-                }
-              })
-              .catch((err)=>{
-                  // console.log(err.message)
-                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
-              });
-            }
-        }else{
-            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
-        }
-};
 
 const addProperty = async (req, res) => {
   let token=req.headers.token;
@@ -1184,6 +954,64 @@ const getProject = (req, res) => {
         }
 };
 
+const getDeveloperTree = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             let id = req.params.id
+             if(id){
+              const promise = developerOperations.getAllDeveloper1(id)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  const {others} = data
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                  })
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+             }else{
+               const query = req.query.new 
+              const promise = developerOperations.getAllDeveloper1(query)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  const {others} = data
+                  if(data.length > 0){
+                   res.status(200).json({
+                    data: data,
+                    success: 1
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: [],
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            }
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
 
 
-module.exports = { addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation,getPropertyType,getPropertyUnitType,getPropertyStatus,getPropertyFor }
+
+module.exports = { getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
