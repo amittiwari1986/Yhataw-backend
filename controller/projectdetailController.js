@@ -586,9 +586,9 @@ const getPropertyUnitType = (req, res) => {
             setdata = decoded.id.id;
         });
         if(setdata){
-             let id = req.params.id
-             if(id){
-                 const promise = propertyUnitTypeOperations.findPropertyUnitTypeId(id)
+             let propertyTypeId = req.params.id
+             if(propertyTypeId){
+                 const promise = propertyUnitTypeOperations.findPropertyUnitTypeId(propertyTypeId)
               promise
               .then((data)=>{
                   console.log(data)
@@ -603,7 +603,7 @@ const getPropertyUnitType = (req, res) => {
                   res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
               });
              }else{
-               const query = req.query.new 
+               const query = req.query.new
               const promise = propertyUnitTypeOperations.getAllPropertyUnitType(query)
               promise
               .then((data)=>{
@@ -702,9 +702,10 @@ const getPropertyStatus = (req, res) => {
             setdata = decoded.id.id;
         });
         if(setdata){
-             let id = req.params.id
-             if(id){
-                 const promise = propertyStatusOperations.findPropertyStatusId(id)
+             let propertyTypeId = req.params.id
+             // console.log(req.params.id);
+             if(propertyTypeId){
+                 const promise = propertyStatusOperations.findPropertyStatusId(propertyTypeId)
               promise
               .then((data)=>{
                   console.log(data)
@@ -799,6 +800,7 @@ const addPropertyUnitType = async (req, res) => {
   if(setdata){
     var status = 1;
     const punittype = new PropertyUnitType(
+      req.body.propertyTypeId,
       req.body.name,
       status,
     );
@@ -836,6 +838,7 @@ const addPropertyStatus = async (req, res) => {
   if(setdata){
     var status = 1;
     const pStatus = new PropertyStatus(
+      req.body.propertyTypeId,
       req.body.name,
       status,
     );
@@ -995,6 +998,9 @@ const updatePropertyUnitType= async (req, res) => {
         if (!propertyUnitType) {
           return res.status(400).json({ success: 0, message: "User Document not found" });
         }
+        if(req.body.propertyTypeId != '' || req.body.propertyTypeId != undefined){
+          propertyUnitType.propertyTypeId = req.body.propertyTypeId;
+        }
         if(req.body.name != '' || req.body.name != undefined){
           propertyUnitType.name = req.body.name;
         }
@@ -1032,6 +1038,9 @@ const updatePropertyStatus= async (req, res) => {
 
         if (!propertyStatus) {
           return res.status(400).json({ success: 0, message: "User Document not found" });
+        }
+        if(req.body.propertyTypeId != '' || req.body.propertyTypeId != undefined){
+          propertyUnitType.propertyTypeId = req.body.propertyTypeId;
         }
         if(req.body.name != '' || req.body.name != undefined){
           propertyStatus.name = req.body.name;

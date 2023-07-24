@@ -16,8 +16,8 @@ const propertyUnitTypeSerives = {
         const promise = await propertyUnitTypeModel.findOne({userId})
         return promise 
     },
-    async findPropertyUnitTypeId(stateId){
-        const promise = await propertyUnitTypeModel.find({stateId})
+    async findPropertyUnitTypeId(propertyTypeId){
+        const promise = await propertyUnitTypeModel.find({propertyTypeId})
         return promise 
     },
     async getPropertyUnitTypeById(id){

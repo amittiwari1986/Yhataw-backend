@@ -16,8 +16,8 @@ const propertyStatusSerives = {
         const promise = await propertyStatusModel.findOne({userId})
         return promise 
     },
-    async findPropertyStatusId(stateId){
-        const promise = await propertyStatusModel.find({stateId})
+    async findPropertyStatusId(propertyTypeId){
+        const promise = await propertyStatusModel.find({propertyTypeId})
         return promise 
     },
     async getPropertyStatusById(id){

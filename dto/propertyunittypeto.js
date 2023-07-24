@@ -1,5 +1,6 @@
 class PropertyUnitType{
-    constructor(name,status){
+    constructor(propertyTypeId,name,status){
+        this.propertyTypeId = propertyTypeId
         this.name = name
         this.status = status
     }

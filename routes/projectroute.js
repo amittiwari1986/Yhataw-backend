@@ -10,8 +10,10 @@ Routes.get("/getProjectDetails",verifyToken,projectdetailController.getProjectDe
 
 Routes.get("/getPropetyFor",projectdetailController.getPropertyFor)
 Routes.get("/getPropetyUnitType",projectdetailController.getPropertyUnitType)
+Routes.get("/getPropetyUnitType/:id",projectdetailController.getPropertyUnitType)
 Routes.get("/getPropetyType",projectdetailController.getPropertyType)
 Routes.get("/getPropetyStatus",projectdetailController.getPropertyStatus)
+Routes.get("/getPropetyStatus/:id",projectdetailController.getPropertyStatus)
 Routes.post("/addPropetyFor",projectdetailController.addPropertyFor)
 Routes.post("/addPropetyUnitType",projectdetailController.addPropertyUnitType)
 Routes.post("/addPropetyType",projectdetailController.addPropertyType)
