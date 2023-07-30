@@ -231,7 +231,7 @@ const userController = {
                       }
                   });
             }else{
-                res.status(500).json({message: "Internal Server Error", success: 0});
+                res.status(200).json({message: "Internal Server Error", success: 0});
             }
             })
             .catch((err)=>{
@@ -471,7 +471,7 @@ const userController = {
                       }
                   });
               }else{
-                res.status(500).json({message: "Data not found", success: 0});
+                res.status(200).json({message: "Data not found", success: 0});
               }
                 
             })
