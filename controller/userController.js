@@ -173,13 +173,14 @@ const userController = {
                     dataArray['name'] = req.name;
                     dataArray['userRole'] = req.userRole;
                     dataArray['phone'] = req.phone;
+                    dataArray['whatsapp'] = req.whatsapp;
                     dataArray['email'] = req.email;
                     dataArray['logintime'] = req.logintime;
                     dataArray['dob'] = req.dob;
                     dataArray['martial_status'] = req.martial_status;
                     dataArray['gender'] = req.gender;
                     dataArray['address1'] = req.address1;
-                    dataArray['address2'] = req.address;
+                    dataArray['address2'] = req.address2;
                     dataArray['city'] = req.city;
 
 
