@@ -29,6 +29,7 @@ const token = require("../utils/token");
 const otpGenerator = require('otp-generator');
 const sendEmail = require("../utils/sendEmail");
 const jwt = require("jsonwebtoken");
+const {ObjectID} = require('mongodb');
 
 const {
   PHONE_NOT_FOUND_ERR,
@@ -291,7 +292,7 @@ const getProjectDetail = (req, res) => {
                   let arr = [];
                  var arrrr = Promise.all(data.map(async (element) => {
                     var req = element;
-
+                    console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     if(req.projectId != 'NA'){
@@ -331,7 +332,7 @@ const getProjectDetail = (req, res) => {
                     dataArray['status'] = req.status;
 
                      if(req.projectforId != 'NA'){
-                      var projectForData = await propertyForOperations.getPropertyForById(req.projectforId);
+                      var projectForData = await propertyForOperations.getPropertyForById(new ObjectID(req.projectforId));
                       dataArray['projectforId'] = req.projectforId;
                       dataArray['property_for_name'] = projectForData.name;
                     }else{
@@ -341,8 +342,9 @@ const getProjectDetail = (req, res) => {
                     // console.log(req.projectstatusId);
                      if(req.projectstatusId != 'NA'){
                       var projectStatusData = await propertyStatusOperations.getPropertyStatusById(req.projectstatusId);
+                      // console.log(projectStatusData);
                       dataArray['projectstatusId'] = req.projectstatusId;
-                      dataArray['projectstatus_name'] = projectStatusData.name;
+                      // dataArray['projectstatus_name'] = projectStatusData.name;
                     }else{
                       dataArray['projectstatusId'] = '';
                       dataArray['projectstatus_name'] = '';
@@ -350,7 +352,7 @@ const getProjectDetail = (req, res) => {
                      if(req.projectunittypeId != 'NA'){
                       var projectUnitTypeData = await propertyUnitTypeOperations.getPropertyUnitTypeById(req.projectunittypeId);
                       dataArray['projectunittypeId'] = req.projectunittypeId;
-                      dataArray['projectunittype_name'] = projectUnitTypeData.name;
+                      // dataArray['projectunittype_name'] = projectUnitTypeData.name;
                     }else{
                       dataArray['projectunittypeId'] = '';
                       dataArray['projectunittype_name'] = '';
@@ -358,7 +360,7 @@ const getProjectDetail = (req, res) => {
                      if(req.projecttypeId != 'NA'){
                       var projectTypeData = await propertyTypeOperations.getPropertyTypeById(req.projecttypeId);
                       dataArray['projecttypeId'] = req.projecttypeId;
-                      dataArray['projecttype_name'] = projectTypeData.name;
+                      // dataArray['projecttype_name'] = projectTypeData.name;
                     }else{
                       dataArray['projecttypeId'] = '';
                       dataArray['projecttype_name'] = '';
@@ -446,7 +448,9 @@ const getProjectDetail = (req, res) => {
                     dataArray['status'] = req.status;
 
                      if(req.projectforId != 'NA'){
-                      var projectForData = await propertyForOperations.getPropertyForById(req.projectforId);
+                      // var gg = ObjectID.Types.ObjectId(req.projectforId); 
+                      // console.log(gg);
+                      var projectForData = await propertyForOperations.getPropertyForById(new ObjectID(req.projectforId));
                       dataArray['projectforId'] = req.projectforId;
                       dataArray['property_for_name'] = projectForData.name;
                     }else{

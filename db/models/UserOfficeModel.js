@@ -9,6 +9,8 @@ const connection  = require('../connect');
      joining:{type:Schema.Types.String,required:[true, 'Please add joining date']},
      working_days:{type:Schema.Types.String,required:[true, 'Please add working days']},
      working_shift:{type:Schema.Types.String,required:[true, 'Please add working shift']},
+     reporting_manager:{type:Schema.Types.String,required:[false, 'Please add Reporting Manager']},
+     role_id:{type:Schema.Types.String,required:[true, 'Please add role']},
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
  

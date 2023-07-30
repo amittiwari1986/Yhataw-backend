@@ -1,5 +1,5 @@
 class User{
-    constructor(name,password,userRole,phone,email,phoneOtp,whatsapp,dob,martial_status,gender,address1,address2,country_id,state_id,city,zipcode,doj,employee_id,status,profile_image,in_complete,time_zone){
+    constructor(name,password,userRole,phone,email,phoneOtp,whatsapp,dob,martial_status,gender,address1,address2,country_id,state_id,city,zipcode,doj,employee_id,status,profile_image,in_complete,time_zone,role_id){
         this.name = name
         this.password = password
         this.userRole = userRole
@@ -22,6 +22,7 @@ class User{
         this.profile_image = profile_image
         this.in_complete = in_complete
         this.time_zone = time_zone
+        this.role_id = role_id
     }
 }
 

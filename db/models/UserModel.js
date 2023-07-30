@@ -34,6 +34,7 @@
      profile_image:{type:Schema.Types.String,required:[true, 'Please add profile image']},
      in_complete:{type:Schema.Types.String,required:true},
      time_zone:{type:Schema.Types.String,required:false},
+     role_id:{type:Schema.Types.String,required:[false, 'Please add role']},
  },{timestamps:true}); 
  
  const UserModel = connection.model('users',UserSchema);

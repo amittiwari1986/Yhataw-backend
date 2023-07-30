@@ -69,8 +69,21 @@ const register = async (req, res) => {
     }
     
 
+    let role = 3;
     let hashPassword = bcrypt.doEncrypt(req.body.password);
-    let role = 2;
+    if(req.body.role_id == '64b6941c5336901025cca02b'){
+      let role = 1;
+    }
+    if(req.body.role_id == '64b6d7ca3ef534e0899482a2'){
+      let role = 2;
+    }
+    if(req.body.role_id == '64b6d7fb3ef534e0899482a5'){
+      let role = 3;
+    }
+    if(req.body.role_id == '64bcb3be8cc78ad4d4439f2c'){
+      let role = 4;
+    }
+    
     let status = 1;
     let inComplete = 0;
     const user = new User(
@@ -95,6 +108,7 @@ const register = async (req, res) => {
       status,
       req.body.profile_image,
       inComplete,
+      '',
     );
 
 
@@ -160,6 +174,8 @@ const addUserOffice = async (req, res) => {
               req.body.joining,
               req.body.working_days,
               req.body.working_shift,
+              req.body.reporting_manager,
+              req.body.role_id,
             );
             const promise = userOfficeOperations.addUserOffice(userOffice);
             promise
@@ -767,6 +783,7 @@ const updateUserOffice = async (req, res) => {
         user.joining = req.body.joining;
         user.working_days = req.body.working_days;
         user.working_shift = req.body.working_shift;
+        user.reporting_manager = req.body.reporting_manager;
         await userOfficeOperations.updateUserOffice(user._id,user);
         return res.status(200).json({ success: 1, message: "User Office Details Updated Successfully" });
       } catch (err) {
