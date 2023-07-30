@@ -152,7 +152,7 @@ const userController = {
                 //     success: 1
                 // })
 
-        
+            if(data){
                  let convertData = [];
                 convertData.push(data);
                 data = convertData;
@@ -230,7 +230,9 @@ const userController = {
                         }) 
                       }
                   });
-
+            }else{
+                res.status(500).json({message: "Internal Server Error", success: 0});
+            }
             })
             .catch((err)=>{
                 // console.log(err.message)
@@ -422,12 +424,7 @@ const userController = {
             promise
             .then((data)=>{
                 // console.log(data)
-                // const {others} = data._doc
-                // res.status(200).json({
-                //     data: data,
-                //     success: 1
-                //     }) 
-
+                if(data){
                  let convertData = [];
                 convertData.push(data);
                 data = convertData;
@@ -445,24 +442,6 @@ const userController = {
                       dataArray['role_id'] = '';
                       dataArray['role_name'] = '';
                     }
-                  
-                    // if(req.countryId != 'NA'){
-                    //   var countryData = await countryOperations.getcountryById(req.countryId);
-                    //   dataArray['countryId'] = req.countryId;
-                    //   dataArray['country_name'] = countryData.country_name;
-                    // }else{
-                    //   dataArray['countryId'] = '';
-                    //   dataArray['country_name'] = '';
-                    // }
-                    // if(req.stateId != 'NA'){
-                    //   var stateData = await stateOperations.getstateById(req.stateId);
-                    //   dataArray['stateId'] = req.stateId;
-                    //   dataArray['state_name'] = stateData.state_name;
-                    // }else{
-                    //   dataArray['stateId'] = '';
-                    //   dataArray['state_name'] = '';
-                    // }
-
                     dataArray['emp_type'] = req.emp_type;
                     dataArray['department'] = req.department;
                     dataArray['designation'] = req.designation;
@@ -491,7 +470,9 @@ const userController = {
                         }) 
                       }
                   });
-              
+              }else{
+                res.status(500).json({message: "Data not found", success: 0});
+              }
                 
             })
             .catch((err)=>{
