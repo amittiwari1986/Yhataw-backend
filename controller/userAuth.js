@@ -722,7 +722,7 @@ const updateUserPersonal = async (req, res) => {
           return res.status(400).json({ success: 0, message: "User Details not found" });
         }
 
-        user.userId = req.body.userId;
+        // user.userId = req.body.userId;
         user.dob = req.body.dob;
         user.phone = req.body.phone;
         user.martial_status = req.body.martial_status;
@@ -775,7 +775,7 @@ const updateUserBank = async (req, res) => {
         //   return res.status(400).json({ success: 0, message: "Details not found" });
         // }
 
-        user.userId = req.body.userId;
+        // user.userId = req.body.userId;
         user.bank_name = req.body.bank_name;
         user.branch_name = req.body.branch_name;
         user.holder_name = req.body.holder_name;
@@ -807,14 +807,14 @@ const updateUserOffice = async (req, res) => {
   if(setdata){
     let data;
     let id = req.body.id;
-    console.log(id);
+    // console.log(id);
       try {
         let user = await userOfficeOperations.getUserOfficeById(id);
-
+        let finalUser = user;
         if (!user) {
           return res.status(400).json({ success: 0, message: "Details not found" });
         };
-        user.userId = req.body.userId;
+        // user.userId = req.body.userId;
         user.emp_type = req.body.emp_type;
         user.department = req.body.department;
         user.designation = req.body.designation;
@@ -851,10 +851,10 @@ const updateUserOffice = async (req, res) => {
           }
           // console.log(role);
           if(role>0){
-            let mUser = await userOperations.getUserById(req.body.userId);
-            console.log(req.body.userId);
-          mUser.userRole = role;
-          mUser.role_id = req.body.role_id;
+            var mUser = await userOperations.getUserById(finalUser.userId);
+            console.log(finalUser);
+            mUser.userRole = role;
+            mUser.role_id = req.body.role_id;
          await userOperations.updateUser(mUser._id,mUser);
           }
           
@@ -891,7 +891,7 @@ const updateUserLeave = async (req, res) => {
           return res.status(400).json({ success: 0, message: "Details not found" });
         };
 
-          user.userId = req.body.userId;
+          // user.userId = req.body.userId;
           user.total_leave = req.body.total_leave;
           user.earned_leave = req.body.earned_leave;
           user.sick_leave = req.body.sick_leave;
@@ -935,7 +935,7 @@ const updateUserSalary = async (req, res) => {
         };
 
       
-       user.userId = req.body.userId;
+       // user.userId = req.body.userId;
        user.EPF_opt = req.body.EPF_opt;
        user.ESI_opt = req.body.ESI_opt;
        user.EPF_no = req.body.EPF_no;
