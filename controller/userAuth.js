@@ -191,6 +191,11 @@ const addUserOffice = async (req, res) => {
     promise
       .then((data) => {
         // console.log(data);
+        if(req.body.reporting_manager){
+          rManger = req.body.reporting_manager;
+        }else{
+          rManger = 'NA';
+        }
         if(data){
           const userOffice = new UserOffice(
               req.body.userId,
@@ -200,7 +205,7 @@ const addUserOffice = async (req, res) => {
               req.body.joining,
               req.body.working_days,
               req.body.working_shift,
-              req.body.reporting_manager,
+              rManger,
               req.body.role_id,
             );
 
@@ -817,7 +822,7 @@ const updateUserOffice = async (req, res) => {
         if(req.body.reporting_manager != undefined){
           user.reporting_manager = req.body.reporting_manager;
         }else{
-          user.reporting_manager = '';
+          user.reporting_manager = 'NA';
         }
         if(req.body.role_id != undefined){
           user.role_id = req.body.role_id;
