@@ -814,21 +814,33 @@ const updateUserOffice = async (req, res) => {
         user.joining = req.body.joining;
         user.working_days = req.body.working_days;
         user.working_shift = req.body.working_shift;
-        user.reporting_manager = req.body.reporting_manager;
-        user.role_id = req.body.role_id;
+        if(req.body.reporting_manager != undefined){
+          user.reporting_manager = req.body.reporting_manager;
+        }else{
+          user.reporting_manager = '';
+        }
+        if(req.body.role_id != undefined){
+          user.role_id = req.body.role_id;
+        }else{
+           user.role_id = 'NA';
+        }
+        
+        
         await userOfficeOperations.updateUserOffice(user._id,user);
         var role = 0;
-        if(req.body.role_id == "64b6941c5336901025cca02b"){
-            var role = 1;
-          }
-          if(req.body.role_id == "64b6d7ca3ef534e0899482a2"){
-            var role = 2;
-          }
-          if(req.body.role_id == "64b6d7fb3ef534e0899482a5"){
-            var role = 3;
-          }
-          if(req.body.role_id == "64bcb3be8cc78ad4d4439f2c"){
-            var role = 4;
+        if(req.body.role_id != undefined){
+          if(req.body.role_id == "64b6941c5336901025cca02b"){
+              var role = 1;
+            }
+            if(req.body.role_id == "64b6d7ca3ef534e0899482a2"){
+              var role = 2;
+            }
+            if(req.body.role_id == "64b6d7fb3ef534e0899482a5"){
+              var role = 3;
+            }
+            if(req.body.role_id == "64bcb3be8cc78ad4d4439f2c"){
+              var role = 4;
+            }
           }
           // console.log(role);
           if(role>0){
