@@ -386,6 +386,55 @@ const addUserSalary = async (req, res) => {
     let user = await userOperations.getUserById(id);
         user.in_complete = "1";
          await userOperations.updateUser(user._id,user);
+
+         var dt = new Date();
+           year  = dt.getFullYear();
+            month = (dt.getMonth() + 1).toString().padStart(2, "0");
+            day   = dt.getDate().toString().padStart(2, "0");
+         
+
+          var day1 = '';
+          var datetime = '00:00';
+
+        for (var i = 1; i < 31; i++) {
+          if(i == 1){
+             day1 = '01/' + month + '/' + year;
+          }else if(i == 2){
+             day1 = '02/' + month + '/' + year;
+          }else if(i == 3){
+             day1 = '03/' + month + '/' + year;
+          }else if(i == 4){
+             day1 = '04/' + month + '/' + year;
+          }else if(i == 5){
+             day1 = '05/' + month + '/' + year;
+          }else if(i == 6){
+             day1 = '06/' + month + '/' + year;
+          }else if(i == 7){
+             day1 = '07/' + month + '/' + year;
+          }else if(i == 8){
+             day1 = '08/' + month + '/' + year;
+          }else if(i == 9){
+             day1 = '09/' + month + '/' + year;
+          }else{
+             day1 = i + '/' + month + '/' + year;
+          }
+        
+          const userAttendance = new UserAttendance(
+            req.body.userId,
+            month,
+            day1,
+            datetime,
+            datetime,
+            datetime,
+            '',
+            '',
+            '',
+            0,
+          );
+          
+          await userAttendanceOperations.addUserAttendance(userAttendance);
+        }
+
     const promise = userOperations.getUserById(id);
     promise
       .then((data) => {

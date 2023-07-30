@@ -26,4 +26,5 @@ Routes.get("/getProject",mastercontroller.getProject)
 Routes.get("/getProject/:id",mastercontroller.getProject)
 Routes.get("/getDeveloperTree",mastercontroller.getDeveloperTree)
 Routes.get("/getDeveloperTree/:id",mastercontroller.getDeveloperTree)
+Routes.delete("/deleteProject/:id",mastercontroller.deleteProject)
 module.exports = Routes
