@@ -70,19 +70,20 @@ const register = async (req, res) => {
     
 
     let role = 3;
-    let hashPassword = bcrypt.doEncrypt(req.body.password);
-    if(req.body.role_id == '64b6941c5336901025cca02b'){
-      let role = 1;
-    }
-    if(req.body.role_id == '64b6d7ca3ef534e0899482a2'){
-      let role = 2;
-    }
-    if(req.body.role_id == '64b6d7fb3ef534e0899482a5'){
-      let role = 3;
-    }
-    if(req.body.role_id == '64bcb3be8cc78ad4d4439f2c'){
-      let role = 4;
-    }
+    let hashPassword = bcrypt.doEncrypt('newUser@1234!');
+    let role_id = "64b6d7fb3ef534e0899482a5";
+    // if(req.body.role_id == '64b6941c5336901025cca02b'){
+    //   let role = 1;
+    // }
+    // if(req.body.role_id == '64b6d7ca3ef534e0899482a2'){
+    //   let role = 2;
+    // }
+    // if(req.body.role_id == '64b6d7fb3ef534e0899482a5'){
+    //   let role = 3;
+    // }
+    // if(req.body.role_id == '64bcb3be8cc78ad4d4439f2c'){
+    //   let role = 4;
+    // }
     
     let status = 1;
     let inComplete = 0;
@@ -108,7 +109,7 @@ const register = async (req, res) => {
       status,
       req.body.profile_image,
       inComplete,
-      '',
+      role_id,
     );
 
 
@@ -147,6 +148,7 @@ const register = async (req, res) => {
 
 const addUserOffice = async (req, res) => {
   let id = req.body.userId;
+  console.log(req.body);
 
      // console.log(id);
      // return res.status(401).send({ auth: false, message: 'No token pffghgrovided.', success: 0});
@@ -161,6 +163,30 @@ const addUserOffice = async (req, res) => {
       setdata = decoded.id.id;
   });
     if(setdata){
+      console.log(req.body);
+      let role = 0;
+      if(req.body.role_id == '64b6941c5336901025cca02b'){
+        let role = 1;
+      }
+      if(req.body.role_id == '64b6d7ca3ef534e0899482a2'){
+        let role = 2;
+      }
+      if(req.body.role_id == '64b6d7fb3ef534e0899482a5'){
+        let role = 3;
+      }
+      if(req.body.role_id == '64bcb3be8cc78ad4d4439f2c'){
+        let role = 4;
+      }
+
+      if(role>0){
+        let user = await userOperations.getUserById(id);
+        user.userRole = role;
+        user.role_id = req.body.role_id;
+       await userOperations.updateUser(user._id,user);
+      }
+
+      
+
     const promise = userOperations.getUserById(id);
     promise
       .then((data) => {
@@ -177,6 +203,8 @@ const addUserOffice = async (req, res) => {
               req.body.reporting_manager,
               req.body.role_id,
             );
+
+
             const promise = userOfficeOperations.addUserOffice(userOffice);
             promise
               .then((data) => {
@@ -672,6 +700,7 @@ const updateUserPersonal = async (req, res) => {
   });
   if(setdata){
     let data;
+    console.log(req.body);
     // if(!req.body.userId){
       let id = req.body.id;
     // }else{
@@ -757,6 +786,7 @@ const updateUserBank = async (req, res) => {
 };
 
 const updateUserOffice = async (req, res) => {
+  
   let token=req.headers.token;
   let setdata = "";
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
@@ -770,6 +800,7 @@ const updateUserOffice = async (req, res) => {
   if(setdata){
     let data;
     let id = req.body.id;
+    console.log(id);
       try {
         let user = await userOfficeOperations.getUserOfficeById(id);
 
@@ -784,7 +815,31 @@ const updateUserOffice = async (req, res) => {
         user.working_days = req.body.working_days;
         user.working_shift = req.body.working_shift;
         user.reporting_manager = req.body.reporting_manager;
+        user.role_id = req.body.role_id;
         await userOfficeOperations.updateUserOffice(user._id,user);
+        var role = 0;
+        if(req.body.role_id == "64b6941c5336901025cca02b"){
+            var role = 1;
+          }
+          if(req.body.role_id == "64b6d7ca3ef534e0899482a2"){
+            var role = 2;
+          }
+          if(req.body.role_id == "64b6d7fb3ef534e0899482a5"){
+            var role = 3;
+          }
+          if(req.body.role_id == "64bcb3be8cc78ad4d4439f2c"){
+            var role = 4;
+          }
+          // console.log(role);
+          if(role>0){
+            let mUser = await userOperations.getUserById(req.body.userId);
+            console.log(req.body.userId);
+          mUser.userRole = role;
+          mUser.role_id = req.body.role_id;
+         await userOperations.updateUser(mUser._id,mUser);
+          }
+          
+
         return res.status(200).json({ success: 1, message: "User Office Details Updated Successfully" });
       } catch (err) {
         return res.status(400).json({message: err.message, success: 0, error_msg: err.message});

@@ -8,6 +8,9 @@ const UserLoanDeclarationService = require("../services/userLoanDeclarationServi
 const UserAttendanceService = require("../services/userAttendanceService")
 const UserApplyLeaveService = require("../services/userApplyLeaveService")
 const organizationService = require("../services/organizationService")
+const roleService = require("../services/roleService")
+const countryService = require("../services/countryService")
+const stateService = require("../services/stateService")
 const jwt = require("jsonwebtoken")
 const {verifyTokenAndAuthoreization,verifyTokenAndAdmin,verifyToken,verifyTokenUser} = require("../utils/verifyToken")
 
@@ -142,12 +145,91 @@ const userController = {
             const promise = UserService.getUserById(id)
             promise
             .then((data)=>{
-                console.log(data)
-                const {password,...others} = data._doc
-                res.status(200).json({
-                    data: others,
-                    success: 1
-                })
+                // console.log(data)
+                // const {password,...others} = data._doc
+                // res.status(200).json({
+                //     data: others,
+                //     success: 1
+                // })
+
+        
+                 let convertData = [];
+                convertData.push(data);
+                data = convertData;
+                  let arr = [];
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+                    // console.log(req);
+                    var dataArray = {};
+                    dataArray['_id'] = req._id; 
+                    // if(req.role_id != 'NA'){
+                    //   var roleData = await roleService.getRoleById(req.role_id);
+                    //   dataArray['role_id'] = req.role_id;
+                    //   dataArray['role_name'] = roleData.role_name;
+                    // }else{
+                    //   dataArray['role_id'] = '';
+                    //   dataArray['role_name'] = '';
+                    // }
+                    dataArray['name'] = req.name;
+                    dataArray['userRole'] = req.userRole;
+                    dataArray['phone'] = req.phone;
+                    dataArray['email'] = req.email;
+                    dataArray['logintime'] = req.logintime;
+                    dataArray['dob'] = req.dob;
+                    dataArray['martial_status'] = req.martial_status;
+                    dataArray['gender'] = req.gender;
+                    dataArray['address1'] = req.address1;
+                    dataArray['address2'] = req.address;
+                    dataArray['city'] = req.city;
+
+
+                    if(req.country_id != 'NA'){
+                      var countryData = await countryService.getcountryById(req.country_id);
+                      dataArray['country_id'] = req.country_id;
+                      dataArray['country_name'] = countryData.country_name;
+                    }else{
+                      dataArray['country_id'] = '';
+                      dataArray['country_name'] = '';
+                    }
+                    if(req.state_id != 'NA'){
+                      var stateData = await stateService.getstateById(req.state_id);
+                      dataArray['state_id'] = req.state_id;
+                      dataArray['state_name'] = stateData.state_name;
+                    }else{
+                      dataArray['state_id'] = '';
+                      dataArray['state_name'] = '';
+                    }
+
+                    dataArray['zipcode'] = req.zipcode;
+                    dataArray['doj'] = req.doj;
+                    dataArray['employee_id'] = req.employee_id;
+                    dataArray['profile_image'] = req.profile_image;
+                    dataArray['status'] = req.status;
+                    dataArray['in_complete'] = req.in_complete;
+                    dataArray['time_zone'] = req.time_zone;
+                    dataArray['createdAt'] = req.createdAt;
+                    
+                    arr.push(dataArray);
+                    return arr;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText[0][0]);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0][0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+
             })
             .catch((err)=>{
                 // console.log(err.message)
@@ -339,23 +421,76 @@ const userController = {
             promise
             .then((data)=>{
                 // console.log(data)
-                const {others} = data._doc
-                res.status(200).json({
-                    data: data,
-                    success: 1
-                    }) 
-                // if(data.length > 0){
-                //    res.status(200).json({
+                // const {others} = data._doc
+                // res.status(200).json({
                 //     data: data,
                 //     success: 1
                 //     }) 
-                // }else{
-                //     res.status(200).json({
-                //     data: [],
-                //     message: "No Data found",
-                //     success: 0
-                //     }) 
-                // }
+
+                 let convertData = [];
+                convertData.push(data);
+                data = convertData;
+                  let arr = [];
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+                    console.log(req);
+                    var dataArray = {};
+                    dataArray['_id'] = req._id; 
+                    if(req.role_id != 'NA'){
+                      var roleData = await roleService.getRoleById(req.role_id);
+                      dataArray['role_id'] = req.role_id;
+                      dataArray['role_name'] = roleData.role_name;
+                    }else{
+                      dataArray['role_id'] = '';
+                      dataArray['role_name'] = '';
+                    }
+                  
+                    // if(req.countryId != 'NA'){
+                    //   var countryData = await countryOperations.getcountryById(req.countryId);
+                    //   dataArray['countryId'] = req.countryId;
+                    //   dataArray['country_name'] = countryData.country_name;
+                    // }else{
+                    //   dataArray['countryId'] = '';
+                    //   dataArray['country_name'] = '';
+                    // }
+                    // if(req.stateId != 'NA'){
+                    //   var stateData = await stateOperations.getstateById(req.stateId);
+                    //   dataArray['stateId'] = req.stateId;
+                    //   dataArray['state_name'] = stateData.state_name;
+                    // }else{
+                    //   dataArray['stateId'] = '';
+                    //   dataArray['state_name'] = '';
+                    // }
+
+                    dataArray['emp_type'] = req.emp_type;
+                    dataArray['department'] = req.department;
+                    dataArray['designation'] = req.designation;
+                    dataArray['joining'] = req.joining;
+                    dataArray['working_days'] = req.working_days;
+                    dataArray['working_shift'] = req.working_shift;
+                    dataArray['createdAt'] = req.createdAt;
+                    
+                    arr.push(dataArray);
+                    return arr;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText[0][0]);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0][0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+              
                 
             })
             .catch((err)=>{
