@@ -67,6 +67,7 @@ function registerValidationSchema(req, res, next) {
 	     in_complete:Joi.string(),
 	     time_zone:Joi.string(),
 	     password:Joi.string(),
+	     role_id:Joi.string(),
     });
     validateRequest(req, res, schema, next);
 }
@@ -80,6 +81,8 @@ function userOfficeValidationSchema(req, res, next) {
 	     joining:Joi.string().required(),
 	     working_days:Joi.string().required(),
 	     working_shift:Joi.string().required(),
+	     reporting_manager:Joi.string(),
+	     role_id:Joi.string().required(),
     });
     validateRequest(req, res, schema, next);
 }

@@ -70,7 +70,7 @@ const register = async (req, res) => {
     
 
     let role = 3;
-    let hashPassword = bcrypt.doEncrypt('newUser@1234!');
+    let hashPassword = bcrypt.doEncrypt(req.body.password);
     let role_id = "64b6d7fb3ef534e0899482a5";
     // if(req.body.role_id == '64b6941c5336901025cca02b'){
     //   let role = 1;
@@ -163,20 +163,22 @@ const addUserOffice = async (req, res) => {
       setdata = decoded.id.id;
   });
     if(setdata){
-      console.log(req.body);
-      let role = 0;
-      if(req.body.role_id == '64b6941c5336901025cca02b'){
-        let role = 1;
+      
+      var role = 0;
+      if(req.body.role_id == "64b6941c5336901025cca02b"){
+        var role = 1;
       }
-      if(req.body.role_id == '64b6d7ca3ef534e0899482a2'){
-        let role = 2;
+      if(req.body.role_id == "64b6d7ca3ef534e0899482a2"){
+        var role = 2;
       }
-      if(req.body.role_id == '64b6d7fb3ef534e0899482a5'){
-        let role = 3;
+      if(req.body.role_id == "64b6d7fb3ef534e0899482a5"){
+        var role = 3;
       }
-      if(req.body.role_id == '64bcb3be8cc78ad4d4439f2c'){
-        let role = 4;
+      if(req.body.role_id == "64bcb3be8cc78ad4d4439f2c"){
+        var role = 4;
       }
+
+      console.log(role);
 
       if(role>0){
         let user = await userOperations.getUserById(id);
