@@ -1998,7 +1998,7 @@ const getRole= async (req, res) => {
             //   req.body.net_pay,
             // );
              const userSalary = new UserSalary(
-              "64807274ee4348490a2181e1",
+              "64c6c6eed61be9be3a6722b0",
               20000.00,
               20000.00,
               10000.00,
@@ -2012,7 +2012,7 @@ const getRole= async (req, res) => {
               50000.00,
               3400.00,
               46600.00,
-              2,
+              5,
               2023,
             );
             const promise = userSalaryOperations.addUserSalary(userSalary);
@@ -2094,8 +2094,7 @@ const getRole= async (req, res) => {
                     if(req.userId){
                       var userData = await userOperations.getUserById(req.userId);
                       dataArray['user_name'] = userData.name;
-                      var userOfficeData = await userOfficeOperations.getUserOfficeById(req.userId);
-                      // console.log(userOfficeData);
+                      var userOfficeData = await userOfficeOperations.findOneUserId(req.userId);
                       if(userOfficeData){
                         dataArray['emp_type'] = userOfficeData.emp_type;
                         dataArray['department'] = userOfficeData.department;
@@ -2108,7 +2107,7 @@ const getRole= async (req, res) => {
                         dataArray['joining'] = '';
                       }
                       
-                      var userSalaryDeclarationData = await userSalaryDeclarationOperations.getUserSalaryDeclarationById(req.userId);
+                      var userSalaryDeclarationData = await userSalaryDeclarationOperations.findOneUserId(req.userId);
                       
                       if(userSalaryDeclarationData){
                         dataArray['EPF_no'] = userSalaryDeclarationData.EPF_no;
@@ -2121,7 +2120,7 @@ const getRole= async (req, res) => {
                       dataArray['absence'] = '';
                       dataArray['leave'] = '';
                     }
-                    // console.log(dataArray);
+                    console.log(dataArray);
 
                      arr.push(dataArray);
                     return arr;
