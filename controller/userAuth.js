@@ -624,12 +624,15 @@ const loginUser = async (req, res) => {
         // console.log(user);
         if(user.userRole == 1){
            role = "Admin";
-        }else if(user.userRole == 3){
+        }else if(user.userRole == 2){
            role = "Hr";
-        }else{
+        }else if(user.userRole == 3){
           role = "User";
+        }else{
+          role = "Executive";
         }
-        const userRole = await roleOperations.findOneRoleId(user.userRole);
+        // console.log(user)
+        const userRole = await roleOperations.getRoleById(user.role_id);
         // console.log(userRole);
         user = {
           _id: user._id,
