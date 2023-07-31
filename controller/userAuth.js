@@ -2188,6 +2188,7 @@ const getRole= async (req, res) => {
                     dataArray['net_pay'] = req.net_pay;
                     dataArray['month'] = req.month;
                     dataArray['year'] = req.year;
+                    dataArray['emp_id'] = req.employee_id;
                     dataArray['createdAt'] = req.createdAt;
                     dataArray['updatedAt'] = req.updatedAt;    
 
@@ -2217,9 +2218,9 @@ const getRole= async (req, res) => {
                         dataArray['EPF_no'] = '';
                         dataArray['ESI_no'] = '';
                       }
-                      dataArray['working_days'] = '';
-                      dataArray['absence'] = '';
-                      dataArray['leave'] = '';
+                      dataArray['working_days'] = '30';
+                      dataArray['absence'] = '0.00';
+                      dataArray['leave'] = '0.00';
                     }
                     // console.log(dataArray);
 
