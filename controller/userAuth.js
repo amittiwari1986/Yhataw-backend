@@ -2042,25 +2042,28 @@ const getRole= async (req, res) => {
     const getSalary= async (req, res) => {
         let token=req.headers.token;
         let setdata = "";
-        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+        // if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
   
-          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        //   jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+        //     if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
             
-            // return res.status(200).send(decoded.id.id);
-            setdata = decoded.id.id;
-        });
-        if(setdata){
+        //     // return res.status(200).send(decoded.id.id);
+        //     setdata = decoded.id.id;
+        // });
+        if(!setdata){
+          // console.log(req);
             let id = req.params.id
             let uid = req.params.userId
             if(!uid){
               res.status(500).json({message: "User Id not found", success: 0});
             }
             if(!id){
+              // console.log("sfds");
               const promise = userSalaryOperations.findUserSalaryId(uid)
               promise
               .then((data)=>{
-                  // console.log(data)
+                console.log("sfds");
+                  console.log(data)
                   // const {others} = data._doc
 
                  // let convertData = [];
@@ -2120,7 +2123,7 @@ const getRole= async (req, res) => {
                       dataArray['absence'] = '';
                       dataArray['leave'] = '';
                     }
-                    console.log(dataArray);
+                    // console.log(dataArray);
 
                      arr.push(dataArray);
                     return arr;
@@ -2152,11 +2155,13 @@ const getRole= async (req, res) => {
                   res.status(500).json({message: "Data not found", success: 0});
               })
             }else{
+              console.log("fgfdgdfgdfg");
               const query = req.query.new;
-              const promise = userSalaryOperations.findOneUserSalaryId(id)
+              console.log(id);
+              const promise = userSalaryOperations.getUserSalaryById(id)
               promise
               .then((data)=>{
-                  console.log(data)
+                  console.log(id)
                   //const {others} = data._doc
                   let convertData = [];
                     convertData.push(data);
@@ -2189,7 +2194,7 @@ const getRole= async (req, res) => {
                     if(req.userId){
                       var userData = await userOperations.getUserById(req.userId);
                       dataArray['user_name'] = userData.name;
-                      var userOfficeData = await userOfficeOperations.getUserOfficeById(req.userId);
+                      var userOfficeData = await userOfficeOperations.findOneUserId(req.userId);
                       // console.log(userOfficeData);
                       if(userOfficeData){
                         dataArray['emp_type'] = userOfficeData.emp_type;
@@ -2203,7 +2208,7 @@ const getRole= async (req, res) => {
                         dataArray['joining'] = '';
                       }
                       
-                      var userSalaryDeclarationData = await userSalaryDeclarationOperations.getUserSalaryDeclarationById(req.userId);
+                      var userSalaryDeclarationData = await userSalaryDeclarationOperations.findOneUserId(req.userId);
                       
                       if(userSalaryDeclarationData){
                         dataArray['EPF_no'] = userSalaryDeclarationData.EPF_no;
