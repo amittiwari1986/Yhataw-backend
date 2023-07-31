@@ -2087,10 +2087,12 @@ const getRole= async (req, res) => {
                     dataArray['i_tax'] = req.i_tax;
                     dataArray['loan_deduction'] = req.loan_deduction;
                     dataArray['total_salary'] = req.total_salary;
-                    dataArray['total_salary'] = req.total_salary; 
+                    dataArray['total_deduction'] = req.total_deduction;
+                    dataArray['i_tax'] = req.i_tax; 
                     dataArray['net_pay'] = req.net_pay;
                     dataArray['month'] = req.month;
                     dataArray['year'] = req.year;
+                    dataArray['emp_id'] = req.employee_id;
                     dataArray['createdAt'] = req.createdAt;
                     dataArray['updatedAt'] = req.updatedAt;    
 
@@ -2184,7 +2186,8 @@ const getRole= async (req, res) => {
                     dataArray['i_tax'] = req.i_tax;
                     dataArray['loan_deduction'] = req.loan_deduction;
                     dataArray['total_salary'] = req.total_salary;
-                    dataArray['total_salary'] = req.total_salary; 
+                    dataArray['total_deduction'] = req.total_deduction;
+                    dataArray['i_tax'] = req.i_tax;  
                     dataArray['net_pay'] = req.net_pay;
                     dataArray['month'] = req.month;
                     dataArray['year'] = req.year;
