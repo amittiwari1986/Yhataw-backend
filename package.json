@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon app.js",
-    "start": "node app.js"
+    "dev": "TZ='Asia/Calcutta' nodemon app.js",
+    "start": "TZ='Asia/Calcutta' node app.js"
   },
   "repository": {
     "type": "git",
