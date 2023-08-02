@@ -1805,7 +1805,7 @@ const getUserDoc= async (req, res) => {
         }
     };
 
-    const addRole = (req, res) => {
+    const addRole = async (req, res) => {
   // let id = req.body.userId;
   let token=req.headers.token;
   let setdata = "";
@@ -1818,6 +1818,12 @@ const getUserDoc= async (req, res) => {
       setdata = decoded.id.id;
   });
   if(setdata){
+    var query = '';
+    let role = await roleOperations.getAllRole(query);
+    var roleId  = role.length + 1;
+    var slug_name = req.body.role_name;
+    var slug=slug_name.split(' ').join('_').toLowerCase();
+    console.log(slug);
     const promise = userOperations.getUserById(setdata);
     promise
       .then((data) => {
@@ -1827,6 +1833,8 @@ const getUserDoc= async (req, res) => {
             req.body.role_name,
             req.body.description,
             JSON.stringify(req.body.info),
+            slug,
+            roleId,
           );
           const promise = roleOperations.addRole(role);
           promise
@@ -1883,6 +1891,9 @@ const updateRole= async (req, res) => {
         }
         if(req.body.info != '' || req.body.info != undefined){
           userDoc.info = JSON.stringify(req.body.info);
+        }
+        if(req.body.slug != '' || req.body.slug != undefined){
+          userDoc.slug = JSON.stringify(req.body.slug);
         }
         
         

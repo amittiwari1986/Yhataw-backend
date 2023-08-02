@@ -27,4 +27,8 @@ Routes.get("/getProject/:id",mastercontroller.getProject)
 Routes.get("/getDeveloperTree",mastercontroller.getDeveloperTree)
 Routes.get("/getDeveloperTree/:id",mastercontroller.getDeveloperTree)
 Routes.delete("/deleteProject/:id",mastercontroller.deleteProject)
+Routes.get("/getTeamList",mastercontroller.getTeam)
+Routes.get("/getTeam/:id",mastercontroller.getTeam)
+Routes.post("/addTeam",mastercontroller.addTeam)
+Routes.put("/updateTeam",mastercontroller.updateTeam)
 module.exports = Routes
