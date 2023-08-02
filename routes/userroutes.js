@@ -68,6 +68,9 @@ Routes.get("/findUserAttendance",verifyToken,userController.getUserAttendanceByI
 Routes.get("/getUserApplyLeaveByIds/:id",verifyToken,userController.getUserApplyLeaveByIds)
 Routes.get("/getUserApplyLeaveByIds",verifyToken,userController.getUserApplyLeaveByIds)
 Routes.get("/getOrganizationByIds",userController.getOrganizationByIds)
+Routes.get("/getAllSalesHead",userController.getAllSalesHead)
+Routes.get("/getAllManagerByTeamWise/:id",userController.getAllManagerByTeamWise)
+
 // Routes.post("/upload-image",uploadController.uploadImage)
 
 Routes.post('/upload-image',upload.single('file'), function (req, res, next) {     

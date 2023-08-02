@@ -41,6 +41,8 @@ Routes.post("/createSalary",userAuth.createSalary)
 Routes.get("/getSalary/:userId",userAuth.getSalary)
 Routes.get("/getSalary/:userId/:id",userAuth.getSalary)
 
+
+
 module.exports = Routes
 
 
@@ -83,6 +85,7 @@ function userOfficeValidationSchema(req, res, next) {
 	     working_shift:Joi.string().required(),
 	     reporting_manager:Joi.string(),
 	     role_id:Joi.string().required(),
+	     team_id:Joi.string(),
     });
     validateRequest(req, res, schema, next);
 }

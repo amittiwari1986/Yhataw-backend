@@ -23,6 +23,11 @@ const userOfficeSerives = {
     async getUserOfficeById(id){
         const promise = await UserOfficeModel.findById(id)
         return promise
+    },
+    async getAllManagerByTeamWise(teamId){
+        const roleId = 5;
+        const promise = await UserOfficeModel.find({team_id: teamId, roleId: roleId})
+        return promise 
     }
 }
 

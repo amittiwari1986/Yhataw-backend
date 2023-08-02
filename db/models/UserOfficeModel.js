@@ -11,6 +11,7 @@ const connection  = require('../connect');
      working_shift:{type:Schema.Types.String,required:[true, 'Please add working shift']},
      reporting_manager:{type:Schema.Types.String,required:[false, 'Please add Reporting Manager']},
      role_id:{type:Schema.Types.String,required:[false, 'Please add role']},
+     team_id:{type:Schema.Types.String},
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
  

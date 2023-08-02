@@ -9,6 +9,7 @@ const userAttendanceOperations = require("../services/userAttendanceService");
 const organizationOperations = require("../services/organizationService");
 const userSalaryOperations = require("../services/userSalaryService");
 const roleOperations = require("../services/roleService");
+const userTeamOperations = require("../services/userTeamService");
 const userTokens = require("../services/userTokenService");
 const userDocumentOperations = require("../services/userDocumentService");
 const User = require("../dto/userdto");
@@ -24,6 +25,7 @@ const Organization = require("../dto/organizationto");
 const UserDocument = require("../dto/userdocumentto");
 const UserSalary = require("../dto/usersalaryto");
 const Role = require("../dto/roleto");
+const UserTeam = require("../dto/userteamto");
 const bcrypt = require("../utils/encrypt");
 const token = require("../utils/token");
 const otpGenerator = require('otp-generator');
@@ -69,22 +71,9 @@ const register = async (req, res) => {
     }
     
 
-    let role = 3;
+    let role = 6;
     let hashPassword = bcrypt.doEncrypt(req.body.password);
-    let role_id = "64b6d7fb3ef534e0899482a5";
-    // if(req.body.role_id == '64b6941c5336901025cca02b'){
-    //   let role = 1;
-    // }
-    // if(req.body.role_id == '64b6d7ca3ef534e0899482a2'){
-    //   let role = 2;
-    // }
-    // if(req.body.role_id == '64b6d7fb3ef534e0899482a5'){
-    //   let role = 3;
-    // }
-    // if(req.body.role_id == '64bcb3be8cc78ad4d4439f2c'){
-    //   let role = 4;
-    // }
-    
+    let role_id = "64ca0c1d186d6338aaed3118";
     let status = 1;
     let inComplete = 0;
     const user = new User(
@@ -163,29 +152,27 @@ const addUserOffice = async (req, res) => {
       setdata = decoded.id.id;
   });
     if(setdata){
-      
-      var role = 0;
-      if(req.body.role_id == "64b6941c5336901025cca02b"){
-        var role = 1;
-      }
-      if(req.body.role_id == "64b6d7ca3ef534e0899482a2"){
-        var role = 2;
-      }
-      if(req.body.role_id == "64b6d7fb3ef534e0899482a5"){
-        var role = 3;
-      }
-      if(req.body.role_id == "64bcb3be8cc78ad4d4439f2c"){
-        var role = 4;
-      }
+    
+      let roledata = req.body.role_id;
+      let getrole = await roleOperations.getRoleById(roledata);
 
-      console.log(role);
-
-      if(role>0){
+      // if(getrole.length>0){
+        let id = req.body.userId;
         let user = await userOperations.getUserById(id);
-        user.userRole = role;
+        // console.log(user);
+        user.userRole = getrole.roleId;
         user.role_id = req.body.role_id;
        await userOperations.updateUser(user._id,user);
-      }
+      // }
+
+       if(getrole.roleId == 5 || getrole.roleId == 6){
+        const userTeam = new UserTeam(
+              req.body.team_id,
+              req.body.userId,
+              req.body.role_id,
+            );
+        await userTeamOperations.addUserTeam(userTeam);
+       }
 
       
 
@@ -198,6 +185,11 @@ const addUserOffice = async (req, res) => {
         }else{
           rManger = 'NA';
         }
+        if(req.body.team_id){
+          teamId = req.body.team_id;
+        }else{
+          teamId = 'NA';
+        }
         if(data){
           const userOffice = new UserOffice(
               req.body.userId,
@@ -209,6 +201,7 @@ const addUserOffice = async (req, res) => {
               req.body.working_shift,
               rManger,
               req.body.role_id,
+              teamId,
             );
 
 

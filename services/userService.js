@@ -68,6 +68,11 @@ const userSerives = {
     async getUserById(id){
         const promise = await UserModel.findById(id)
         return promise
+    },
+    async getAllSalesHead(userRole){
+        const userrole = 4;
+        const promise = await UserModel.find({userRole: userrole})
+        return promise
     }
 }
 
