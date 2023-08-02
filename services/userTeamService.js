@@ -16,11 +16,6 @@ const userTeamSerives = {
         const promise = await userTeamModel.findOne({userId})
         return promise 
     },
-    async getAllManagerByTeamWise(teamId){
-        const roleId = 4;
-        const promise = await userTeamModel.find({teamId: teamId,roleId: roleId})
-        return promise 
-    },
     async getcityById(id){
         const promise = await userTeamModel.findById(id)
         return promise

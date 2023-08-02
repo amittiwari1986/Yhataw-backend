@@ -879,29 +879,55 @@ const updateUserOffice = async (req, res) => {
         
         
         await userOfficeOperations.updateUserOffice(user._id,user);
-        var role = 0;
-        if(req.body.role_id != undefined){
-          if(req.body.role_id == "64b6941c5336901025cca02b"){
-              var role = 1;
-            }
-            if(req.body.role_id == "64b6d7ca3ef534e0899482a2"){
-              var role = 2;
-            }
-            if(req.body.role_id == "64b6d7fb3ef534e0899482a5"){
-              var role = 3;
-            }
-            if(req.body.role_id == "64bcb3be8cc78ad4d4439f2c"){
-              var role = 4;
-            }
-          }
-          // console.log(role);
-          if(role>0){
-            var mUser = await userOperations.getUserById(finalUser.userId);
-            console.log(finalUser);
-            mUser.userRole = role;
-            mUser.role_id = req.body.role_id;
-         await userOperations.updateUser(mUser._id,mUser);
-          }
+        // var role = 0;
+        // if(req.body.role_id != undefined){
+        //   if(req.body.role_id == "64b6941c5336901025cca02b"){
+        //       var role = 1;
+        //     }
+        //     if(req.body.role_id == "64b6d7ca3ef534e0899482a2"){
+        //       var role = 2;
+        //     }
+        //     if(req.body.role_id == "64b6d7fb3ef534e0899482a5"){
+        //       var role = 3;
+        //     }
+        //     if(req.body.role_id == "64bcb3be8cc78ad4d4439f2c"){
+        //       var role = 4;
+        //     }
+        //   }
+        //   // console.log(role);
+        //   if(role>0){
+        //     var mUser = await userOperations.getUserById(finalUser.userId);
+        //     console.log(finalUser);
+        //     mUser.userRole = role;
+        //     mUser.role_id = req.body.role_id;
+        //  await userOperations.updateUser(mUser._id,mUser);
+        //   }
+
+        let roledata = req.body.role_id;
+        let getrole = await roleOperations.getRoleById(roledata);
+
+          let uid = req.body.userId;
+          let userD = await userOperations.getUserById(uid);
+          // console.log(user);
+          userD.userRole = getrole.roleId;
+          userD.role_id = req.body.role_id;
+         await userOperations.updateUser(userD._id,userD);
+
+         if(getrole.roleId == 5 || getrole.roleId == 6){
+
+          let checkUserTeam = await userTeamOperations.findOneUserId(req.body.userId);
+          var Gid = checkUserTeam._id
+          console.log(Gid.toString());
+           if(checkUserTeam){
+            await userTeamOperations.delete(Gid.toString());
+           }
+          const userTeam = new UserTeam(
+                req.body.team_id,
+                req.body.userId,
+                req.body.role_id,
+              );
+          await userTeamOperations.addUserTeam(userTeam);
+         }
           
 
         return res.status(200).json({ success: 1, message: "User Office Details Updated Successfully" });
