@@ -906,7 +906,7 @@ const updateUserOffice = async (req, res) => {
         let roledata = req.body.role_id;
         let getrole = await roleOperations.getRoleById(roledata);
 
-          let uid = req.body.userId;
+          let uid = finalUser.userId;
           let userD = await userOperations.getUserById(uid);
           // console.log(user);
           userD.userRole = getrole.roleId;
