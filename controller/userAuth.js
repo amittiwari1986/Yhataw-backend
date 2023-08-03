@@ -876,6 +876,11 @@ const updateUserOffice = async (req, res) => {
         }else{
            user.role_id = 'NA';
         }
+        if(req.body.team_id != undefined){
+          user.team_id = req.body.team_id;
+        }else{
+           user.team_id = 'NA';
+        }
         
         
         await userOfficeOperations.updateUserOffice(user._id,user);
@@ -917,7 +922,7 @@ const updateUserOffice = async (req, res) => {
 
           let checkUserTeam = await userTeamOperations.findOneUserId(req.body.userId);
           var Gid = checkUserTeam._id
-          console.log(Gid.toString());
+          // console.log(Gid.toString());
            if(checkUserTeam){
             await userTeamOperations.delete(Gid.toString());
            }
