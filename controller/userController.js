@@ -11,6 +11,7 @@ const organizationService = require("../services/organizationService")
 const roleService = require("../services/roleService")
 const countryService = require("../services/countryService")
 const stateService = require("../services/stateService")
+const teamService = require("../services/teamService")
 const userTeamService = require("../services/userTeamService")
 const jwt = require("jsonwebtoken")
 const {verifyTokenAndAuthoreization,verifyTokenAndAdmin,verifyToken,verifyTokenUser} = require("../utils/verifyToken")
@@ -442,6 +443,22 @@ const userController = {
                     }else{
                       dataArray['role_id'] = '';
                       dataArray['role_name'] = '';
+                    }
+                    if(req.team_id != 'NA'){
+                      var teamData = await teamService.getTeamById(req.team_id);
+                      dataArray['team_id'] = req.team_id;
+                      dataArray['team_name'] = teamData.team_name;
+                    }else{
+                      dataArray['team_id'] = '';
+                      dataArray['team_name'] = '';
+                    }
+                    if(req.reporting_manager != 'NA'){
+                      var rManagerData = await UserService.getUserById(req.reporting_manager);
+                      dataArray['reporting_manager'] = req.reporting_manager;
+                      dataArray['reporting_manager_name'] = rManagerData.name;
+                    }else{
+                      dataArray['reporting_manager'] = '';
+                      dataArray['reporting_manager_name'] = '';
                     }
                     dataArray['emp_type'] = req.emp_type;
                     dataArray['department'] = req.department;
