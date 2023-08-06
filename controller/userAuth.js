@@ -565,16 +565,17 @@ const loginUser = async (req, res) => {
     // // save otp to user collection
     const otp = Math.floor(100000 + Math.random() * 900000);
     user.phoneOtp = otp;
-    
-    res.status(200).json({
-      data: {
-        userId: user._id,
-      },
-      settings: {
+
+    data = {
+          userId: user._id,
+          data: [],
+          settings: {
             success: 1,
             message: `OTP sended to your registered phone number. otp is ${otp}`,
           },
-    });
+        };
+    
+    res.status(200).json({ message: data });
     // // user.isAccountVerified = true;
     await userOperations.updateUser(user._id,user);
 
@@ -696,9 +697,12 @@ const loginWithPhone = async (req, res) => {
         lastUpdate: new Date(),
         name: user.name,
         },
+        settings: {
           success: 1,
           message: `OTP verified successfully`,
+        }
       });
+
     } catch (error) {
       return res.status(400).json({ success: 1, message: "User not found" });
     }
