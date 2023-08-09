@@ -31,6 +31,7 @@ Routes.put("/leaveApprove",userAuth.leaveApprove)
 Routes.post("/addUserDoc",userAuth.addUserDoc)
 Routes.put("/updateUserDoc",userAuth.updateUserDoc)
 Routes.get("/getUserDoc/:id",userAuth.getUserDoc)
+Routes.put("/updateUserLoan",userAuth.updateUserLoan)
 
 Routes.post("/addRole",userAuth.addRole)
 Routes.put("/updateRole",userAuth.updateRole)

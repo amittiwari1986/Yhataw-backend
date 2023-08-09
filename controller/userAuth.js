@@ -992,6 +992,46 @@ const updateUserLeave = async (req, res) => {
 
 };
 
+const updateUserLoan = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    let data;
+    let id = req.body.id;
+      try {
+        let user = await userLoanDeclarationOperations.getUserLoanDeclarationById(id);
+
+        if (!user) {
+          return res.status(400).json({ success: 0, message: "Details not found" });
+        };
+
+          // user.userId = req.body.userId;
+          user.loan_acc = req.body.loan_acc;
+          user.loan_amt = req.body.loan_amt;
+          user.loan_emi = req.body.loan_emi;
+          user.start_from = req.body.start_from;
+          user.updated_amt = req.body.updated_amt;
+          user.status = req.body.status;
+
+        await userLoanDeclarationOperations.updateUserLoanDeclaration(user._id,user);
+        return res.status(200).json({ success: 1, message: "User Loan Details Updated Successfully" });
+      } catch (err) {
+        return res.status(400).json({message: err.message, success: 0, error_msg: err.message});
+      }
+    }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+
+};
+
 
 const updateUserSalary = async (req, res) => {
   let token=req.headers.token;
@@ -2300,4 +2340,4 @@ const getRole= async (req, res) => {
     };
 
 
-module.exports = { createSalary,getSalary,getRole,addRole,updateRole,getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
+module.exports = { updateUserLoan,createSalary,getSalary,getRole,addRole,updateRole,getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
