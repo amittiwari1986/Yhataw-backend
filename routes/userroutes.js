@@ -62,7 +62,7 @@ Routes.get("/findUserOffice/:id",verifyTokenAndAuthoreization,userController.get
 Routes.get("/getUserAllInfo/:id",verifyTokenAndAuthoreization,userController.getallUserByIds)
 Routes.get("/findUserSalaryDeclaration/:id",verifyTokenAndAuthoreization,userController.getUserSalaryDeclarationByIds)
 Routes.get("/findUserLoanDeclaration/:id",verifyTokenAndAuthoreization,userController.getUserLoanDeclarationByIds)
-Routes.get("/findUserLoanDeclaration",userController.getUserLoanDeclarationByIds)
+Routes.get("/findUserLoanList/:id",userController.getUserLoanListByUserId)
 Routes.get("/findUserAttendance/:id",verifyToken,userController.getUserAttendanceByIds)
 Routes.get("/findUserAttendance",verifyToken,userController.getUserAttendanceByIds)
 

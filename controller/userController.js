@@ -560,7 +560,7 @@ const userController = {
         });
         if(setdata){
             let id = req.params.id
-            if(id){
+            // if(id){
                 const promise = UserLoanDeclarationService.getUserLoanDeclarationById(id)
                 promise
                 .then((data)=>{
@@ -576,9 +576,43 @@ const userController = {
                     // console.log(err.message)
                     res.status(200).json({message: "Data not found", success: 0});
                 })
-            }else{
-                const query = req.query.new;
-                const promise = UserLoanDeclarationService.getAllUserLoanDeclaration(query)
+            // }else{
+            //     const query = req.query.new;
+            //     const promise = UserLoanDeclarationService.findAllLoanUserId(query)
+            //     promise
+            //     .then((data)=>{
+            //         console.log(data)
+            //         // const {others} = data._doc
+            //         res.status(200).json({
+            //             data: data,
+            //             success: 1
+            //             })
+                    
+            //     })
+            //     .catch((err)=>{
+            //         // console.log(err.message)
+            //         res.status(200).json({message: "Data not found", success: 0});
+            //     })
+            // }
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+    },
+    getUserLoanListByUserId(req,res){
+        let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+            let id = req.params.id
+            
+                const promise = UserLoanDeclarationService.findAllLoanUserId(id)
                 promise
                 .then((data)=>{
                     console.log(data)
@@ -593,7 +627,7 @@ const userController = {
                     // console.log(err.message)
                     res.status(200).json({message: "Data not found", success: 0});
                 })
-            }
+            
         }else{
             return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }

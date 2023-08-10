@@ -16,6 +16,10 @@ const userLoanDeclarationSerives = {
         const promise = await UserLoanDeclarationModel.findOne({userId})
         return promise 
     },
+    async findAllLoanUserId(userId){
+        const promise = await UserLoanDeclarationModel.find({userId})
+        return promise 
+    },
     async getUserLoanDeclarationById(id){
         const promise = await UserLoanDeclarationModel.findById(id)
         return promise
