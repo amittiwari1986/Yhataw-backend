@@ -13,6 +13,7 @@ app.use("/",require("./routes/userroutes"))
 app.use("/",require("./routes/auth"))
 app.use("/",require("./routes/masterroute"))
 app.use("/",require("./routes/projectroute"))
+app.use("/",require("./routes/leadroute"))
 const server = app.listen(process.env.PORT,()=>{
     console.log("Backend Up",server.address().port)
 })
