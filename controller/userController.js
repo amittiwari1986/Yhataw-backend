@@ -350,6 +350,7 @@ const userController = {
                 console.log(data)
                 // const {others} = data._doc
 
+                if(data != null){
                   let convertData = [];
                     convertData.push(data);
                     data = convertData;
@@ -394,6 +395,9 @@ const userController = {
                         }) 
                       }
                   });
+             }else{
+                res.status(200).json({message: "Data not found", success: 0});
+             }
                 // res.status(200).json({
                 //     data: data,
                 //     success: 1
@@ -401,7 +405,7 @@ const userController = {
             })
             .catch((err)=>{
                 // console.log(err.message)
-                res.status(500).json({message: "Data not found", success: 0});
+                res.status(200).json({message: "Data not found", success: 0});
             })
         }else{
             return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
