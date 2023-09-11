@@ -1872,7 +1872,7 @@ const getUserDoc= async (req, res) => {
             })
             .catch((err)=>{
                 // console.log(err.message)
-                res.status(200).json({message: "Data not found", success: 0});
+                res.status(200).json({message: "Documents has not been uploaded", success: 0});
             })
         }else{
             return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
