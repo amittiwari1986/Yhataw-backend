@@ -130,8 +130,8 @@ function userLoanValidationSchema(req, res, next) {
 function userSalaryValidationSchema(req, res, next) {
     const schema = Joi.object({
 		 userId:Joi.string().required(),
-	     EPF_opt:Joi.string().required(),
-	     ESI_opt:Joi.string().required(),
+	     EPF_opt:Joi.boolean().required(),
+	     ESI_opt:Joi.boolean().required(),
 	     EPF_no:Joi.string(),
 	     ESI_no:Joi.string(),
 	     basic:Joi.string().required(),

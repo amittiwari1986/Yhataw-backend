@@ -1214,12 +1214,15 @@ const punchIn = async (req, res) => {
   var day1 = day +'/' + month + '/' + year;
 
   let userAtt = await userAttendanceOperations.findUserByMultipleData(uid,day1);
-  var datetime = hours  + ':' + minutes;
+  
+    var datetimeC = dt.toLocaleTimeString('en-US', {
+      timeZone: 'Asia/Calcutta'
+    });
   if (userAtt[0].punch_in != "00:00") {
             return res.status(400).json({ success: 0, message: "You have already punch-in for Today" });
           }
     
-    userAtt[0].punch_in = datetime;
+    userAtt[0].punch_in = datetimeC;
     userAtt[0].work_type = "Present";
     const myJSON = userAtt[0]._id; 
     const updateId = myJSON.toString().replace(/ObjectId\("(.*)"\)/, "$1");
@@ -1289,8 +1292,11 @@ const punchOut = async (req, res) => {
           if (userAtt.punch_out != "00:00") {
             return res.status(400).json({ success: 0, message: "User Attendence All ready updated" });
           }
+           var datetimeC = dt.toLocaleTimeString('en-US', {
+              timeZone: 'Asia/Calcutta'
+            });
 
-          userAtt.punch_out = current_datetime;
+          userAtt.punch_out = datetimeC;
           userAtt.working_hours = hourss+":"+mint;
           await userAttendanceOperations.updateUserAttendance(userAtt._id,userAtt);
            res.status(200).json({
