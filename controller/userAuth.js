@@ -1206,8 +1206,8 @@ const punchIn = async (req, res) => {
   month = (dt.getMonth() + 1).toString().padStart(2, "0");
   day   = dt.getDate().toString().padStart(2, "0");
   // current hours
-  let hours = dt.getHours();
-  let minutes = dt.getMinutes();
+  let hours = dt.getHours() + 5;
+  let minutes = dt.getMinutes() + 30;
   let seconds = dt.getSeconds();
   // let date = ("0" + dt.getDate()).slice(-2);
 
@@ -1215,9 +1215,10 @@ const punchIn = async (req, res) => {
 
   let userAtt = await userAttendanceOperations.findUserByMultipleData(uid,day1);
   
-    var datetimeC = dt.toLocaleTimeString('en-US', {
-      timeZone: 'Asia/Calcutta'
-    });
+    // var datetimeC = dt.toLocaleTimeString('en-US', {
+    //   timeZone: 'Asia/Calcutta'
+    // });
+  var datetimeC = hours + ':' + minutes;
   if (userAtt[0].punch_in != "00:00") {
             return res.status(400).json({ success: 0, message: "You have already punch-in for Today" });
           }
@@ -1265,8 +1266,8 @@ const punchOut = async (req, res) => {
     month = (dt.getMonth() + 1).toString().padStart(2, "0");
     day   = dt.getDate().toString().padStart(2, "0");
     // current hours
-    let hours = dt.getHours();
-    let minutes = dt.getMinutes();
+    let hours = dt.getHours() + 5;
+    let minutes = dt.getMinutes() + 30;
     let seconds = dt.getSeconds();
     // let date = ("0" + dt.getDate()).slice(-2);
 
@@ -1292,9 +1293,11 @@ const punchOut = async (req, res) => {
           if (userAtt.punch_out != "00:00") {
             return res.status(400).json({ success: 0, message: "User Attendence All ready updated" });
           }
-           var datetimeC = dt.toLocaleTimeString('en-US', {
-              timeZone: 'Asia/Calcutta'
-            });
+           // var datetimeC = dt.toLocaleTimeString('en-US', {
+           //    timeZone: 'Asia/Calcutta'
+           //  });
+
+          var datetimeC = hours + ':' + minutes;
 
           userAtt.punch_out = datetimeC;
           userAtt.working_hours = hourss+":"+mint;
