@@ -2345,5 +2345,17 @@ const getRole= async (req, res) => {
         }
     };
 
+const testDT = async (req, res) => {
+  var dt = new Date();
+  let hours = dt.getHours();
+  let minutes = dt.getMinutes();
+  let seconds = dt.getSeconds();
+  res.status(200).json({
+      message: "Punch-In Successfully",
+      success: 1,
+      data: hours +':' + minutes,
+    });
+  };
 
-module.exports = { updateUserLoan,createSalary,getSalary,getRole,addRole,updateRole,getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
+
+module.exports = { testDT,updateUserLoan,createSalary,getSalary,getRole,addRole,updateRole,getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
