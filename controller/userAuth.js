@@ -1271,8 +1271,8 @@ const punchOut = async (req, res) => {
     month = (dt.getMonth() + 1).toString().padStart(2, "0");
     day   = dt.getDate().toString().padStart(2, "0");
     // current hours
-    let hours = dt.getHours() + 5;
-    let minutes = dt.getMinutes() + 30;
+    let hours = dt.getHours();
+    let minutes = dt.getMinutes();
     let seconds = dt.getSeconds();
     // let date = ("0" + dt.getDate()).slice(-2);
 
@@ -1302,7 +1302,10 @@ const punchOut = async (req, res) => {
            //    timeZone: 'Asia/Calcutta'
            //  });
 
-          var datetimeC = hours + ':' + minutes;
+          let hours1 = hours + 5;
+          let minutes1 = minutes + 30;
+
+          var datetimeC = hours1 + ':' + minutes1;
 
           userAtt.punch_out = datetimeC;
           userAtt.working_hours = hourss+":"+mint;
