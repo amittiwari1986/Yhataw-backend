@@ -1305,10 +1305,13 @@ const punchOut = async (req, res) => {
           let hours1 = hours + 5;
           let minutes1 = minutes + 30;
 
+          let hourss1 = hourss + 5;
+          let mint1 = mint + 30;
+
           var datetimeC = hours1 + ':' + minutes1;
 
           userAtt.punch_out = datetimeC;
-          userAtt.working_hours = hourss+":"+mint;
+          userAtt.working_hours = hourss1+":"+mint1;
           await userAttendanceOperations.updateUserAttendance(userAtt._id,userAtt);
            res.status(200).json({
             message: "Punch-out Successfully",
