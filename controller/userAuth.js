@@ -1713,17 +1713,71 @@ const leaveApprove = async (req, res) => {
             return res.status(400).json({ message: "User Id not found",success: 0});
           }
 
-    
-
     try {
       // console.log(req.body.id);
           let userApplyLeave = await userApplyLeaveOperations.getUserApplyLeaveById(req.body.id);
-          // console.log(userApplyLeave);
+          
 
-          if (!userApplyLeave) {
-            return res.status(400).json({ success: 0, message: "User Leave not found" });
+           if (!userApplyLeave) {
+            return res.status(200).json({ success: 0, message: "User Leave not found" });
           }
 
+           if (userApplyLeave.status == "1") {
+            return res.status(200).json({ success: 0, message: "User Leave Allready Approved By Approver" });
+          }
+         
+          var dd  = userApplyLeave.from_date;
+          var applyDays  = userApplyLeave.total_days;
+          let dates1 = dd.split("-");
+          let month = dates1[1];
+          let day = dates1[2];
+          let year = dates1[0];
+
+          if(applyDays  == "0.5"){
+              var date = day +'/' + month + '/' + year;
+              let userAtt = await userAttendanceOperations.findUserByMultipleData(uid,date);
+
+              userAtt[0].leave_applied = "yes";
+              userAtt[0].working_hours = "4:00";
+              userAtt[0].work_type = "Half Leave";
+              const myJSON = userAtt[0]._id; 
+              const updateId = myJSON.toString().replace(/ObjectId\("(.*)"\)/, "$1");
+              await userAttendanceOperations.updateUserAttendance(updateId,userAtt[0]);
+          }else{
+             for(let i=0; i<applyDays; i++){
+              var day1 = parseInt(day) + parseInt(i);
+              var date = day1 +'/' + month + '/' + year;
+              let userAtt = await userAttendanceOperations.findUserByMultipleData(uid,date);
+
+              userAtt[0].leave_applied = "yes";
+              userAtt[0].working_hours = "8:00";
+              userAtt[0].work_type = "Leave";
+              const myJSON = userAtt[0]._id; 
+              const updateId = myJSON.toString().replace(/ObjectId\("(.*)"\)/, "$1");
+              await userAttendanceOperations.updateUserAttendance(updateId,userAtt[0]);
+            }
+          }
+          
+
+          let userWiseData = await userLeaveOperations.findOneUserId(uid);
+          var total_leave = parseInt(userWiseData.total_leave) - parseInt(applyDays);
+          userWiseData.total_leave_available = total_leave;
+          if(userApplyLeave.leave_type == "Earned Leave"){
+            var earned_leave = parseInt(userWiseData.earned_leave) - parseInt(applyDays);
+            userWiseData.earned_leave_available = earned_leave;
+          }
+          if(userApplyLeave.leave_type == "Sick Leave"){
+            var sick_leave = parseInt(userWiseData.sick_leave) - parseInt(applyDays);
+            userWiseData.sick_leave_available = sick_leave;
+          }
+          if(userApplyLeave.leave_type == "Casual Leave"){
+            var casual_leave = parseInt(userWiseData.casual_leave) - parseInt(applyDays);
+            userWiseData.casual_leave_available = casual_leave;
+          }
+          await userLeaveOperations.updateUserLeave(userWiseData._id,userWiseData);
+
+         
+          
           userApplyLeave.status = statusId;
           userApplyLeave.approver = uid;
           let updatedata = await userApplyLeaveOperations.updateUserApplyLeave(userApplyLeave._id,userApplyLeave);
