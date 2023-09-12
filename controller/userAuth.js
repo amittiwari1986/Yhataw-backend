@@ -1180,6 +1180,71 @@ const saveChangePassword = async (req, res) => {
   // }
 };
 
+const checkPunchIn = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  // if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+  //   jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+  //     if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+  //     // return res.status(200).send(decoded.id.id);
+  //     setdata = decoded.id.id;
+  // });
+  if(!setdata){
+    const { id, authorization } = req.params;
+    // var datetime = new Date();
+    var dt = new Date();
+    let uid = req.body.userId;
+    const user = await userOperations.getUserById(uid);
+      // console.log(user);
+      if (!user) {
+        return res.status(400).json({ message: "User Id not found",success: 0});
+      }
+
+  year  = dt.getFullYear();
+  month = (dt.getMonth() + 1).toString().padStart(2, "0");
+  day   = dt.getDate().toString().padStart(2, "0");
+  // current hours
+  let hours = dt.getHours() + 5;
+  let minutes = dt.getMinutes() + 30;
+  let seconds = dt.getSeconds();
+  // let date = ("0" + dt.getDate()).slice(-2);
+
+  var day1 = day +'/' + month + '/' + year;
+
+  let userAtt = await userAttendanceOperations.findUserByMultipleData(uid,day1);
+  
+    // var datetimeC = dt.toLocaleTimeString('en-US', {
+    //   timeZone: 'Asia/Calcutta'
+    // });
+  var datetimeC = hours + ':' + minutes;
+  if (userAtt[0].punch_in != "00:00") {
+          if(userAtt[0].punch_out == "00:00"){
+            return res.status(200).json({ success: 0, message: "", data: userAtt[0] });
+          }else{
+            return res.status(400).json({ success: 0, message: "", data: userAtt[0] });
+          }
+            
+          }
+    
+    // userAtt[0].punch_in = datetimeC;
+    // userAtt[0].work_type = "Present";
+    // const myJSON = userAtt[0]._id; 
+    // const updateId = myJSON.toString().replace(/ObjectId\("(.*)"\)/, "$1");
+    // await userAttendanceOperations.updateUserAttendance(updateId,userAtt[0]);
+     res.status(200).json({
+      message: "Punch-In Successfully",
+      success: 1,
+      data: userAtt,
+    });
+
+    }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+
+};
+
 const punchIn = async (req, res) => {
   let token=req.headers.token;
   let setdata = "";
@@ -2372,4 +2437,4 @@ const testDT = async (req, res) => {
   };
 
 
-module.exports = { testDT,updateUserLoan,createSalary,getSalary,getRole,addRole,updateRole,getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
+module.exports = { checkPunchIn,testDT,updateUserLoan,createSalary,getSalary,getRole,addRole,updateRole,getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
