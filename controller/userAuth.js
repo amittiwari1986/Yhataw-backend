@@ -1220,7 +1220,7 @@ const punchIn = async (req, res) => {
     // });
   var datetimeC = hours + ':' + minutes;
   if (userAtt[0].punch_in != "00:00") {
-            return res.status(400).json({ success: 0, message: "You have already punch-in for Today" });
+            return res.status(400).json({ success: 0, message: "You have already punch-in for Today", data: userAtt[0] });
           }
     
     userAtt[0].punch_in = datetimeC;
