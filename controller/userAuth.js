@@ -1338,12 +1338,12 @@ const addUserApplyLeave = async (req, res) => {
     let date1 = req.body.from_date;
     let dates1 = date1.split("-")
     // console.log(dates1);
-    var date_1 = dates1[2] + '/' + dates1[1] + '/' + dates1[0]  + ' 00:00';
+    var date_1 = dates1[0] + '/' + dates1[1] + '/' + dates1[2]  + ' 00:00';
     let date2 = req.body.to_date;
     let date1_1 = new Date(date_1);
 
     let dates2 = date2.split("-")
-    var date_2 = dates2[2] + '/' + dates2[1] + '/' + dates2[0]  + ' 00:00';
+    var date_2 = dates2[0] + '/' + dates2[1] + '/' + dates2[2]  + ' 00:00';
     let date2_2 = new Date(date_2);
     var dateDiff = date2_2.getTime() - date1_1.getTime();
     var resultInMinutes = Math.round(dateDiff / 60000);
