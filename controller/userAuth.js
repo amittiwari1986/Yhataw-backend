@@ -1205,34 +1205,15 @@ const checkPunchIn = async (req, res) => {
   year  = dt.getFullYear();
   month = (dt.getMonth() + 1).toString().padStart(2, "0");
   day   = dt.getDate().toString().padStart(2, "0");
-  // current hours
-  let hours = dt.getHours() + 5;
-  let minutes = dt.getMinutes() + 30;
-  let seconds = dt.getSeconds();
-  // let date = ("0" + dt.getDate()).slice(-2);
-
   var day1 = day +'/' + month + '/' + year;
 
   let userAtt = await userAttendanceOperations.findUserByMultipleData(uid,day1);
   
-    // var datetimeC = dt.toLocaleTimeString('en-US', {
-    //   timeZone: 'Asia/Calcutta'
-    // });
-  var datetimeC = hours + ':' + minutes;
   if (userAtt[0].punch_in != "00:00") {
-          if(userAtt[0].punch_out == "00:00"){
             return res.status(200).json({ success: 0, message: "", data: userAtt[0] });
-          }else{
-            return res.status(400).json({ success: 0, message: "", data: userAtt[0] });
-          }
             
           }
     
-    // userAtt[0].punch_in = datetimeC;
-    // userAtt[0].work_type = "Present";
-    // const myJSON = userAtt[0]._id; 
-    // const updateId = myJSON.toString().replace(/ObjectId\("(.*)"\)/, "$1");
-    // await userAttendanceOperations.updateUserAttendance(updateId,userAtt[0]);
      res.status(200).json({
       message: "Punch-In Successfully",
       success: 1,
