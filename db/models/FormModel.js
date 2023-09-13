@@ -10,6 +10,7 @@ const connection  = require('../connect');
             leadEmail:{type:Schema.Types.String,required:false},
             leadPhone:{type:Schema.Types.Number,required:false},
             dynamicFields:{type:Schema.Types.String,required:false},
+            status:{type:Schema.Types.String,required:[true, 'Please add status']},
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
  

@@ -810,7 +810,9 @@ const userController = {
                     dataArray['updatedAt'] = req.updatedAt;    
 
                     if(req.userId){
+                        console.log(req.userId);
                       var userData = await UserService.getUserById(req.userId);
+
                       dataArray['userId'] = req.userId;
                       dataArray['user_name'] = userData.name;
                     }
