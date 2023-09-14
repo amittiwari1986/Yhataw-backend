@@ -336,6 +336,8 @@ const addLeadForm = async (req, res) => {
       req.body.leadPhone,
       JSON.stringify(req.body.dynamicFields),
       statusData,
+      "",
+      "",
     );
     const promise = leadOperations.addLead(lead);
     promise
