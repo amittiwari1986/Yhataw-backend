@@ -8,6 +8,10 @@ Routes.put("/updateForm",leadController.updateForm)
 //Routes.put("/updateProjectDetail",verifyToken,projectdetailController.updateProjectDetail)
 Routes.get("/getForm/:id",verifyToken,leadController.getForm)
 Routes.get("/getForm",verifyToken,leadController.getForm)
+Routes.post("/addLead",leadController.addLeadForm)
+Routes.put("/updateLead",leadController.updateLeadForm)
+Routes.get("/getLead/:id",verifyToken,leadController.getLeadForm)
+Routes.get("/getLeadList",verifyToken,leadController.getLeadForm)
 
 
 

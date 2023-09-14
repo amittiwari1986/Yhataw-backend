@@ -25,6 +25,8 @@ const Project = require("../dto/projectto");
 const teamOperations = require("../services/teamService");
 const From = require("../dto/formto");
 const formOperations = require("../services/formService");
+const Lead = require("../dto/leadto");
+const leadOperations = require("../services/leadService");
 const Team = require("../dto/teamto");
 const jwt = require("jsonwebtoken");
 const db  = require('../db/connect');
@@ -310,5 +312,245 @@ const getForm = (req, res) => {
 };
 
 
+const addLeadForm = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
 
-module.exports = { getForm,addForm,updateForm }
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    statusData = 1;
+    const lead = new Lead(
+      req.body.form_name,
+      req.body.formId,
+      req.body.developerId,
+      req.body.projectId,
+      req.body.projecttypeId,
+      req.body.leadName,
+      req.body.leadEmail,
+      req.body.leadPhone,
+      JSON.stringify(req.body.dynamicFields),
+      statusData,
+    );
+    const promise = leadOperations.addLead(lead);
+    promise
+      .then((data) => {
+        res.status(201).json({
+          message: "Save Successfully",
+          success: 1,
+          data: data,
+        });
+      })
+      .catch((err) => {
+        // res.status(500).json(err.message);
+        // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        // var keys = Object.keys(err.keyPattern);
+        // var duplicate = keys[0];
+        if(err.keyPattern){
+          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+        }else{
+          res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        }
+      });
+    }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
+
+
+const updateLeadForm = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    let data;
+    let id = req.body.id;
+      try {
+        let lead = await leadOperations.getLeadById(id);
+        console.log(lead);
+
+        if (!lead) {
+          return res.status(400).json({ success: 0, message: "Lead Details not found" });
+        }
+
+        lead.form_name = req.body.form_name;
+        lead.formId = req.body.formId;
+        lead.developerId = req.body.developerId;
+        lead.projectId = req.body.projectId;
+        lead.projecttypeId = req.body.projecttypeId;
+        lead.leadName = req.body.leadName;
+        lead.leadEmail = req.body.leadEmail;
+        lead.leadPhone = req.body.leadPhone;
+        lead.dynamicFields = JSON.stringify(req.body.dynamicFields);
+        lead.status = req.body.status;
+
+        await leadOperations.updateLead(lead._id,lead);
+        return res.status(200).json({ success: 1, message: "Lead Details Updated Successfully" });
+      } catch (error) {
+        return res.status(400).json({ success: 0, message: "Details not found" });
+      }
+    }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+
+};
+
+const getLeadForm = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             let id = req.params.id
+             if(id){
+                 const promise = leadOperations.getLeadById(id)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  const {others} = data
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                  })
+                     
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+             }else{
+               const query = req.query.new 
+              const promise = leadOperations.getAllLead(query)
+              promise
+              .then((data)=>{
+                  // console.log(data)
+                  const {others} = data
+                  if(data.length > 0){
+                   res.status(200).json({
+                    data: data,
+                    success: 1
+                    }) 
+
+                  //  let convertData = [];
+                // convertData.push(data);
+                // data = convertData;
+                //   let arr = [];
+                //  var arrrr = Promise.all(data.map(async (element) => {
+                //     var req = element[0];
+                //     // console.log(req);
+                //     var dataArray = {};
+                //     dataArray['_id'] = req._id; 
+                //     if(req.projectId != 'NA'){
+                //       // console.log(req.projectId);
+                //       var projectData = await projectOperations.getProjectById(req.projectId);
+                //       // console.log(projectData);
+                //       if(projectData){
+                //           dataArray['projectId'] = req.projectId;
+                //           dataArray['project_name'] = projectData.project_name;
+                //       }else{
+                //         dataArray['projectId'] = '';
+                //         dataArray['project_name'] = '';
+                //       }
+                     
+                //     }else{
+                //       dataArray['projectId'] = '';
+                //       dataArray['project_name'] = '';
+                //     }
+
+                //     if(req.developerId != 'NA'){
+                //       var developerData = await developerOperations.getDeveloperById(req.developerId);
+                //       if(developerData){
+                //         dataArray['developerId'] = req.developerId;
+                //         dataArray['developer_name'] = developerData.developer_name;
+                //       }else{
+                //         dataArray['developerId'] = '';
+                //         dataArray['developer_name'] = '';
+                //       }
+                      
+                //     }else{
+                //       dataArray['developerId'] = '';
+                //       dataArray['developer_name'] = '';
+                //     }
+                    
+                //      if(req.projecttypeId != 'NA'){
+                //       var projectTypeData = await propertyTypeOperations.getPropertyTypeById(req.projecttypeId);
+                //       if(projectTypeData){
+                //         dataArray['projecttypeId'] = req.projecttypeId;
+                //         dataArray['projecttype_name'] = projectTypeData.name;
+                //       }else{
+                //         dataArray['projecttypeId'] = '';
+                //         dataArray['projecttype_name'] = '';
+                //       }
+                      
+                //     }else{
+                //       dataArray['projecttypeId'] = '';
+                //       dataArray['projecttype_name'] = '';
+                //     }
+
+                //     dataArray['form_name'] = req.form_name;
+                //     dataArray['leadName'] = req.leadName;
+                //     dataArray['leadEmail'] = req.leadEmail;
+                //     dataArray['leadPhone'] = req.leadPhone;
+                //     dataArray['dynamicFields'] = req.dynamicFields;
+                //     // dataArray['status'] = req.status;
+                    
+                //     arr.push(dataArray);
+                //     return arr;
+                   
+                //     }
+                //   )
+                // ).then((responseText) => {
+                //   // console.log(responseText);
+                //     if(responseText.length > 0){
+                //          res.status(200).json({
+                //           data: responseText[0][0],
+                //           success: 1
+                //           }) 
+                //       }else{
+                //           res.status(200).json({
+                //           data: [],
+                //           message: "No Data found",
+                //           success: 0
+                //         }) 
+                //       }
+                //   });
+
+                }else{
+                    res.status(200).json({
+                    data: [],
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            }
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
+
+
+
+module.exports = { getForm,addForm,updateForm,getLeadForm,addLeadForm,updateLeadForm }
