@@ -1129,13 +1129,13 @@ const getTeam = (req, res) => {
                     data: data,
                     success: 1
                     }) 
-                }else{
-                    res.status(200).json({
-                    data: [],
-                    message: "No Data found",
-                    success: 0
-                    }) 
-                }
+                  }else{
+                      res.status(200).json({
+                      data: [],
+                      message: "No Data found",
+                      success: 0
+                      }) 
+                  }
               })
               .catch((err)=>{
                   // console.log(err.message)
