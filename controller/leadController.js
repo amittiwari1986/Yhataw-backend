@@ -400,6 +400,10 @@ const addLeadForm = async (req, res) => {
       setdata = decoded.id.id;
   });
   if(setdata){
+    var random = Math.floor(1000 + Math.random() * 9000);
+    var uid = "LD" + random;
+    var stage = "new";
+    var source = "FACEBOOK"
     statusData = 1;
     const lead = new Lead(
       req.body.form_name,
@@ -414,6 +418,9 @@ const addLeadForm = async (req, res) => {
       statusData,
       "",
       "",
+      source,
+      uid,
+      stage,
     );
     const promise = leadOperations.addLead(lead);
     promise
@@ -567,6 +574,9 @@ const getLeadForm = (req, res) => {
                     dataArray['status'] = req.status;
                     dataArray['AssignTo'] = req.AssignTo;
                     dataArray['AssignToUser'] = req.AssignToUser;
+                    dataArray['source'] = req.source;
+                    dataArray['stage'] = req.stage;
+                    dataArray['uid'] = req.uid;
                     
                     arr.push(dataArray);
                     return arr;
@@ -669,6 +679,9 @@ const getLeadForm = (req, res) => {
                     dataArray['status'] = req.status;
                     dataArray['AssignTo'] = req.AssignTo;
                     dataArray['AssignToUser'] = req.AssignToUser;
+                    dataArray['source'] = req.source;
+                    dataArray['stage'] = req.stage;
+                    dataArray['uid'] = req.uid;
 
                     arr.push(dataArray);
                     return arr;

@@ -14,6 +14,9 @@ const connection  = require('../connect');
             status:{type:Schema.Types.String,required:[true, 'Please add status']},
             AssignTo:{type:Schema.Types.String,required:false},
             AssignToUser:{type:Schema.Types.String,required:false},
+            source:{type:Schema.Types.String,required:false},
+            uid:{type:Schema.Types.String,required:false},
+            stage:{type:Schema.Types.String,required:false},
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
  
