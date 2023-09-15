@@ -491,6 +491,107 @@ const updateLeadForm = async (req, res) => {
         }
 
 };
+const updateLeadStage = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    let data;
+    let id = req.body.id;
+      try {
+        let lead = await leadOperations.getLeadById(id);
+
+        if (!lead) {
+          return res.status(400).json({ success: 0, message: "Lead Details not found" });
+        }
+
+        lead.stage = req.body.stage;
+
+        await leadOperations.updateLead(lead._id,lead);
+        return res.status(200).json({ success: 1, message: "Lead stage Updated Successfully" });
+      } catch (error) {
+        return res.status(400).json({ success: 0, message: "Details not found" });
+      }
+    }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+
+};
+
+const updateLeadAssignTo = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    let data;
+    let id = req.body.id;
+      try {
+        let lead = await leadOperations.getLeadById(id);
+
+        if (!lead) {
+          return res.status(400).json({ success: 0, message: "Lead Details not found" });
+        }
+
+        lead.AssignTo = req.body.AssignTo;
+
+        await leadOperations.updateLead(lead._id,lead);
+        return res.status(200).json({ success: 1, message: "Lead Assignment Updated Successfully" });
+      } catch (error) {
+        return res.status(400).json({ success: 0, message: "Details not found" });
+      }
+    }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+
+};
+
+const updateLeadAssignToUser = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    let data;
+    let id = req.body.id;
+      try {
+        let lead = await leadOperations.getLeadById(id);
+
+        if (!lead) {
+          return res.status(400).json({ success: 0, message: "Lead Details not found" });
+        }
+
+        lead.AssignToUser = req.body.AssignToUser;
+
+        await leadOperations.updateLead(lead._id,lead);
+        return res.status(200).json({ success: 1, message: "Lead Assignment Updated Successfully" });
+      } catch (error) {
+        return res.status(400).json({ success: 0, message: "Details not found" });
+      }
+    }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+
+};
 
 const getLeadForm = (req, res) => {
   let token=req.headers.token;
@@ -724,4 +825,4 @@ const getLeadForm = (req, res) => {
 
 
 
-module.exports = { getForm,addForm,updateForm,getLeadForm,addLeadForm,updateLeadForm }
+module.exports = { getForm,addForm,updateForm,getLeadForm,addLeadForm,updateLeadForm,updateLeadAssignToUser,updateLeadAssignTo,updateLeadStage }
