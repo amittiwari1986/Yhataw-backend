@@ -15,10 +15,6 @@ Routes.get("/getLeadList",verifyToken,leadController.getLeadForm)
 Routes.put("/updateLeadAssignToUser",leadController.updateLeadAssignToUser)
 Routes.put("/updateLeadAssignTo",leadController.updateLeadAssignTo)
 Routes.put("/updateLeadStage",leadController.updateLeadStage)
-Routes.post("/addLeadReminder",leadController.addLeadReminder)
-Routes.put("/updateLeadReminder",leadController.updateLeadReminder)
-Routes.get("/getLeadReminder/:id",verifyToken,leadController.getLeadReminder)
-Routes.get("/getLeadReminder",verifyToken,leadController.getLeadReminder)
 
 
 
