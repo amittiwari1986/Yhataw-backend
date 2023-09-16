@@ -286,6 +286,7 @@ const getProjectDetail = (req, res) => {
                  const promise = projectDetailOperations.getProjectDetailById(id)
               promise
               .then((data)=>{
+                console.log(data);
                 let convertData = [];
                 convertData.push(data);
                 data = convertData;

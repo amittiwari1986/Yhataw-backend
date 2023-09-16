@@ -12,6 +12,9 @@ Routes.post("/addLead",leadController.addLeadForm)
 Routes.put("/updateLead",leadController.updateLeadForm)
 Routes.get("/getLead/:id",verifyToken,leadController.getLeadForm)
 Routes.get("/getLeadList",verifyToken,leadController.getLeadForm)
+Routes.put("/updateLeadAssignToUser",leadController.updateLeadAssignToUser)
+Routes.put("/updateLeadAssignTo",leadController.updateLeadAssignTo)
+Routes.put("/updateLeadStage",leadController.updateLeadStage)
 
 
 
