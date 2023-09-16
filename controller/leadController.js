@@ -321,7 +321,7 @@ const addLeadForm = async (req, res) => {
       if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
       
       // return res.status(200).send(decoded.id.id);
-      setdata = decoded.id.id;
+      setdata = decoded.id.id; 
   });
   if(setdata){
     statusData = 1;
