@@ -670,6 +670,21 @@ const getLeadForm = (req, res) => {
                       dataArray['projecttype_name'] = '';
                     }
 
+                    if(req.AssignTo != 'NA'){
+                      var userData = await teamOperations.getTeamById(req.AssignTo);
+                      if(userData){
+                        dataArray['AssignTo'] = req.AssignTo;
+                        dataArray['AssignTo_name'] = userData.team_name;
+                      }else{
+                        dataArray['AssignTo'] = '';
+                        dataArray['AssignTo_name'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['AssignTo'] = '';
+                      dataArray['AssignTo_name'] = '';
+                    }
+
                     dataArray['form_name'] = req.form_name;
                     dataArray['formId'] = req.formId;
                     dataArray['leadName'] = req.leadName;
@@ -677,7 +692,6 @@ const getLeadForm = (req, res) => {
                     dataArray['leadPhone'] = req.leadPhone;
                     dataArray['dynamicFields'] = req.dynamicFields;
                     dataArray['status'] = req.status;
-                    dataArray['AssignTo'] = req.AssignTo;
                     dataArray['AssignToUser'] = req.AssignToUser;
                     dataArray['source'] = req.source;
                     dataArray['stage'] = req.stage;
@@ -775,6 +789,21 @@ const getLeadForm = (req, res) => {
                       dataArray['projecttype_name'] = '';
                     }
 
+                    if(req.AssignTo != 'NA'){
+                      var userData = await teamOperations.getTeamById(req.AssignTo);
+                      if(userData){
+                        dataArray['AssignTo'] = req.AssignTo;
+                        dataArray['AssignTo_name'] = userData.team_name;
+                      }else{
+                        dataArray['AssignTo'] = '';
+                        dataArray['AssignTo_name'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['AssignTo'] = '';
+                      dataArray['AssignTo_name'] = '';
+                    }
+
                     dataArray['form_name'] = req.form_name;
                     dataArray['formId'] = req.formId;
                     dataArray['leadName'] = req.leadName;
@@ -782,7 +811,6 @@ const getLeadForm = (req, res) => {
                     dataArray['leadPhone'] = req.leadPhone;
                     dataArray['dynamicFields'] = req.dynamicFields;
                     dataArray['status'] = req.status;
-                    dataArray['AssignTo'] = req.AssignTo;
                     dataArray['AssignToUser'] = req.AssignToUser;
                     dataArray['source'] = req.source;
                     dataArray['stage'] = req.stage;
