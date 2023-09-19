@@ -2471,5 +2471,34 @@ const testDT = async (req, res) => {
     });
   };
 
+  const dashboard = async (req, res) => {
+  var dt = new Date();
+  let hours = dt.getHours() + 5;
+  let minutes = dt.getMinutes() + 30;
+  let seconds = dt.getSeconds();
 
-module.exports = { checkPunchIn,testDT,updateUserLoan,createSalary,getSalary,getRole,addRole,updateRole,getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
+  let arr = [];
+  var dataArray = {};
+  dataArray['attendence_total_emp'] = 40;
+  dataArray['attendence_present_today'] = 33;
+  dataArray['attendence_absent_today'] = 7;
+  dataArray['attendence_leave_today'] = 2;
+  dataArray['attendence_late_today'] = 1;
+  dataArray['leads_total_leads'] = 199;
+  dataArray['leads_pipeline'] = 100;
+  dataArray['leads_in-progress'] = 88;
+  dataArray['leads_not-interested'] = 8;
+  dataArray['leads_success'] = 10;
+  dataArray['projects_total'] = 20;
+  dataArray['projects_commercial'] = 10;
+  dataArray['projects_residencial'] = 10;
+  arr.push(dataArray);
+  res.status(200).json({
+      success: 1,
+      data: arr,
+    });
+  };
+
+
+
+module.exports = { dashboard,checkPunchIn,testDT,updateUserLoan,createSalary,getSalary,getRole,addRole,updateRole,getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };

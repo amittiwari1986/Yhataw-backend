@@ -44,6 +44,8 @@ Routes.post("/createSalary",userAuth.createSalary)
 Routes.get("/getSalary/:userId",userAuth.getSalary)
 Routes.get("/getSalary/:userId/:id",userAuth.getSalary)
 
+Routes.get("/dashboard",userAuth.dashboard)
+
 
 
 module.exports = Routes
