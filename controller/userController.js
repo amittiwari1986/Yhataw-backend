@@ -258,8 +258,27 @@ const userController = {
         });
           console.log(setdata);
         if(setdata){
-            const query = req.query.new 
-            const promise = UserService.getAllUsers(setdata);
+            // const query = req.query.new
+            let start_date = req.query.start_date
+            let end_date = req.query.end_date
+
+            var dt = new Date();
+            year  = dt.getFullYear();
+            month = (dt.getMonth() + 1).toString().padStart(2, "0");
+            day   = dt.getDate().toString().padStart(2, "0");
+            var query = {};
+
+            if(start_date == ''){
+                start_date = day + '/' + month + '/' + year;
+            }
+            if(end_date == ''){
+                end_date = day + '/' + month + '/' + year;
+            }
+             query = {"start_date": start_date, "end_date": end_date};
+             console.log(query);
+            
+
+            const promise = UserService.getAllUsers(query);
             promise.then((data)=>{
                 if(data.length > 0){
                    res.status(200).json({

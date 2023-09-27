@@ -24,11 +24,14 @@ const userSerives = {
         const promise = await UserModel.findByIdAndUpdate(id,data,{new:true})
         return promise
     },
-    async getAllUsers(id){
+    async getAllUsers(query){
         // const promise = await UserModel.find({ _id: { $ne: id } }).populate({path: 'user_leaves',populate: { path: 'user_offices' } })
         // let ids = mongoose.Types.ObjectId(id);
         const promise = await UserModel.aggregate(
             [
+             {
+                "$match": {"date": {"$gte": query.start_date, "$lte": query.end_date}}
+             },
             { "$project": { "user_id": { "$toString": "$_id" },
                 "name": { "$toString": "$name" },
                 "phone": { "$toString": "$phone" },
@@ -42,6 +45,7 @@ const userSerives = {
                 "state": { "$toString": "$state_id" },
                 "city": { "$toString": "$city" },
                 "in_complete": { "$toString": "$in_complete" },
+                "create_date": { "$toString": "$date" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
                 {$lookup: 

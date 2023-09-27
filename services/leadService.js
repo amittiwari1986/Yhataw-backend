@@ -25,7 +25,33 @@ const leadServices = {
         return promise
     },
     async getAllLead(query){
-        const promise = query ? await leadModel.find().sort({_id:-1}).limit(5): await leadModel.find()
+        // const promise = query ? await leadModel.find().sort({_id:-1}).limit(5): await leadModel.find()
+
+         const promise = await leadModel.aggregate(
+            [
+             {
+                "$match": {"date": {"$gte": query.start_date, "$lte": query.end_date}}
+             },
+            { "$project": { "_id": { "$toString": "$_id" },
+                "form_name": { "$toString": "$form_name" },
+                "formId": { "$toString": "$formId" },
+                "developerId": { "$toString": "$developerId" },
+                "projectId": { "$toString": "$projectId" },
+                "projecttypeId": { "$toString": "$projecttypeId" },
+                "leadName": { "$toString": "$leadName" },
+                "leadEmail": { "$toString": "$leadEmail" },
+                "status": { "$toString": "$status" },
+                "leadPhone": { "$toString": "$leadPhone" },
+                "AssignTo": { "$toString": "$AssignTo" },
+                "AssignToUser": { "$toString": "$AssignToUser" },
+                "source": { "$toString": "$source" },
+                "uid": { "$toString": "$uid" },
+                "stage": { "$toString": "$stage" },
+                "create_date": { "$toString": "$date" },
+                "updatedAt": { "$toString": "$updatedAt" },
+            }},
+                { $sort : { updatedAt : -1} }])
+
         return promise
     },
 }

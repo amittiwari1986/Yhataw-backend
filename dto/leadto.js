@@ -1,5 +1,5 @@
 class Form{
-    constructor(form_name,formId,developerId,projectId,projecttypeId,leadName,leadEmail,leadPhone,dynamicFields,status,AssignTo,AssignToUser,source,uid,stage){
+    constructor(form_name,formId,developerId,projectId,projecttypeId,leadName,leadEmail,leadPhone,dynamicFields,status,AssignTo,AssignToUser,source,uid,stage,date){
         this.form_name = form_name
         this.formId = formId
         this.developerId = developerId
@@ -15,6 +15,7 @@ class Form{
         this.source = source
         this.uid = uid
         this.stage = stage
+        this.date = date
     }
 }
 

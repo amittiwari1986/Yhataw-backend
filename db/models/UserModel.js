@@ -35,6 +35,7 @@
      in_complete:{type:Schema.Types.String,required:true},
      time_zone:{type:Schema.Types.String,required:false},
      role_id:{type:Schema.Types.String,required:[false, 'Please add role']},
+     date:{type:Schema.Types.String,required:false},
  },{timestamps:true}); 
  
  const UserModel = connection.model('users',UserSchema);

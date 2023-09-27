@@ -70,6 +70,11 @@ const register = async (req, res) => {
       return res.status(400).json({message: "duplicate data Please check phone", success: 0});
     }
     
+    var dt = new Date();
+    year  = dt.getFullYear();
+    month = (dt.getMonth() + 1).toString().padStart(2, "0");
+    day   = dt.getDate().toString().padStart(2, "0");
+    var date = day +'/' + month + '/' + year;
 
     let role = 6;
     let hashPassword = bcrypt.doEncrypt(req.body.password);
@@ -99,6 +104,7 @@ const register = async (req, res) => {
       req.body.profile_image,
       inComplete,
       role_id,
+      date,
     );
 
 

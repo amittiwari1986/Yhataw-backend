@@ -17,6 +17,7 @@ const connection  = require('../connect');
             source:{type:Schema.Types.String,required:false},
             uid:{type:Schema.Types.String,required:false},
             stage:{type:Schema.Types.String,required:false},
+            date:{type:Schema.Types.String,required:false},
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
  

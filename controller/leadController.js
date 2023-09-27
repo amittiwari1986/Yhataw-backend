@@ -404,6 +404,14 @@ const addLeadForm = async (req, res) => {
       setdata = decoded.id.id; 
   });
   if(setdata){
+
+    var dt = new Date();
+    year  = dt.getFullYear();
+    month = (dt.getMonth() + 1).toString().padStart(2, "0");
+    day   = dt.getDate().toString().padStart(2, "0");
+    var date = day +'/' + month + '/' + year;
+
+
     var random = Math.floor(1000 + Math.random() * 9000);
     var uid = "LD" + random;
     var stage = "new";
@@ -425,6 +433,7 @@ const addLeadForm = async (req, res) => {
       source,
       uid,
       stage,
+      date,
     );
     const promise = leadOperations.addLead(lead);
     promise
@@ -724,7 +733,24 @@ const getLeadForm = (req, res) => {
                   res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
               });
              }else{
-               const query = req.query.new 
+               let start_date = req.query.start_date
+                let end_date = req.query.end_date
+
+                var dt = new Date();
+                year  = dt.getFullYear();
+                month = (dt.getMonth() + 1).toString().padStart(2, "0");
+                day   = dt.getDate().toString().padStart(2, "0");
+                var query = {};
+
+                if(start_date == ''){
+                    start_date = day + '/' + month + '/' + year;
+                }
+                if(end_date == ''){
+                    end_date = day + '/' + month + '/' + year;
+                }
+                 query = {"start_date": start_date, "end_date": end_date};
+                 console.log(query);
+
               const promise = leadOperations.getAllLead(query)
               promise
               .then((data)=>{
