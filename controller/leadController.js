@@ -704,19 +704,20 @@ const getLeadForm = (req, res) => {
                     dataArray['source'] = req.source;
                     dataArray['stage'] = req.stage;
                     dataArray['uid'] = req.uid;
+                    dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
 
 
-                    if(req.formId != 'NA'){
-                      var formData = await formOperations.findFormId(req.formId);
-                      if(formData){
-                        dataArray['dynamicFields'] = JSON.parse(formData.dynamicFields);
-                      }else{
-                        dataArray['dynamicFields'] = '';
-                      }
+                    // if(req.formId != 'NA'){
+                    //   var formData = await formOperations.findFormId(req.formId);
+                    //   if(formData){
+                    //     dataArray['dynamicFields'] = JSON.parse(formData.dynamicFields);
+                    //   }else{
+                    //     dataArray['dynamicFields'] = '';
+                    //   }
                       
-                    }else{
-                      dataArray['dynamicFields'] = '';
-                    }
+                    // }else{
+                    //   dataArray['dynamicFields'] = '';
+                    // }
                     
                     arr.push(dataArray);
                     return arr;
@@ -852,18 +853,19 @@ const getLeadForm = (req, res) => {
                     dataArray['source'] = req.source;
                     dataArray['stage'] = req.stage;
                     dataArray['uid'] = req.uid;
+                    dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
 
-                    if(req.formId != 'NA'){
-                      var formData = await formOperations.findFormId(req.formId);
-                      if(formData){
-                        dataArray['dynamicFields'] = JSON.parse(formData[0].dynamicFields);
-                      }else{
-                        dataArray['dynamicFields'] = '';
-                      }
+                    // if(req.formId != 'NA'){
+                    //   var formData = await formOperations.findFormId(req.formId);
+                    //   if(formData){
+                    //     dataArray['dynamicFields'] = JSON.parse(formData[0].dynamicFields);
+                    //   }else{
+                    //     dataArray['dynamicFields'] = '';
+                    //   }
                       
-                    }else{
-                      dataArray['dynamicFields'] = '';
-                    }
+                    // }else{
+                    //   dataArray['dynamicFields'] = '';
+                    // }
                     arr.push(dataArray);
                     return arr;
                    

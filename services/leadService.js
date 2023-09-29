@@ -47,6 +47,7 @@ const leadServices = {
                 "source": { "$toString": "$source" },
                 "uid": { "$toString": "$uid" },
                 "stage": { "$toString": "$stage" },
+                "dynamicFields": { "$toString": "$dynamicFields" },
                 "create_date": { "$toString": "$date" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
