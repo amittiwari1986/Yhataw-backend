@@ -699,12 +699,24 @@ const getLeadForm = (req, res) => {
                     dataArray['leadName'] = req.leadName;
                     dataArray['leadEmail'] = req.leadEmail;
                     dataArray['leadPhone'] = req.leadPhone;
-                    dataArray['dynamicFields'] = req.dynamicFields;
                     dataArray['status'] = req.status;
                     dataArray['AssignToUser'] = req.AssignToUser;
                     dataArray['source'] = req.source;
                     dataArray['stage'] = req.stage;
                     dataArray['uid'] = req.uid;
+
+
+                    if(req.formId != 'NA'){
+                      var formData = await formOperations.findFormId(req.formId);
+                      if(formData){
+                        dataArray['dynamicFields'] = JSON.parse(formData.dynamicFields);
+                      }else{
+                        dataArray['dynamicFields'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['dynamicFields'] = '';
+                    }
                     
                     arr.push(dataArray);
                     return arr;
@@ -835,13 +847,23 @@ const getLeadForm = (req, res) => {
                     dataArray['leadName'] = req.leadName;
                     dataArray['leadEmail'] = req.leadEmail;
                     dataArray['leadPhone'] = req.leadPhone;
-                    dataArray['dynamicFields'] = req.dynamicFields;
                     dataArray['status'] = req.status;
                     dataArray['AssignToUser'] = req.AssignToUser;
                     dataArray['source'] = req.source;
                     dataArray['stage'] = req.stage;
                     dataArray['uid'] = req.uid;
 
+                    if(req.formId != 'NA'){
+                      var formData = await formOperations.findFormId(req.formId);
+                      if(formData){
+                        dataArray['dynamicFields'] = JSON.parse(formData[0].dynamicFields);
+                      }else{
+                        dataArray['dynamicFields'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['dynamicFields'] = '';
+                    }
                     arr.push(dataArray);
                     return arr;
                    
