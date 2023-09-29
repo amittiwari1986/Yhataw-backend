@@ -755,7 +755,7 @@ const getLeadForm = (req, res) => {
                 var query = {};
 
                 if(start_date == ''){
-                    start_date = day + '/' + month + '/' + year;
+                    start_date = day + '/' + month + '/2022';
                 }
                 if(end_date == ''){
                     end_date = day + '/' + month + '/' + year;
@@ -1011,12 +1011,12 @@ const getLeadReminder = (req, res) => {
               promise
               .then((data)=>{
                 // console.log(data);
-                let convertData = [];
-                convertData.push(data);
-                data = convertData;
+                // let convertData = [];
+                // convertData.push(data);
+                // data = convertData;
                 let arr = [];
                  var arrrr = Promise.all(data.map(async (element) => {
-                    var req = element[0];
+                    var req = element;
                     console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
@@ -1065,7 +1065,7 @@ const getLeadReminder = (req, res) => {
                   // console.log(responseText);
                     if(responseText.length > 0){
                          res.status(200).json({
-                          data: responseText[0][0],
+                          data: responseText[0],
                           success: 1
                           }) 
                       }else{
