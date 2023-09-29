@@ -24,6 +24,10 @@ const projectOperations = require("../services/projectService");
 const Project = require("../dto/projectto");
 const teamOperations = require("../services/teamService");
 const Team = require("../dto/teamto");
+const LeadStatus = require("../dto/leadstatusto");
+const leadStatusOperations = require("../services/leadStatusService");
+const LeadSource = require("../dto/leadsourceto");
+const leadSourceOperations = require("../services/leadSourceService");
 const jwt = require("jsonwebtoken");
 const db  = require('../db/connect');
 
@@ -1191,5 +1195,172 @@ const updateTeam= async (req, res) => {
 
 };
 
+const getLeadStatus = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             let id = req.params.id
+             const query = req.query.new 
+            const promise = leadStatusOperations.getAllLeadStatus(query)
+            promise
+            .then((data)=>{
+                console.log(data)
+                const {others} = data
+               if(data.length > 0){
+                   res.status(200).json({
+                    data: data,
+                    success: 1
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: [],
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+            })
+            .catch((err)=>{
+                // console.log(err.message)
+                res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+            });
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
 
-module.exports = { updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
+const addLeadSource = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    var status = 1;
+    const leadSource = new LeadSource(
+      req.body.source_name,
+      status,
+    );
+    const promise = leadSourceOperations.addLeadSource(leadSource);
+    promise
+      .then((data) => {
+        res.status(201).json({
+          message: "Save Successfully",
+          success: 1,
+          data: data,
+        });
+      })
+      .catch((err) => {
+        // res.status(500).json(err.message);
+        // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        // var keys = Object.keys(err.keyPattern);
+        // var duplicate = keys[0];
+        if(err.keyPattern){
+          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+        }else{
+          res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        }
+      });
+    }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
+
+const getLeadSource = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             let id = req.params.id
+             const query = req.query.new 
+            const promise = leadSourceOperations.getAllLeadSource(query)
+            promise
+            .then((data)=>{
+                console.log(data)
+                const {others} = data
+               if(data.length > 0){
+                   res.status(200).json({
+                    data: data,
+                    success: 1
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: [],
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+            })
+            .catch((err)=>{
+                // console.log(err.message)
+                res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+            });
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
+
+const addLeadStatus = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    var status = 1;
+    const leadStatus = new LeadStatus(
+      req.body.status_name,
+      status,
+    );
+    const promise = leadStatusOperations.addLeadStatus(leadStatus);
+    promise
+      .then((data) => {
+        res.status(201).json({
+          message: "Save Successfully",
+          success: 1,
+          data: data,
+        });
+      })
+      .catch((err) => {
+        // res.status(500).json(err.message);
+        // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        // var keys = Object.keys(err.keyPattern);
+        // var duplicate = keys[0];
+        if(err.keyPattern){
+          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+        }else{
+          res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        }
+      });
+    }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
+
+
+
+module.exports = { addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }

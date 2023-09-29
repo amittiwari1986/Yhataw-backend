@@ -31,4 +31,8 @@ Routes.get("/getTeamList",mastercontroller.getTeam)
 Routes.get("/getTeam/:id",mastercontroller.getTeam)
 Routes.post("/addTeam",mastercontroller.addTeam)
 Routes.put("/updateTeam",mastercontroller.updateTeam)
+Routes.post("/addLeadStatus",mastercontroller.addLeadStatus)
+Routes.get("/getLeadStatus",mastercontroller.getLeadStatus)
+Routes.post("/addLeadSource",mastercontroller.addLeadSource)
+Routes.get("/getLeadSource",mastercontroller.getLeadSource)
 module.exports = Routes
