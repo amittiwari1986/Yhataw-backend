@@ -755,12 +755,12 @@ const getLeadForm = (req, res) => {
                 day   = dt.getDate().toString().padStart(2, "0");
                 var query = {};
 
-                if(start_date == ''){
-                    start_date = day + '/' + month + '/2022';
-                }
-                if(end_date == ''){
-                    end_date = day + '/' + month + '/' + year;
-                }
+                // if(start_date == ''){
+                //     start_date = day + '/' + month + '/2022';
+                // }
+                // if(end_date == ''){
+                //     end_date = day + '/' + month + '/' + year;
+                // }
                  query = {"start_date": start_date, "end_date": end_date};
                  console.log(query);
 
