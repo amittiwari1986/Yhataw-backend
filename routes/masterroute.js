@@ -35,4 +35,5 @@ Routes.post("/addLeadStatus",mastercontroller.addLeadStatus)
 Routes.get("/getLeadStatus",mastercontroller.getLeadStatus)
 Routes.post("/addLeadSource",mastercontroller.addLeadSource)
 Routes.get("/getLeadSource",mastercontroller.getLeadSource)
+Routes.get("/getTeamDropDown",mastercontroller.getTeamDropDown)
 module.exports = Routes

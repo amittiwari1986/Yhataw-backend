@@ -28,6 +28,8 @@ const LeadStatus = require("../dto/leadstatusto");
 const leadStatusOperations = require("../services/leadStatusService");
 const LeadSource = require("../dto/leadsourceto");
 const leadSourceOperations = require("../services/leadSourceService");
+const User = require("../dto/userdto");
+const userOfficeOperations = require("../services/userOfficeService");
 const jwt = require("jsonwebtoken");
 const db  = require('../db/connect');
 
@@ -1151,6 +1153,91 @@ const getTeam = (req, res) => {
         }
 };
 
+const getTeamDropDown = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             
+               const query = req.query.new 
+              const promise = teamOperations.getAllTeam(query)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  // const {others} = data
+                  // if(data.length > 0){
+                  //  res.status(200).json({
+                  //   data: data,
+                  //   success: 1
+                  //   }) 
+                  // }else{
+                  //     res.status(200).json({
+                  //     data: [],
+                  //     message: "No Data found",
+                  //     success: 0
+                  //     }) 
+                  // }
+                  let arr = [];
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+                    var query = '';
+                    console.log(req);
+                    var dataArray = {};
+                    dataArray['_id'] = req._id; 
+                    dataArray['team_name'] = req.team_name;
+                    dataArray['status'] = req.status;
+                    dataArray['is_remove'] = req.is_remove;
+                    if(req.projectId != 'NA'){
+                      var projectData = await userOfficeOperations.getAllTeamDropDown(req._id.toString());
+                      if(projectData){
+                          dataArray['team_members'] = projectData;
+                      }else{
+                        dataArray['team_members'] = '';
+                      }
+                     
+                    }else{
+                      dataArray['team_members'] = '';
+                    }
+                    
+                    
+                    arr.push(dataArray);
+                    return arr;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
+
 const updateTeam= async (req, res) => {
   let token=req.headers.token;
   let setdata = "";
@@ -1363,4 +1450,4 @@ const addLeadStatus = async (req, res) => {
 
 
 
-module.exports = { addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
+module.exports = { getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }

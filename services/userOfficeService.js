@@ -28,7 +28,24 @@ const userOfficeSerives = {
         const roleId = 5;
         const promise = await UserOfficeModel.find({team_id: teamId, roleId: roleId})
         return promise 
-    }
+    },
+    async getAllTeamDropDown(query){
+        const promise = await UserOfficeModel.aggregate(
+            [
+                {
+                "$match": {"team_id": query}
+             },
+            { "$project": { "userId": { "$toObjectId": "$userId" },
+            }},
+                {$lookup: 
+                    {from: "users", 
+                    localField: "userId", 
+                    foreignField: "_id", 
+                    as: "users"}
+                },
+                { $sort : { updatedAt : -1} }])
+        return promise
+    },
 }
 
 module.exports = userOfficeSerives;

@@ -20,6 +20,7 @@ const teamSerives = {
         const promise = query ? await teamModel.find().sort({_id:-1}).limit(5): await teamModel.find()
         return promise
     },
+    
 }
 
 module.exports = teamSerives;

@@ -41,11 +41,11 @@ const userSerives = {
                 "doj": { "$toString": "$doj" },
                 "dob": { "$toString": "$dob" },
                 "status": { "$toString": "$status" },
-                "country": { "$toString": "$country_id" },
-                "state": { "$toString": "$state_id" },
+                "country": { "$toObjectId": "$country_id" },
+                "state": { "$toObjectId": "$state_id" },
                 "city": { "$toString": "$city" },
                 "in_complete": { "$toString": "$in_complete" },
-                "create_date": { "$toString": "$date" },
+                "date": { "$toString": "$date" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
                 {$lookup: 
@@ -60,6 +60,19 @@ const userSerives = {
                     foreignField: "userId", 
                     as: "userOffices"}
                 },
+                {$lookup: 
+                    {from: "states", 
+                    localField: "state", 
+                    foreignField: "_id", 
+                    as: "states"}
+                },
+                {$lookup: 
+                    {from: "countries", 
+                    localField: "country", 
+                    foreignField: "_id", 
+                    as: "countries"}
+                },
+
                 { $sort : { updatedAt : -1} }])
 
         
