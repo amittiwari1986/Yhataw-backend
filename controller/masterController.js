@@ -30,6 +30,9 @@ const LeadSource = require("../dto/leadsourceto");
 const leadSourceOperations = require("../services/leadSourceService");
 const User = require("../dto/userdto");
 const userOfficeOperations = require("../services/userOfficeService");
+
+const userOperations = require("../services/userService");
+const roleOperations = require("../services/roleService");
 const jwt = require("jsonwebtoken");
 const db  = require('../db/connect');
 
@@ -1449,5 +1452,54 @@ const addLeadStatus = async (req, res) => {
 };
 
 
+const getReportingManagerByRoleWise = async (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+       
+            let id = req.params.id
+            const dataset = []
+            var userRoleData = await roleOperations.getRoleById(req.body.role_id);
+            if(userRoleData.roleId == 2 || userRoleData.roleId == 3){
+              var userRole = 1;
+            }
+            if(userRoleData.roleId == 4){
+              var userRole = 2;
+            }
+            if(userRoleData.roleId == 5){
+              var userRole = 4;
+            }
+            const promise = userOperations.getAllManager(userRole);
+            promise
+            .then((data)=>{
+                  let arr = [];
+                    var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+                    var dataArray = {};
+                    dataArray['_id'] = req._id; 
+                    dataArray['name'] = req.name;
+                    arr.push(dataArray);
+                    return arr;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText[0][0]);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+            }).catch((err)=>{
+                res.status(500).json({message: "Data not found", success: 0});
+            })
+};
 
-module.exports = { getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
+module.exports = { getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }

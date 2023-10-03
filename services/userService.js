@@ -90,6 +90,11 @@ const userSerives = {
         const userrole = 4;
         const promise = await UserModel.find({userRole: userrole})
         return promise
+    },
+    async getAllManager(userRole){
+        const userrole = userRole;
+        const promise = await UserModel.find({userRole: userrole})
+        return promise
     }
 }
 

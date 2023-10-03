@@ -1053,6 +1053,7 @@ const userController = {
             })
         
     },
+    
     getAllManagerByTeamWise(req,res){
         let token=req.headers.token;
         let setdata = "";
