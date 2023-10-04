@@ -87,6 +87,7 @@ const leadServices = {
          
     },
     async getAllMyLead(query){
+        console.log(query);
         // const promise = query ? await leadModel.find().sort({_id:-1}).limit(5): await leadModel.find()
         if(query.start_date != ''){
 
