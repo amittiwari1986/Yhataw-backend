@@ -1030,7 +1030,9 @@ const getMyLeadForm = (req, res) => {
                     dataArray['source'] = req.source;
                     dataArray['stage'] = req.stage;
                     dataArray['uid'] = req.uid;
-                    dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
+                    if(req.dynamicFields){
+                      dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
+                    }
 
 
                     // if(req.formId != 'NA'){
