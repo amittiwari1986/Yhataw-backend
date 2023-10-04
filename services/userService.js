@@ -78,6 +78,46 @@ const userSerives = {
         
         return promise
     }, 
+
+    async getAllUserData(query){
+        // const promise = await UserModel.find({ _id: { $ne: id } }).populate({path: 'user_leaves',populate: { path: 'user_offices' } })
+        // let ids = mongoose.Types.ObjectId(id);
+        const promise = await UserModel.aggregate(
+            [
+            { "$project": { "user_id": { "$toString": "$_id" },
+                "name": { "$toString": "$name" },
+                "phone": { "$toString": "$phone" },
+                "email": { "$toString": "$email" },
+                "whatsapp": { "$toString": "$whatsapp" },
+                "employee_id": { "$toString": "$employee_id" },
+                "doj": { "$toString": "$doj" },
+                "dob": { "$toString": "$dob" },
+                "status": { "$toString": "$status" },
+                "country": { "$toObjectId": "$country_id" },
+                "state": { "$toObjectId": "$state_id" },
+                "city": { "$toString": "$city" },
+                "in_complete": { "$toString": "$in_complete" },
+                "date": { "$toString": "$date" },
+                "updatedAt": { "$toString": "$updatedAt" },
+            }},
+                {$lookup: 
+                    {from: "user_leaves", 
+                    localField: "user_id", 
+                    foreignField: "userId", 
+                    as: "leaves"}
+                },
+                {$lookup: 
+                    {from: "user_offices", 
+                    localField: "user_id", 
+                    foreignField: "userId", 
+                    as: "userOffices"}
+                },
+
+                { $sort : { updatedAt : -1} }])
+
+        
+        return promise
+    }, 
     async findOneUserId(userId){
         const promise = await UserModel.findOne({userId})
         return promise

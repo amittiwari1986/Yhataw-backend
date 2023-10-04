@@ -86,6 +86,71 @@ const leadServices = {
         }
          
     },
+    async getAllMyLead(query){
+        // const promise = query ? await leadModel.find().sort({_id:-1}).limit(5): await leadModel.find()
+        if(query.start_date != ''){
+
+            const promise = await leadModel.aggregate(
+            [
+             {
+                "$match": {"AssignTo": query.user_id,"date": {"$gte": query.start_date, "$lte": query.end_date}}
+             },
+            { "$project": { "_id": { "$toString": "$_id" },
+                "form_name": { "$toString": "$form_name" },
+                "formId": { "$toString": "$formId" },
+                "developerId": { "$toString": "$developerId" },
+                "projectId": { "$toString": "$projectId" },
+                "projecttypeId": { "$toString": "$projecttypeId" },
+                "leadName": { "$toString": "$leadName" },
+                "leadEmail": { "$toString": "$leadEmail" },
+                "status": { "$toString": "$status" },
+                "leadPhone": { "$toString": "$leadPhone" },
+                "AssignTo": { "$toString": "$AssignTo" },
+                "AssignToUser": { "$toString": "$AssignToUser" },
+                "source": { "$toString": "$source" },
+                "uid": { "$toString": "$uid" },
+                "stage": { "$toString": "$stage" },
+                "dynamicFields": { "$toString": "$dynamicFields" },
+                "create_date": { "$toString": "$date" },
+                "updatedAt": { "$toString": "$updatedAt" },
+            }},
+                { $sort : { updatedAt : -1} }])
+
+        return promise
+
+        }else{
+
+             const promise = await leadModel.aggregate(
+            [
+            {
+                "$match": {"AssignTo": query.user_id}
+             },
+            { "$project": { "_id": { "$toString": "$_id" },
+                "form_name": { "$toString": "$form_name" },
+                "formId": { "$toString": "$formId" },
+                "developerId": { "$toString": "$developerId" },
+                "projectId": { "$toString": "$projectId" },
+                "projecttypeId": { "$toString": "$projecttypeId" },
+                "leadName": { "$toString": "$leadName" },
+                "leadEmail": { "$toString": "$leadEmail" },
+                "status": { "$toString": "$status" },
+                "leadPhone": { "$toString": "$leadPhone" },
+                "AssignTo": { "$toString": "$AssignTo" },
+                "AssignToUser": { "$toString": "$AssignToUser" },
+                "source": { "$toString": "$source" },
+                "uid": { "$toString": "$uid" },
+                "stage": { "$toString": "$stage" },
+                "dynamicFields": { "$toString": "$dynamicFields" },
+                "create_date": { "$toString": "$date" },
+                "updatedAt": { "$toString": "$updatedAt" },
+            }},
+                { $sort : { updatedAt : -1} }])
+
+        return promise
+
+        }
+         
+    },
 }
 
 module.exports = leadServices;

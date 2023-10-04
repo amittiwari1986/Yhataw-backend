@@ -1642,7 +1642,7 @@ const addAttendanceDummy = async (req, res) => {
     var day1 = '';
     var datetime = '00:00';
     try {
-    const users = await userOperations.getAllUsers();
+    const users = await userOperations.getAllUserData();
      
       users.forEach(async function(element) {
         // console.log(element.user_id);
@@ -1687,7 +1687,7 @@ const addAttendanceDummy = async (req, res) => {
         return res.status(201).json({ success: 1, message: "Details inserted" });
       });
       } catch (error) {
-        return res.status(400).json({ success: 0, message: "Details not found" });
+        return res.status(400).json({ success: 0, message: "Details not found"+error });
       }
       
     }else{

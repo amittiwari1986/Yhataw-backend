@@ -906,6 +906,151 @@ const getLeadForm = (req, res) => {
 };
 
 
+const getMyLeadForm = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             let id = setdata;
+             let start_date = req.query.start_date
+            let end_date = req.query.end_date
+             query = {"user_id":id, "start_date": start_date, "end_date": end_date};
+                 const promise = leadOperations.getAllMyLead(query)
+              promise
+              .then((data)=>{
+                let arr = [];
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+                    var dataArray = {};
+                    dataArray['_id'] = req._id; 
+                    if(req.projectId != 'NA'){
+                      // console.log(req.projectId);
+                      var projectData = await projectOperations.getProjectById(req.projectId);
+                      // console.log(projectData);
+                      if(projectData){
+                          dataArray['projectId'] = req.projectId;
+                          dataArray['project_name'] = projectData.project_name;
+                      }else{
+                        dataArray['projectId'] = '';
+                        dataArray['project_name'] = '';
+                      }
+                     
+                    }else{
+                      dataArray['projectId'] = '';
+                      dataArray['project_name'] = '';
+                    }
+
+                    if(req.developerId != 'NA'){
+                      var developerData = await developerOperations.getDeveloperById(req.developerId);
+                      if(developerData){
+                        dataArray['developerId'] = req.developerId;
+                        dataArray['developer_name'] = developerData.developer_name;
+                      }else{
+                        dataArray['developerId'] = '';
+                        dataArray['developer_name'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['developerId'] = '';
+                      dataArray['developer_name'] = '';
+                    }
+                    
+                     if(req.projecttypeId != 'NA'){
+                      var projectTypeData = await propertyTypeOperations.getPropertyTypeById(req.projecttypeId);
+                      if(projectTypeData){
+                        dataArray['projecttypeId'] = req.projecttypeId;
+                        dataArray['projecttype_name'] = projectTypeData.name;
+                      }else{
+                        dataArray['projecttypeId'] = '';
+                        dataArray['projecttype_name'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['projecttypeId'] = '';
+                      dataArray['projecttype_name'] = '';
+                    }
+
+                    if(req.AssignTo != 'NA'){
+                      var userData = await teamOperations.getTeamById(req.AssignTo);
+                      if(userData){
+                        dataArray['AssignTo'] = req.AssignTo;
+                        dataArray['AssignTo_name'] = userData.team_name;
+                      }else{
+                        dataArray['AssignTo'] = '';
+                        dataArray['AssignTo_name'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['AssignTo'] = '';
+                      dataArray['AssignTo_name'] = '';
+                    }
+
+                    dataArray['form_name'] = req.form_name;
+                    dataArray['formId'] = req.formId;
+                    dataArray['leadName'] = req.leadName;
+                    dataArray['leadEmail'] = req.leadEmail;
+                    dataArray['leadPhone'] = req.leadPhone;
+                    dataArray['status'] = req.status;
+                    dataArray['AssignToUser'] = req.AssignToUser;
+                    dataArray['source'] = req.source;
+                    dataArray['stage'] = req.stage;
+                    dataArray['uid'] = req.uid;
+                    dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
+
+
+                    // if(req.formId != 'NA'){
+                    //   var formData = await formOperations.findFormId(req.formId);
+                    //   if(formData){
+                    //     dataArray['dynamicFields'] = JSON.parse(formData.dynamicFields);
+                    //   }else{
+                    //     dataArray['dynamicFields'] = '';
+                    //   }
+                      
+                    // }else{
+                    //   dataArray['dynamicFields'] = '';
+                    // }
+                    
+                    arr.push(dataArray);
+                    return arr;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+                     
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+             
+
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
+
+
 const addLeadReminder = async (req, res) => {
   let token=req.headers.token;
   let setdata = "";
@@ -1180,4 +1325,4 @@ const getLeadReminder = (req, res) => {
 
 
 
-module.exports = { getForm,addForm,updateForm,getLeadForm,addLeadForm,updateLeadForm,updateLeadAssignToUser,updateLeadAssignTo,updateLeadStage,addLeadReminder,updateLeadReminder,getLeadReminder }
+module.exports = { getMyLeadForm,getForm,addForm,updateForm,getLeadForm,addLeadForm,updateLeadForm,updateLeadAssignToUser,updateLeadAssignTo,updateLeadStage,addLeadReminder,updateLeadReminder,getLeadReminder }

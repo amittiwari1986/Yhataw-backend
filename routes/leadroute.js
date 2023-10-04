@@ -19,6 +19,7 @@ Routes.post("/addLeadReminder",leadController.addLeadReminder)
 Routes.put("/updateLeadReminder",leadController.updateLeadReminder)
 Routes.get("/getLeadReminder/:id",verifyToken,leadController.getLeadReminder)
 Routes.get("/getLeadReminder",verifyToken,leadController.getLeadReminder)
+Routes.get("/getMyLeadList",verifyToken,leadController.getMyLeadForm)
 
 
 module.exports = Routes
