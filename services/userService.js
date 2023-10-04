@@ -135,7 +135,11 @@ const userSerives = {
         const userrole = userRole;
         const promise = await UserModel.find({userRole: userrole})
         return promise
-    }
+    },
+    async getMultipleUser(query){
+        const promise = query ? await UserModel.find({ "_id": { "$in": query } }).sort({_id:-1}).limit(5): await UserModel.find({ "_id": { "$in": query } })
+        return promise
+    },
 }
 
 module.exports = userSerives;

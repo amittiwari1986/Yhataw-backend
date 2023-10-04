@@ -37,4 +37,5 @@ Routes.post("/addLeadSource",mastercontroller.addLeadSource)
 Routes.get("/getLeadSource",mastercontroller.getLeadSource)
 Routes.get("/getTeamDropDown",mastercontroller.getTeamDropDown)
 Routes.post("/getReportingManagerByRoleWise",mastercontroller.getReportingManagerByRoleWise)
+Routes.post("/getMultipleTeamWiseDropDown",mastercontroller.getMultipleTeamWiseDropDown)
 module.exports = Routes

@@ -538,6 +538,7 @@ const updateLeadStage = async (req, res) => {
 
 };
 
+
 const updateLeadAssignTo = async (req, res) => {
   let token=req.headers.token;
   let setdata = "";
@@ -559,7 +560,7 @@ const updateLeadAssignTo = async (req, res) => {
           return res.status(400).json({ success: 0, message: "Lead Details not found" });
         }
 
-        lead.AssignTo = req.body.AssignTo;
+        lead.AssignTo = JSON.stringify(req.body.AssignTo);
 
         await leadOperations.updateLead(lead._id,lead);
         return res.status(200).json({ success: 1, message: "Lead Assignment Updated Successfully" });
@@ -593,10 +594,10 @@ const updateLeadAssignToUser = async (req, res) => {
           return res.status(400).json({ success: 0, message: "Lead Details not found" });
         }
 
-        lead.AssignToUser = req.body.AssignToUser;
+        lead.AssignToUser = JSON.stringify(req.body.AssignToUser);
 
         await leadOperations.updateLead(lead._id,lead);
-        return res.status(200).json({ success: 1, message: "Lead Assignment Updated Successfully" });
+        return res.status(200).json({ success: 1, message: "Lead Assignment To Users Successfully" });
       } catch (error) {
         return res.status(400).json({ success: 0, message: "Details not found" });
       }
@@ -680,18 +681,29 @@ const getLeadForm = (req, res) => {
                     }
 
                     if(req.AssignTo != 'NA'){
-                      var userData = await teamOperations.getTeamById(req.AssignTo);
-                      if(userData){
-                        dataArray['AssignTo'] = req.AssignTo;
-                        dataArray['AssignTo_name'] = userData.team_name;
+                      var teamId =JSON.parse(req.AssignTo);
+                      var teamData = await teamOperations.getMultipleTeam(teamId);
+                      if(teamData){
+                        dataArray['AssignTo'] = teamData;
                       }else{
                         dataArray['AssignTo'] = '';
-                        dataArray['AssignTo_name'] = '';
                       }
                       
                     }else{
                       dataArray['AssignTo'] = '';
-                      dataArray['AssignTo_name'] = '';
+                    }
+
+                    if(req.AssignToUser != 'NA'){
+                      var userId =JSON.parse(req.AssignToUser);
+                      var userData = await userOperations.getMultipleUser(userId);
+                      if(userData){
+                        dataArray['AssignToUser'] = userData;
+                      }else{
+                        dataArray['AssignToUser'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['AssignToUser'] = '';
                     }
 
                     dataArray['form_name'] = req.form_name;
@@ -700,11 +712,13 @@ const getLeadForm = (req, res) => {
                     dataArray['leadEmail'] = req.leadEmail;
                     dataArray['leadPhone'] = req.leadPhone;
                     dataArray['status'] = req.status;
-                    dataArray['AssignToUser'] = req.AssignToUser;
+                    // dataArray['AssignToUser'] = req.AssignToUser;
                     dataArray['source'] = req.source;
                     dataArray['stage'] = req.stage;
                     dataArray['uid'] = req.uid;
-                    dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
+                    if(req.dynamicFields){
+                      dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
+                    }
 
 
                     // if(req.formId != 'NA'){
@@ -829,18 +843,29 @@ const getLeadForm = (req, res) => {
                     }
 
                     if(req.AssignTo != 'NA'){
-                      var userData = await teamOperations.getTeamById(req.AssignTo);
-                      if(userData){
-                        dataArray['AssignTo'] = req.AssignTo;
-                        dataArray['AssignTo_name'] = userData.team_name;
+                      var teamId =JSON.parse(req.AssignTo);
+                      var teamData = await teamOperations.getMultipleTeam(teamId);
+                      if(teamData){
+                        dataArray['AssignTo'] = teamData;
                       }else{
                         dataArray['AssignTo'] = '';
-                        dataArray['AssignTo_name'] = '';
                       }
                       
                     }else{
                       dataArray['AssignTo'] = '';
-                      dataArray['AssignTo_name'] = '';
+                    }
+
+                    if(req.AssignToUser != 'NA'){
+                      var userId =JSON.parse(req.AssignToUser);
+                      var userData = await userOperations.getMultipleUser(userId);
+                      if(userData){
+                        dataArray['AssignToUser'] = userData;
+                      }else{
+                        dataArray['AssignToUser'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['AssignToUser'] = '';
                     }
 
                     dataArray['form_name'] = req.form_name;
@@ -849,11 +874,14 @@ const getLeadForm = (req, res) => {
                     dataArray['leadEmail'] = req.leadEmail;
                     dataArray['leadPhone'] = req.leadPhone;
                     dataArray['status'] = req.status;
-                    dataArray['AssignToUser'] = req.AssignToUser;
+                    // dataArray['AssignToUser'] = req.AssignToUser;
                     dataArray['source'] = req.source;
                     dataArray['stage'] = req.stage;
                     dataArray['uid'] = req.uid;
-                    dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
+                    if(req.dynamicFields){
+                      dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
+                    }
+                    
 
                     // if(req.formId != 'NA'){
                     //   var formData = await formOperations.findFormId(req.formId);

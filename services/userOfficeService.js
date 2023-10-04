@@ -51,6 +51,23 @@ const userOfficeSerives = {
                 { $sort : { updatedAt : -1} }])
         return promise
     },
+    async getMultipleTeamWiseDropDown(query){
+        const promise = await UserOfficeModel.aggregate(
+            [
+             {
+               "$match": {"team_id": {"$in" : query}}
+             },
+            { "$project": { "userId": { "$toObjectId": "$userId" },
+            }},
+                {$lookup: 
+                    {from: "users", 
+                    localField: "userId", 
+                    foreignField: "_id", 
+                    as: "users"}
+                },
+                { $sort : { updatedAt : -1} }])
+        return promise
+    },
 }
 
 module.exports = userOfficeSerives;

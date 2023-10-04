@@ -20,6 +20,10 @@ const teamSerives = {
         const promise = query ? await teamModel.find().sort({_id:-1}).limit(5): await teamModel.find()
         return promise
     },
+    async getMultipleTeam(query){
+        const promise = query ? await teamModel.find({ "_id": { "$in": query } }).sort({_id:-1}).limit(5): await teamModel.find({ "_id": { "$in": query } })
+        return promise
+    },
     
 }
 
