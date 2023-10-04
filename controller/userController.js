@@ -363,46 +363,46 @@ const userController = {
         });
         if(setdata){
             let id = req.params.id
-            let start_date = req.query.start_date
-            let end_date = req.query.end_date
+            // let start_date = req.query.start_date
+            // let end_date = req.query.end_date
 
-            var dt = new Date();
-            year  = dt.getFullYear();
-            month = (dt.getMonth() + 1).toString().padStart(2, "0");
-            day   = dt.getDate().toString().padStart(2, "0");
-            var query = {};
-            if(id != ''){
-                if(start_date == ''){
-                    start_date = '01/' + month + '/' + year;
-                }
-                if(end_date == ''){
-                    end_date = '31/' + month + '/' + year;
-                }
-                 query = {"userId":id,"start_date": start_date, "end_date": end_date};
-            }else{
+            // var dt = new Date();
+            // year  = dt.getFullYear();
+            // month = (dt.getMonth() + 1).toString().padStart(2, "0");
+            // day   = dt.getDate().toString().padStart(2, "0");
+            // var query = {};
+            // if(id != ''){
+            //     if(start_date == ''){
+            //         start_date = '01/' + month + '/' + year;
+            //     }
+            //     if(end_date == ''){
+            //         end_date = '31/' + month + '/' + year;
+            //     }
+            //      query = {"userId":id,"start_date": start_date, "end_date": end_date};
+            // }else{
 
-                if(start_date == ''){
-                    start_date = day + '/' + month + '/' + year;
-                }
-                if(end_date == ''){
-                    end_date = day + '/' + month + '/' + year;
-                }
-                 query = {"userId":"","start_date": start_date, "end_date": end_date};
-                 console.log(query);
-            }
+            //     if(start_date == ''){
+            //         start_date = day + '/' + month + '/' + year;
+            //     }
+            //     if(end_date == ''){
+            //         end_date = day + '/' + month + '/' + year;
+            //     }
+            //      query = {"userId":"","start_date": start_date, "end_date": end_date};
+            //      console.log(query);
+            // }
 
-            if(id == undefined){
-                if(start_date == '' || start_date == undefined){
-                    start_date = day + '/' + month + '/' + year;
-                }
-                if(end_date == '' || end_date == undefined){
-                    end_date = day + '/' + month + '/' + year;
-                }
-                 query = {"userId":"","start_date": start_date, "end_date": end_date};
-                 console.log(query);
-            }
-            //const promise = UserLeaveService.findOneUserId(id)
-            const promise = UserLeaveService.getAllLeave(query)
+            // if(id == undefined){
+            //     if(start_date == '' || start_date == undefined){
+            //         start_date = day + '/' + month + '/' + year;
+            //     }
+            //     if(end_date == '' || end_date == undefined){
+            //         end_date = day + '/' + month + '/' + year;
+            //     }
+            //      query = {"userId":"","start_date": start_date, "end_date": end_date};
+            //      console.log(query);
+            // }
+            const promise = UserLeaveService.findOneUserId(id)
+            // const promise = UserLeaveService.getAllLeave(query)
             promise
             .then((data)=>{
                 console.log(data)
