@@ -1331,7 +1331,7 @@ const punchOut = async (req, res) => {
     var current_datetime = hours  + ':' + minutes;
     var current_datetimecheck = year + '/' + month + '/' + day  + ' ' + hours  + ':' + minutes;
     var getpunch_in = year + '/' + month + '/' + day  + ' ' + req.body.punch_in;
-    // console.log(getpunch_in);
+
 
     try {
       // console.log(req.body.id);
@@ -1339,10 +1339,21 @@ const punchOut = async (req, res) => {
 
           var startTime = new Date(getpunch_in); 
           var endTime = new Date(current_datetimecheck);
-          var difference = endTime.getTime() - startTime.getTime(); // This will give difference in milliseconds
-          var resultInMinutes = Math.round(difference / 60000);
-          var hourss = Math.round(resultInMinutes / 60);
-          var mint = resultInMinutes % 60;
+          var differenceHours = endTime.getHours() - startTime.getHours(); // This will give difference in milliseconds
+
+          var diffstart = 60 - startTime.getMinutes();
+          var diffmint = diffstart + endTime.getMinutes();
+          var mintHour = Math.round(diffmint / 60);
+          var mint = diffmint % 60;
+
+          // console.log(diff);
+           // console.log(differenceHours);
+
+           //  console.log(mint);
+          // var resultInMinutes = Math.round(difference / 60000);
+          // var hourss = Math.round(resultInMinutes / 60);
+          // var mint = resultInMinutes % 60;
+          
 
           if (!userAtt) {
             return res.status(400).json({ success: 0, message: "User Attendence not found" });
@@ -1354,16 +1365,19 @@ const punchOut = async (req, res) => {
            //    timeZone: 'Asia/Calcutta'
            //  });
 
-          let hours1 = hours + 5;
-          let minutes1 = minutes + 30;
+          var minutesDta = minutes % 60;
 
-          let hourss1 = hourss + 5;
+          let hours1 = hours + 5;
+          let minutes1 = minutesDta + 30;
+
+          let hourss1 = differenceHours + mintHour + 5 ;
           let mint1 = mint + 30;
 
           var datetimeC = hours1 + ':' + minutes1;
 
           userAtt.punch_out = datetimeC;
           userAtt.working_hours = hourss1+":"+mint1;
+
           await userAttendanceOperations.updateUserAttendance(userAtt._id,userAtt);
            res.status(200).json({
             message: "Punch-out Successfully",
@@ -1393,7 +1407,7 @@ const addUserApplyLeave = async (req, res) => {
   if(setdata){
      let id = req.body.userId;
     const user = await userOperations.getUserById(id);
-      // console.log(user);
+     console.log(req.body);
       if (!user) {
         return res.status(400).json({ message: "User Id not found",success: 0});
       }
@@ -1409,6 +1423,17 @@ const addUserApplyLeave = async (req, res) => {
     var date_2 = dates2[0] + '/' + dates2[1] + '/' + dates2[2]  + ' 00:00';
     let date2_2 = new Date(date_2);
     var dateDiff = date2_2.getTime() - date1_1.getTime();
+    if(req.body.leave_take_type === "half"){
+      var days = 0.5;
+      checkdate2 = date2_2.getDate();
+      checkdate1 = date1_1.getDate();
+
+      if(checkdate2 != checkdate1){
+        return res.status(400).json({message: "Please Check Leave Applied Dates", success: 0});
+      }
+      
+
+    }else{
     var resultInMinutes = Math.round(dateDiff / 60000);
           var hourss = Math.round(resultInMinutes / 60);
           var day = Math.round(hourss / 24);
@@ -1418,7 +1443,7 @@ const addUserApplyLeave = async (req, res) => {
             var days = day+1;
           }
           
-          var mint = resultInMinutes % 60;
+      }   
 
     const userApplyLeave = new UserApplyLeave(
       req.body.userId,
