@@ -2431,10 +2431,10 @@ const getRole= async (req, res) => {
                       var userOfficeData = await userOfficeOperations.findUserId(req.userId);
                       console.log(userOfficeData);
                       if(userOfficeData){
-                        dataArray['emp_type'] = userOfficeData.emp_type;
-                        dataArray['department'] = userOfficeData.department;
-                        dataArray['designation'] = userOfficeData.designation;
-                        dataArray['joining'] = userOfficeData.joining;
+                        dataArray['emp_type'] = userOfficeData[0].emp_type;
+                        dataArray['department'] = userOfficeData[0].department;
+                        dataArray['designation'] = userOfficeData[0].designation;
+                        dataArray['joining'] = userOfficeData[0].joining;
                       }else{
                         dataArray['emp_type'] = '';
                         dataArray['department'] = '';
