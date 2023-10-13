@@ -2228,7 +2228,7 @@ const getRole= async (req, res) => {
             //   req.body.net_pay,
             // );
              const userSalary = new UserSalary(
-              "64c6c6eed61be9be3a6722b0",
+              "65276fc923416aea55af35be",
               20000.00,
               20000.00,
               10000.00,
@@ -2242,7 +2242,7 @@ const getRole= async (req, res) => {
               50000.00,
               3400.00,
               46600.00,
-              5,
+              10,
               2023,
             );
             const promise = userSalaryOperations.addUserSalary(userSalary);
@@ -2428,8 +2428,8 @@ const getRole= async (req, res) => {
                     if(req.userId){
                       var userData = await userOperations.getUserById(req.userId);
                       dataArray['user_name'] = userData.name;
-                      var userOfficeData = await userOfficeOperations.findOneUserId(req.userId);
-                      // console.log(userOfficeData);
+                      var userOfficeData = await userOfficeOperations.findUserId(req.userId);
+                      console.log(userOfficeData);
                       if(userOfficeData){
                         dataArray['emp_type'] = userOfficeData.emp_type;
                         dataArray['department'] = userOfficeData.department;
