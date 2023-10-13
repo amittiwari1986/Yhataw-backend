@@ -1536,7 +1536,7 @@ const addOrganiation = async (req, res) => {
   });
   if(setdata){
     const org = await organizationOperations.findOrganizationId(setdata);
-            console.log(org);
+            console.log(setdata);
       if (org.length > 0) {
         return res.status(200).json({ message: "Organization Allready added for this user",success: 0});
       }

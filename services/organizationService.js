@@ -17,7 +17,7 @@ const organizationSerives = {
         return promise 
     },
     async findOrganizationId(userId){
-        const promise = await organizationModel.find({stateId})
+        const promise = await organizationModel.find({userId})
         return promise 
     },
     async getOrganizationById(id){

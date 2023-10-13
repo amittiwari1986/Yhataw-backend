@@ -151,7 +151,7 @@ function userSalaryValidationSchema(req, res, next) {
 
 function addOrganizationValidationSchema(req, res, next) {
     const schema = Joi.object({
-		 userId:Joi.string().required(),
+		 userId:Joi.string(),
 	     companyname:Joi.string().min(3).message("company name cannot be less than 3 characters").max(150).message("company name cannot be more than 30 characters").required(),
 	     brandname:Joi.string().min(3).message("brand name cannot be less than 3 characters").max(150).message("brand name cannot be more than 30 characters").required(),
 	     imageUrl:Joi.string().required(),
