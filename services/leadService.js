@@ -94,9 +94,10 @@ const leadServices = {
             const promise = await leadModel.aggregate(
             [
              {
-                "$match": {"AssignTo": query.user_id,"date": {"$gte": query.start_date, "$lte": query.end_date}}
+                "$match": {"date": {"$gte": query.start_date, "$lte": query.end_date}}
              },
             { "$project": { "_id": { "$toString": "$_id" },
+                "leadId": { "$toString": "$_id" },
                 "form_name": { "$toString": "$form_name" },
                 "formId": { "$toString": "$formId" },
                 "developerId": { "$toString": "$developerId" },
@@ -115,6 +116,14 @@ const leadServices = {
                 "create_date": { "$toString": "$date" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
+            {$lookup: 
+                    {from: "lead_mapping", 
+                    localField: "leadId", 
+                    foreignField: "lead_id",
+                    as: "mapping"}
+                },
+                {"$unwind":"$mapping"},
+                {"$match":{"mapping.user_id": query.user_id}},
                 { $sort : { updatedAt : -1} }])
 
         return promise
@@ -123,10 +132,8 @@ const leadServices = {
 
              const promise = await leadModel.aggregate(
             [
-            {
-                "$match": {"AssignTo": query.user_id}
-             },
             { "$project": { "_id": { "$toString": "$_id" },
+                 "leadId": { "$toString": "$_id" },
                 "form_name": { "$toString": "$form_name" },
                 "formId": { "$toString": "$formId" },
                 "developerId": { "$toString": "$developerId" },
@@ -145,6 +152,14 @@ const leadServices = {
                 "create_date": { "$toString": "$date" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
+            {$lookup: 
+                    {from: "lead_mappings", 
+                    localField: "leadId", 
+                    foreignField: "lead_id",
+                    as: "mapping"}
+                },
+                {"$unwind":"$mapping"},
+                {"$match":{"mapping.user_id": '65276fc923416aea55af35be'}},
                 { $sort : { updatedAt : -1} }])
 
         return promise

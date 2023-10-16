@@ -32,6 +32,8 @@ const Lead = require("../dto/leadto");
 const leadOperations = require("../services/leadService");
 const LeadReminder = require("../dto/leadreminderto");
 const leadReminderOperations = require("../services/leadReminderService");
+const LeadMapping = require("../dto/leadmappingto");
+const leadMappingOperations = require("../services/leadMappingService");
 const jwt = require("jsonwebtoken");
 const db  = require('../db/connect');
 
@@ -563,6 +565,18 @@ const updateLeadAssignTo = async (req, res) => {
         lead.AssignTo = JSON.stringify(req.body.AssignTo);
 
         await leadOperations.updateLead(lead._id,lead);
+
+        // var obj = req.body.AssignTo;
+        // obj.forEach(element => {
+
+        //       var leadMapping = new LeadMapping(
+        //         req.body.id,
+        //         element,
+        //         "team",
+        //       );
+
+        //         leadMappingOperations.addLeadMapping(leadMapping);
+        //   }); 
         return res.status(200).json({ success: 1, message: "Lead Assignment Updated Successfully" });
       } catch (error) {
         return res.status(400).json({ success: 0, message: "Details not found" });
@@ -597,6 +611,18 @@ const updateLeadAssignToUser = async (req, res) => {
         lead.AssignToUser = JSON.stringify(req.body.AssignToUser);
 
         await leadOperations.updateLead(lead._id,lead);
+        await leadMappingOperations.deleteLeadId(id);
+        var obj = req.body.AssignToUser;
+        obj.forEach(element => {
+
+              var leadMapping = new LeadMapping(
+                req.body.id,
+                element,
+                "user",
+              );
+
+                leadMappingOperations.addLeadMapping(leadMapping);
+          }); 
         return res.status(200).json({ success: 1, message: "Lead Assignment To Users Successfully" });
       } catch (error) {
         return res.status(400).json({ success: 0, message: "Details not found" });
@@ -934,7 +960,7 @@ const getLeadForm = (req, res) => {
 };
 
 
-const getMyLeadForm = (req, res) => {
+const getMyLeadForm = (req, res) => { 
   let token=req.headers.token;
         let setdata = "";
         if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
@@ -953,13 +979,14 @@ const getMyLeadForm = (req, res) => {
                  const promise = leadOperations.getAllMyLead(query)
               promise
               .then((data)=>{
+                // console.log(data);
                 let arr = [];
                  var arrrr = Promise.all(data.map(async (element) => {
                     var req = element;
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     if(req.projectId != 'NA'){
-                      // console.log(req.projectId);
+                      console.log(req);
                       var projectData = await projectOperations.getProjectById(req.projectId);
                       // console.log(projectData);
                       if(projectData){
@@ -1005,20 +1032,20 @@ const getMyLeadForm = (req, res) => {
                       dataArray['projecttype_name'] = '';
                     }
 
-                    if(req.AssignTo != 'NA'){
-                      var userData = await teamOperations.getTeamById(req.AssignTo);
-                      if(userData){
-                        dataArray['AssignTo'] = req.AssignTo;
-                        dataArray['AssignTo_name'] = userData.team_name;
-                      }else{
-                        dataArray['AssignTo'] = '';
-                        dataArray['AssignTo_name'] = '';
-                      }
+                    // if(req.AssignTo != 'NA'){
+                    //   var userData = await teamOperations.getTeamById(req.AssignTo);
+                    //   if(userData){
+                    //     dataArray['AssignTo'] = req.AssignTo;
+                    //     dataArray['AssignTo_name'] = userData.team_name;
+                    //   }else{
+                    //     dataArray['AssignTo'] = '';
+                    //     dataArray['AssignTo_name'] = '';
+                    //   }
                       
-                    }else{
-                      dataArray['AssignTo'] = '';
-                      dataArray['AssignTo_name'] = '';
-                    }
+                    // }else{
+                    //   dataArray['AssignTo'] = '';
+                    //   dataArray['AssignTo_name'] = '';
+                    // }
 
                     dataArray['form_name'] = req.form_name;
                     dataArray['formId'] = req.formId;
@@ -1026,6 +1053,7 @@ const getMyLeadForm = (req, res) => {
                     dataArray['leadEmail'] = req.leadEmail;
                     dataArray['leadPhone'] = req.leadPhone;
                     dataArray['status'] = req.status;
+                    dataArray['AssignTo'] = req.AssignTo;
                     dataArray['AssignToUser'] = req.AssignToUser;
                     dataArray['source'] = req.source;
                     dataArray['stage'] = req.stage;

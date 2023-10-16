@@ -1191,12 +1191,23 @@ const getTeamDropDown = (req, res) => {
                  var arrrr = Promise.all(data.map(async (element) => {
                     var req = element;
                     var query = '';
-                    console.log(req);
+                    // console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     dataArray['team_name'] = req.team_name;
                     dataArray['status'] = req.status;
                     dataArray['is_remove'] = req.is_remove;
+                    var ss = "652cb3170d5548d9413adc94";
+
+                    var dsf = JSON.stringify(dataArray['_id']);
+                    console.log(ss.indexOf(dsf));
+                    console.log(JSON.stringify(dataArray['_id']));
+                    
+                    if(ss.indexOf(dsf) >= 0){
+                      dataArray['is_available'] = 1;
+                    }else{
+                      dataArray['is_available'] = 0;
+                    }
                     if(req.projectId != 'NA'){
                       var projectData = await userOfficeOperations.getAllTeamDropDown(req._id.toString());
                       if(projectData){
@@ -1541,6 +1552,7 @@ const getReportingManagerByRoleWise = async (req, res) => {
             if(userRoleData.roleId == 5){
               var userRole = 4;
             }
+            console.log(userRole);
             const promise = userOperations.getAllManager(userRole);
             promise
             .then((data)=>{
