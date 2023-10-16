@@ -1785,6 +1785,8 @@ const leaveApprove = async (req, res) => {
               userAtt[0].work_type = "Leave";
               const myJSON = userAtt[0]._id; 
               const updateId = myJSON.toString().replace(/ObjectId\("(.*)"\)/, "$1");
+              // console.log(updateId);
+              // console.log(userAtt[0]);
               await userAttendanceOperations.updateUserAttendance(updateId,userAtt[0]);
             }
           }
