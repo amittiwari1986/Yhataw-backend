@@ -159,7 +159,7 @@ const leadServices = {
                     as: "mapping"}
                 },
                 {"$unwind":"$mapping"},
-                {"$match":{"mapping.user_id": '65276fc923416aea55af35be'}},
+                {"$match":{"mapping.user_id": query.user_id}},
                 { $sort : { updatedAt : -1} }])
 
         return promise

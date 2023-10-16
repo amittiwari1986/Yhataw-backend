@@ -13,7 +13,7 @@ const LeadMappingSerives = {
         return promise
     },
     async deleteLeadId(leadId){
-        const query = { $regex: leadId };
+        const query = { lead_id: leadId };
         const result = await LeadMappingModel.deleteMany(query);
     },
     async findOneUserId(userId){
