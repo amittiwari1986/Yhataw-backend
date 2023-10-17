@@ -1779,37 +1779,42 @@ const leaveApprove = async (req, res) => {
               var day1 = parseInt(day) + parseInt(i);
               var date = day1 +'/' + month + '/' + year;
               let userAtt = await userAttendanceOperations.findUserByMultipleData(uid,date);
-
-              userAtt[0].leave_applied = "yes";
-              userAtt[0].working_hours = "8:00";
-              userAtt[0].work_type = "Leave";
-              const myJSON = userAtt[0]._id; 
-              const updateId = myJSON.toString().replace(/ObjectId\("(.*)"\)/, "$1");
-              // console.log(updateId);
-              // console.log(userAtt[0]);
-              await userAttendanceOperations.updateUserAttendance(updateId,userAtt[0]);
+              if(userAtt){
+                userAtt[0].leave_applied = "yes";
+                userAtt[0].working_hours = "8:00";
+                userAtt[0].work_type = "Leave";
+                const myJSON = userAtt[0]._id; 
+                const updateId = myJSON.toString().replace(/ObjectId\("(.*)"\)/, "$1");
+                // console.log(updateId);
+                // console.log(userAtt[0]);
+                await userAttendanceOperations.updateUserAttendance(updateId,userAtt[0]);
+              }
             }
           }
           
 
           let userWiseData = await userLeaveOperations.findOneUserId(uid);
-          var total_leave = parseInt(userWiseData.total_leave) - parseInt(applyDays);
+          var total_leave = parseInt(userWiseData.total_leave_available) - parseInt(applyDays);
           userWiseData.total_leave_available = total_leave;
-          if(userApplyLeave.leave_type == "Earned Leave"){
-            var earned_leave = parseInt(userWiseData.earned_leave) - parseInt(applyDays);
+          if(userApplyLeave.leave_type === "Earned Leave"){
+            var earned_leave = parseInt(userWiseData.earned_leave_available) - parseInt(applyDays);
             userWiseData.earned_leave_available = earned_leave;
           }
-          if(userApplyLeave.leave_type == "Sick Leave"){
-            var sick_leave = parseInt(userWiseData.sick_leave) - parseInt(applyDays);
+          if(userApplyLeave.leave_type === "Sick Leave"){
+            var sick_leave = parseInt(userWiseData.sick_leave_available) - parseInt(applyDays);
             userWiseData.sick_leave_available = sick_leave;
           }
-          if(userApplyLeave.leave_type == "Casual Leave"){
-            var casual_leave = parseInt(userWiseData.casual_leave) - parseInt(applyDays);
+          if(userApplyLeave.leave_type === "Casual Leave"){
+            var casual_leave = parseInt(userWiseData.casual_leave_available) - parseInt(applyDays);
             userWiseData.casual_leave_available = casual_leave;
           }
-          await userLeaveOperations.updateUserLeave(userWiseData._id,userWiseData);
 
-         
+          // res.status(200).json({
+          //   message:'sdsa',
+          //   success: 1,
+          //   data: userWiseData,
+          // });
+          await userLeaveOperations.updateUserLeave(userWiseData._id,userWiseData);
           
           userApplyLeave.status = statusId;
           userApplyLeave.approver = uid;
