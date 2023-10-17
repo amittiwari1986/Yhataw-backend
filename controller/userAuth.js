@@ -1736,9 +1736,9 @@ const leaveApprove = async (req, res) => {
       const { userId, id, status, authorization } = req.params;
       // var datetime = new Date();
       var dt = new Date();
-       let uid = req.body.userId;
+       let loginid = req.body.userId;
        let statusId = req.body.status;
-        const user = await userOperations.getUserById(uid);
+        const user = await userOperations.getUserById(loginid);
           // console.log(user);
           if (!user) {
             return res.status(400).json({ message: "User Id not found",success: 0});
@@ -1747,7 +1747,7 @@ const leaveApprove = async (req, res) => {
     try {
       // console.log(req.body.id);
           let userApplyLeave = await userApplyLeaveOperations.getUserApplyLeaveById(req.body.id);
-          
+          var uid = userApplyLeave.userId;
 
            if (!userApplyLeave) {
             return res.status(200).json({ success: 0, message: "User Leave not found" });
@@ -1824,7 +1824,7 @@ const leaveApprove = async (req, res) => {
           await userLeaveOperations.updateUserLeave(userWiseData._id,userWiseData);
 
           userApplyLeave.status = statusId;
-          userApplyLeave.approver = uid;
+          userApplyLeave.approver = loginid;
           let updatedata = await userApplyLeaveOperations.updateUserApplyLeave(userApplyLeave._id,userApplyLeave);
           if(statusId == 1){
               message = "Leave Approved Successfully";
