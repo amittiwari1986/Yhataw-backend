@@ -1775,7 +1775,10 @@ const leaveApprove = async (req, res) => {
               userAtt[0].work_type = "Half Leave";
               const myJSON = userAtt[0]._id; 
               const updateId = myJSON.toString().replace(/ObjectId\("(.*)"\)/, "$1");
-              await userAttendanceOperations.updateUserAttendance(updateId,userAtt[0]);
+
+              if(statusId == 1){
+                await userAttendanceOperations.updateUserAttendance(updateId,userAtt[0]);
+              }
           }else{
 
             var sta = 0;
@@ -1794,7 +1797,10 @@ const leaveApprove = async (req, res) => {
                 const updateId = myJSON.toString().replace(/ObjectId\("(.*)"\)/, "$1");
                 // console.log(updateId);
                 // console.log(userAtt[0]);
-                await userAttendanceOperations.updateUserAttendance(updateId,userAtt[0]);
+                if(statusId == 1){
+                  await userAttendanceOperations.updateUserAttendance(updateId,userAtt[0]);
+
+                }
               }else{
                 var sta = 1;
               }
@@ -1823,11 +1829,20 @@ const leaveApprove = async (req, res) => {
           //   success: 1,
           //   data: userWiseData,
           // });
-          await userLeaveOperations.updateUserLeave(userWiseData._id,userWiseData);
+
+
+          if(statusId == 1){
+            await userLeaveOperations.updateUserLeave(userWiseData._id,userWiseData);
+
+          }
 
           userApplyLeave.status = statusId;
           userApplyLeave.approver = loginid;
-          let updatedata = await userApplyLeaveOperations.updateUserApplyLeave(userApplyLeave._id,userApplyLeave);
+
+
+          if(statusId == 1){
+            let updatedata = await userApplyLeaveOperations.updateUserApplyLeave(userApplyLeave._id,userApplyLeave);
+          }
           if(statusId == 1){
               message = "Leave Approved Successfully";
             }else{
@@ -1877,7 +1892,7 @@ const attendanceApprove = async (req, res) => {
           let userAttendance = await userAttendanceOperations.getUserAttendanceById(req.body.id);
           console.log(userAttendance);
           if (!userAttendance) {
-            return res.status(400).json({ success: 0, message: "User Attendence not found1" });
+            return res.status(400).json({ success: 0, message: "User Attendence not found" });
           }
 
           userAttendance.status = statusId;
@@ -1895,7 +1910,7 @@ const attendanceApprove = async (req, res) => {
             data: userAttendance,
           });
         } catch (error) {
-          return res.status(400).json({ success: 0, message: "User Attendence not found2", err: error });
+          return res.status(400).json({ success: 0, message: "User Attendence not found", err: error });
         }
 
    }else{

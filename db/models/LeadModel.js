@@ -9,7 +9,7 @@ const connection  = require('../connect');
             projecttypeId:{type:Schema.Types.String,required:false},
             leadName:{type:Schema.Types.String,required:false},
             leadEmail:{type:Schema.Types.String,required:false},
-            leadPhone:{type:Schema.Types.Number,required:false},
+            leadPhone:{type:Schema.Types.String,required:false},
             dynamicFields:{type:Schema.Types.String,required:false},
             status:{type:Schema.Types.String,required:[true, 'Please add status']},
             AssignTo:{type:Schema.Types.String,required:false},

@@ -2,7 +2,7 @@
 const connection  = require('../connect');
  const {Schema} = require('mongoose');
  const PropertyTypeSchema = new Schema({
-     name:{type:Schema.Types.String,required:true},
+     name:{type:Schema.Types.String,required:true,unique:true},
      status:{type:Schema.Types.Number,required:true},
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
