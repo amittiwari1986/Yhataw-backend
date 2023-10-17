@@ -1775,6 +1775,8 @@ const leaveApprove = async (req, res) => {
               const updateId = myJSON.toString().replace(/ObjectId\("(.*)"\)/, "$1");
               await userAttendanceOperations.updateUserAttendance(updateId,userAtt[0]);
           }else{
+
+            var sta = 0;
              for(let i=0; i<applyDays; i++){
               var day1 = parseInt(day) + parseInt(i);
               var date = day1 +'/' + month + '/' + year;
@@ -1788,7 +1790,12 @@ const leaveApprove = async (req, res) => {
                 // console.log(updateId);
                 // console.log(userAtt[0]);
                 await userAttendanceOperations.updateUserAttendance(updateId,userAtt[0]);
+              }else{
+                var sta = 1;
               }
+            }
+            if(sta == 0){
+              return res.status(400).json({ success: 0, message: "User Attendence not found" data: userAtt });
             }
           }
           
@@ -1815,7 +1822,7 @@ const leaveApprove = async (req, res) => {
           //   data: userWiseData,
           // });
           await userLeaveOperations.updateUserLeave(userWiseData._id,userWiseData);
-          
+
           userApplyLeave.status = statusId;
           userApplyLeave.approver = uid;
           let updatedata = await userApplyLeaveOperations.updateUserApplyLeave(userApplyLeave._id,userApplyLeave);
