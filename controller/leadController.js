@@ -251,7 +251,7 @@ const getForm = (req, res) => {
                     dataArray['leadName'] = req.leadName;
                     dataArray['leadEmail'] = req.leadEmail;
                     dataArray['leadPhone'] = req.leadPhone;
-                    dataArray['dynamicFields'] = req.dynamicFields;
+                    dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
                     // dataArray['status'] = req.status;
                     
                     arr.push(dataArray);
