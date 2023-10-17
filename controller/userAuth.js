@@ -1778,15 +1778,12 @@ const leaveApprove = async (req, res) => {
 
             var sta = 0;
             var day1 = day;
-             for(let i=0; i<applyDays; i++){
+             for(var i=0; i<applyDays; i++){
               var day1 = parseInt(day1) + parseInt(i);
               var date = day1 +'/' + month + '/' + year;
+              // console.log(date);
               let userAtt = await userAttendanceOperations.findUserByMultipleData(uid,date);
-              res.status(200).json({
-                message:'get data',
-                success: 1,
-                data: userAtt,
-              });
+              // console.log(userAtt);
               if(userAtt){
                 userAtt[0].leave_applied = "yes";
                 userAtt[0].working_hours = "8:00";
@@ -1799,9 +1796,6 @@ const leaveApprove = async (req, res) => {
               }else{
                 var sta = 1;
               }
-            }
-            if(sta == 0){
-              return res.status(400).json({ success: 0, message: "User Attendence not found"});
             }
           }
           
