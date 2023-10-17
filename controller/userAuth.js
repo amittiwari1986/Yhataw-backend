@@ -1777,8 +1777,9 @@ const leaveApprove = async (req, res) => {
           }else{
 
             var sta = 0;
+            var day1 = day;
              for(let i=0; i<applyDays; i++){
-              var day1 = parseInt(day) + parseInt(i);
+              var day1 = parseInt(day1) + parseInt(i);
               var date = day1 +'/' + month + '/' + year;
               let userAtt = await userAttendanceOperations.findUserByMultipleData(uid,date);
               res.status(200).json({
