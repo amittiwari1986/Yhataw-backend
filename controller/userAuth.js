@@ -1781,6 +1781,11 @@ const leaveApprove = async (req, res) => {
               var day1 = parseInt(day) + parseInt(i);
               var date = day1 +'/' + month + '/' + year;
               let userAtt = await userAttendanceOperations.findUserByMultipleData(uid,date);
+              res.status(200).json({
+                message:'get data',
+                success: 1,
+                data: userAtt,
+              });
               if(userAtt){
                 userAtt[0].leave_applied = "yes";
                 userAtt[0].working_hours = "8:00";
