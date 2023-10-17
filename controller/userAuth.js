@@ -1757,9 +1757,9 @@ const leaveApprove = async (req, res) => {
             return res.status(200).json({ success: 0, message: "User Leave Allready Approved By Approver" });
           }
          
-          var dd  = userApplyLeave.from_date;
+          var ddDate  = userApplyLeave.from_date;
           var applyDays  = userApplyLeave.total_days;
-          let dates1 = dd.split("-");
+          let dates1 = ddDate.split("-");
           let month = dates1[1];
           let day = dates1[2];
           let year = dates1[0];
@@ -1795,7 +1795,7 @@ const leaveApprove = async (req, res) => {
               }
             }
             if(sta == 0){
-              return res.status(400).json({ success: 0, message: "User Attendence not found" data: userAtt });
+              return res.status(400).json({ success: 0, message: "User Attendence not found"});
             }
           }
           
