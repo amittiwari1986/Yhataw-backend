@@ -81,12 +81,13 @@ const register = async (req, res) => {
     let role_id = "64ca0c1d186d6338aaed3118";
     let status = 1;
     let inComplete = 0;
+    let email = req.body.email.toLowerCase();
     const user = new User(
       req.body.name,
       hashPassword,
       role,
       req.body.phone,
-      req.body.email,
+      email,
       req.body.phoneOtp,
       req.body.whatsapp,
       req.body.dob,
@@ -777,7 +778,7 @@ const updateUserPersonal = async (req, res) => {
           return res.status(400).json({ success: 0, message: "User Details not found" });
         }
 
-        // user.userId = req.body.userId;
+        user.name = req.body.name;
         user.dob = req.body.dob;
         user.phone = req.body.phone;
         user.martial_status = req.body.martial_status;
@@ -1113,6 +1114,7 @@ const resetUserPassword = async (req, res) => {
           res.json({
             success: 1, message: `a link to reset your password has been sent to: ${user.email} please go with http://localhost:5000/reset-password?token=${getToken}`,
             getToken,
+            user_id: user._id,
           });
     // try {
     //   let subject = 'Reset Password Link - Amit.com';
