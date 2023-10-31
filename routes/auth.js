@@ -110,10 +110,10 @@ function userBankValidationSchema(req, res, next) {
 function userLeaveValidationSchema(req, res, next) {
     const schema = Joi.object({
 		 userId:Joi.string().required(),
-	     total_leave:Joi.number().integer().required(),
-	     earned_leave:Joi.number().integer().required(),
-	     sick_leave:Joi.number().integer().required(),
-	     casual_leave:Joi.number().integer().required(),
+	     total_leave:Joi.string().required(),
+	     earned_leave:Joi.string().required(),
+	     sick_leave:Joi.string().required(),
+	     casual_leave:Joi.string().required(),
     });
     validateRequest(req, res, schema, next);
 }
