@@ -29,7 +29,7 @@
      city:{type:Schema.Types.String,required:[true, 'Please add city']},
      zipcode:{type:Schema.Types.String,required:[true, 'Please add zip code']},
      doj:{type:Schema.Types.String,required:[false, 'Please add joining date']},
-     employee_id:{type:Schema.Types.String,required:[true, 'Please add employee id']},
+     employee_id:{type:Schema.Types.String,required:[true, 'Please add employee id'],unique:true},
      status:{type:Schema.Types.String,required:[true, 'Please add status']},
      profile_image:{type:Schema.Types.String,required:[true, 'Please add profile image']},
      in_complete:{type:Schema.Types.String,required:true},
