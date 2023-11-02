@@ -20,6 +20,10 @@ const userSerives = {
         const promise = await UserModel.findOne({name})
         return promise 
     },
+    async checkEmpId(employee_id){
+        const promise = await UserModel.findOne({employee_id})
+        return promise 
+    },
     async updateUser(id,data){
         const promise = await UserModel.findByIdAndUpdate(id,data,{new:true})
         return promise

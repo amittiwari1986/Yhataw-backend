@@ -55,6 +55,11 @@ const register = async (req, res) => {
   });
   if(setdata){
 
+    let empIdCheck = await userOperations.checkEmpId(req.body.employee_id);
+    if(empIdCheck){
+      return res.status(400).json({message: "duplicate data Please check Employee Id", success: 0});
+    }
+
     let nameCheck = await userOperations.checkName(req.body.name);
     if(nameCheck){
       return res.status(400).json({message: "duplicate data Please check name", success: 0});
