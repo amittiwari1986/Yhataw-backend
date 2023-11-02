@@ -23,7 +23,7 @@
      martial_status:{type:Schema.Types.String,required:[true, 'Please add marital status']},
      gender:{type:Schema.Types.String,required:[true, 'Please add gender']},
      address1:{type:Schema.Types.String,required:[true, 'Please add address 1']},
-     address2:{type:Schema.Types.String,required:false},
+     address2:{type:Schema.Types.String},
      country_id:{type:Schema.Types.String,required:[true, 'Please add country']},
      state_id:{type:Schema.Types.String,required:[true, 'Please add state']},
      city:{type:Schema.Types.String,required:[true, 'Please add city']},

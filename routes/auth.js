@@ -62,7 +62,7 @@ function registerValidationSchema(req, res, next) {
 	     dob:Joi.string().required(),
 	     martial_status:Joi.string().required(),
 	     address1:Joi.string().required(),
-	     address2:Joi.string(),
+	     // address2:Joi.string(),
 	     country_id:Joi.string().required(),
 	     state_id:Joi.string().required(),
 	     city:Joi.string().required(),
