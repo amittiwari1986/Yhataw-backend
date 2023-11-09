@@ -656,7 +656,7 @@ const getLeadForm = (req, res) => {
                 let arr = [];
                  var arrrr = Promise.all(data.map(async (element) => {
                     var req = element;
-                    // console.log(req);
+                    console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     if(req.projectId != 'NA'){
@@ -707,7 +707,9 @@ const getLeadForm = (req, res) => {
                     }
 
                     if(req.AssignTo != 'NA'){
-                      var teamId =JSON.parse(req.AssignTo);
+                      var teamId = req.AssignTo;
+                      teamId = teamId.split(',');
+                      console.log(teamId);
                       var teamData = await teamOperations.getMultipleTeam(teamId);
                       if(teamData){
                         dataArray['AssignTo'] = teamData;
@@ -720,7 +722,8 @@ const getLeadForm = (req, res) => {
                     }
 
                     if(req.AssignToUser != 'NA'){
-                      var userId =JSON.parse(req.AssignToUser);
+                      var userId =req.AssignToUser;
+                      userId = userId.split(',');
                       var userData = await userOperations.getMultipleUser(userId);
                       if(userData){
                         dataArray['AssignToUser'] = userData;
@@ -869,7 +872,10 @@ const getLeadForm = (req, res) => {
                     }
 
                     if(req.AssignTo != 'NA'){
-                      var teamId =JSON.parse(req.AssignTo);
+                      var teamId = req.AssignTo;
+                      var teamId = teamId.replace(/["']/g, "");
+                      teamId = teamId.split(',');
+                      // console.log(teamId);
                       var teamData = await teamOperations.getMultipleTeam(teamId);
                       if(teamData){
                         dataArray['AssignTo'] = teamData;
@@ -882,7 +888,11 @@ const getLeadForm = (req, res) => {
                     }
 
                     if(req.AssignToUser != 'NA'){
-                      var userId =JSON.parse(req.AssignToUser);
+                      // var userId =JSON.parse(req.AssignToUser);
+                       var userId = req.AssignToUser;
+                      var userId = userId.replace(/["']/g, "");
+                      userId = userId.split(',');
+                      // console.log(userId);
                       var userData = await userOperations.getMultipleUser(userId);
                       if(userData){
                         dataArray['AssignToUser'] = userData;
