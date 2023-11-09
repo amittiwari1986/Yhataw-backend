@@ -1901,7 +1901,7 @@ const attendanceApprove = async (req, res) => {
           }
 
           userAttendance.status = statusId;
-          userAttendance.approver = uid;
+          userAttendance.approver = user.name;
           await userAttendanceOperations.updateUserAttendance(userAttendance._id,userAttendance);
           var message = "";
             if(statusId == 1){
