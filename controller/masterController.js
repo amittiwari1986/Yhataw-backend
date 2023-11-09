@@ -30,6 +30,8 @@ const LeadSource = require("../dto/leadsourceto");
 const leadSourceOperations = require("../services/leadSourceService");
 const User = require("../dto/userdto");
 const userOfficeOperations = require("../services/userOfficeService");
+const leadOperations = require("../services/leadService");
+const Lead = require("../dto/leadto");
 
 const userOperations = require("../services/userService");
 const roleOperations = require("../services/roleService");
@@ -182,15 +184,15 @@ const getState = (req, res) => {
 const addState = async (req, res) => {
   let token=req.headers.token;
   let setdata = "";
-  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
+  // if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
 
-    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+  //   jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+  //     if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
       
-      // return res.status(200).send(decoded.id.id);
-      setdata = decoded.id.id;
-  });
-  if(setdata){
+  //     // return res.status(200).send(decoded.id.id);
+  //     setdata = decoded.id.id;
+  // });
+  if(!setdata){
     const state = new State(
       req.body.countryId,
       req.body.state_name,
@@ -1168,42 +1170,37 @@ const getTeamDropDown = (req, res) => {
             setdata = decoded.id.id;
         });
         if(setdata){
-             
-               const query = req.query.new 
+              let leadId = req.params.id;
+               const query = req.query.new;
               const promise = teamOperations.getAllTeam(query)
               promise
               .then((data)=>{
                   console.log(data)
-                  // const {others} = data
-                  // if(data.length > 0){
-                  //  res.status(200).json({
-                  //   data: data,
-                  //   success: 1
-                  //   }) 
-                  // }else{
-                  //     res.status(200).json({
-                  //     data: [],
-                  //     message: "No Data found",
-                  //     success: 0
-                  //     }) 
-                  // }
                   let arr = [];
                  var arrrr = Promise.all(data.map(async (element) => {
                     var req = element;
                     var query = '';
-                    // console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     dataArray['team_name'] = req.team_name;
                     dataArray['status'] = req.status;
                     dataArray['is_remove'] = req.is_remove;
-                    var ss = "652cb3170d5548d9413adc94";
-
-                    var dsf = JSON.stringify(dataArray['_id']);
-                    console.log(ss.indexOf(dsf));
-                    console.log(JSON.stringify(dataArray['_id']));
+                    if(leadId){
+                      var leadData = await leadOperations.getLeadById(leadId);
+                      var ss = leadData.AssignTo;
+                      ss = ss.split(',');
+                    }else{
+                      var ss = [];
+                    }
+                    var dsf = req._id;
+                    if(ss.length > 0){
+                      var matches = ss.filter(s => s.includes(dsf));
+                    }else{
+                      var matches = [];
+                    }
                     
-                    if(ss.indexOf(dsf) >= 0){
+                    
+                    if(matches.length > 0){
                       dataArray['is_available'] = 1;
                     }else{
                       dataArray['is_available'] = 0;
