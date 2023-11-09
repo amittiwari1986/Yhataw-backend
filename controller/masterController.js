@@ -1263,15 +1263,17 @@ const getMultipleTeamWiseDropDown = (req, res) => {
         if(setdata){
              
                const query = req.body.team_id;
+               const leadId = req.body.lead_id;
                const query1 = query;
               const promise = teamOperations.getMultipleTeam(query)
               promise
               .then((data)=>{
                   let arr = [];
+                  let arr1 = [];
                  var arrrr = Promise.all(data.map(async (element) => {
                     var req = element;
                     var query = '';
-                    console.log(req);
+                    // console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     dataArray['team_name'] = req.team_name;
@@ -1279,8 +1281,38 @@ const getMultipleTeamWiseDropDown = (req, res) => {
                     dataArray['is_remove'] = req.is_remove;
                     if(req.projectId != 'NA'){
                       var projectData = await userOfficeOperations.getMultipleTeamWiseDropDown(query1);
+                      if(leadId){
+                        var leadData = await leadOperations.getLeadById(leadId);
+                        // console.log(leadData.AssignToUser);
+                        var ss = leadData.AssignToUser;
+                        ss = ss.split(',');
+                        }else{
+                          var ss = [];
+                        }
+                        // console.log(projectData);
                       if(projectData){
-                          dataArray['team_members'] = projectData;
+                        let dataArray1 = {};
+                        projectData.forEach(ele => {
+                          // console.log(ele);
+                          var matchId = ele.userId;
+                          if(ss.length > 0){
+                            var matches = ss.filter(s => s.includes(matchId));
+                          }else{
+                            var matches = [];
+                          }
+                          // console.log(matches);
+                          dataArray1['_id'] = ele._id;
+                          dataArray1['userId'] = ele.userId;
+                          if(matches.length > 0){
+                            dataArray1['is_available'] = 1;
+                          }else{
+                            dataArray1['is_available'] = 0;
+                          }
+                          dataArray1['users'] = ele.users;
+                          arr1.push(dataArray1);
+                        });
+                        // console.log(dataArray1);
+                          dataArray['team_members'] = arr1;
                       }else{
                         dataArray['team_members'] = '';
                       }

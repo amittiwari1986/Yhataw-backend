@@ -1771,6 +1771,12 @@ const leaveApprove = async (req, res) => {
           let day = dates1[2];
           let year = dates1[0];
 
+          for(var d = 1; d <= 10; d++){
+            if(day == d){
+              day = '0' + day;
+            }
+          }
+
           if(applyDays  == "0.5"){
               var date = day +'/' + month + '/' + year;
               let userAtt = await userAttendanceOperations.findUserByMultipleData(uid,date);
@@ -1856,7 +1862,6 @@ const leaveApprove = async (req, res) => {
            res.status(200).json({
             message: message,
             success: 1,
-            data: updatedata,
           });
         } catch (error) {
           return res.status(400).json({ success: 0, message: "User Leave not found" });
