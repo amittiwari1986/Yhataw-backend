@@ -613,16 +613,16 @@ const updateLeadAssignToUser = async (req, res) => {
         await leadOperations.updateLead(lead._id,lead);
         await leadMappingOperations.deleteLeadId(id);
         var obj = req.body.AssignToUser;
-        obj.forEach(element => {
+        // obj.forEach(element => {
 
-              var leadMapping = new LeadMapping(
-                req.body.id,
-                element,
-                "user",
-              );
+        //       var leadMapping = new LeadMapping(
+        //         req.body.id,
+        //         element,
+        //         "user",
+        //       );
 
-                leadMappingOperations.addLeadMapping(leadMapping);
-          }); 
+        //         leadMappingOperations.addLeadMapping(leadMapping);
+        //   }); 
         return res.status(200).json({ success: 1, message: "Lead Assignment To Users Successfully" });
       } catch (error) {
         return res.status(400).json({ success: 0, message: "Details not found" });
