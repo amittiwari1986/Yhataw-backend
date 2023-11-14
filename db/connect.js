@@ -19,7 +19,9 @@ const dbOptions = {
 //   }
 // });
 
-mongoose.connect("mongodb://yhatawAdmin:yhatawAdmin-qa@3.110.159.174:27017/Yhataw-qa", dbOptions, (err) => {
+// mongoose.connect("mongodb://yhatawAdmin:yhatawAdmin-qa@3.110.159.174:27017/Yhataw-qa", dbOptions, (err) => {
+
+mongoose.connect("mongodb://Amit:amitUsers1221@15.206.116.103:27017/test", dbOptions, (err) => {
   if (err) {
     console.log("DB Error", err);
   } else {
