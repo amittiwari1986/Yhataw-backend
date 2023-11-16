@@ -820,6 +820,9 @@ const addPropertyUnitType = async (req, res) => {
       })
       .catch((err) => {
         if(err.keyPattern){
+          // res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+          var keys = Object.keys(err.keyPattern);
+        var duplicate = keys[0];
           res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
         }else{
           res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
