@@ -111,6 +111,7 @@ const register = async (req, res) => {
       inComplete,
       role_id,
       date,
+      '',
     );
 
 
@@ -797,7 +798,9 @@ const updateUserPersonal = async (req, res) => {
         user.doj = req.body.doj;
         user.employee_id = req.body.employee_id;
         user.profile_image = req.body.profile_image;
-
+        if(req.body.dor != '' || req.body.dor != undefined){
+          user.dor = req.body.dor;
+        }
         await userOperations.updateUser(user._id,user);
         return res.status(200).json({ success: 1, message: "User Personal Details Updated Successfully" });
       } catch (err) {

@@ -44,6 +44,7 @@ const userSerives = {
                 "employee_id": { "$toString": "$employee_id" },
                 "doj": { "$toString": "$doj" },
                 "dob": { "$toString": "$dob" },
+                "dor": { "$toString": "$dor" },
                 "status": { "$toString": "$status" },
                 "country": { "$toObjectId": "$country_id" },
                 "state": { "$toObjectId": "$state_id" },
