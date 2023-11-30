@@ -111,7 +111,6 @@ const register = async (req, res) => {
       inComplete,
       role_id,
       date,
-      '',
     );
 
 
@@ -200,8 +199,10 @@ const addUserOffice = async (req, res) => {
         }
         if(req.body.team_id){
           teamId = req.body.team_id;
+          team_name = req.body.team_name;
         }else{
           teamId = 'NA';
+          team_name = '';
         }
         if(data){
           const userOffice = new UserOffice(
@@ -215,6 +216,8 @@ const addUserOffice = async (req, res) => {
               rManger,
               req.body.role_id,
               teamId,
+              '',
+              team_name
             );
 
 
@@ -798,9 +801,7 @@ const updateUserPersonal = async (req, res) => {
         user.doj = req.body.doj;
         user.employee_id = req.body.employee_id;
         user.profile_image = req.body.profile_image;
-        if(req.body.dor != '' || req.body.dor != undefined){
-          user.dor = req.body.dor;
-        }
+
         await userOperations.updateUser(user._id,user);
         return res.status(200).json({ success: 1, message: "User Personal Details Updated Successfully" });
       } catch (err) {
@@ -897,8 +898,15 @@ const updateUserOffice = async (req, res) => {
         }
         if(req.body.team_id != undefined){
           user.team_id = req.body.team_id;
+          user.team_name = req.body.team_name;
         }else{
            user.team_id = 'NA';
+           user.team_name = '';
+        }
+        if(req.body.dor != undefined){
+          user.dor = req.body.dor;
+        }else{
+          user.dor = '';
         }
         
         
