@@ -33,6 +33,9 @@ const userOfficeOperations = require("../services/userOfficeService");
 const leadOperations = require("../services/leadService");
 const Lead = require("../dto/leadto");
 
+const propertyListOperations = require("../services/propertyListService");
+const PropertyList = require("../dto/propertylistto");
+
 const userOperations = require("../services/userService");
 const roleOperations = require("../services/roleService");
 const jwt = require("jsonwebtoken");
@@ -1616,5 +1619,157 @@ const getReportingManagerByRoleWise = async (req, res) => {
                 res.status(500).json({message: "Data not found", success: 0});
             })
 };
+const getPropertyList = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             let id = req.params.id
+            const promise = propertyListOperations.findPropertyListId(id)
+            promise
+            .then((data)=>{
+                console.log(data)
+                const {others} = data
+               if(data.length > 0){
+                   res.status(200).json({
+                    data: data,
+                    success: 1
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: [],
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+            })
+            .catch((err)=>{
+                // console.log(err.message)
+                res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+            });
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
 
-module.exports = { getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
+const addPropertyList = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    var status = 1;
+    const propertyList = new PropertyList(
+      req.body.propertyTypeId,
+      req.body.bedroom,
+      req.body.bathroom,
+      req.body.balcony,
+      req.body.furnish_type,
+      req.body.car_parking,
+      req.body.bedroom,
+      req.body.utility,
+      req.body.study,
+      req.body.pooja,
+      status,
+    );
+    const promise = propertyListOperations.addPropertyList(propertyList);
+    promise
+      .then((data) => {
+        res.status(201).json({
+          message: "Save Successfully",
+          success: 1,
+          data: data,
+        });
+      })
+      .catch((err) => {
+        // res.status(500).json(err.message);
+        // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        // var keys = Object.keys(err.keyPattern);
+        // var duplicate = keys[0];
+        if(err.keyPattern){
+          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+        }else{
+          res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        }
+      });
+    }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
+
+const updatePropertyList= async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    let data;
+    let id = req.body.id;
+      // try {
+        let propertyListDoc = await propertyListOperations.getPropertyListById(id);
+        // console.log(req.body.info);
+        // console.log(JSON.stringify(req.body.info));
+
+        if (!propertyListDoc) {
+          return res.status(400).json({ success: 0, message: "Property List Document not found" });
+        }
+        if(req.body.bedroom != '' || req.body.bedroom != undefined){
+          propertyListDoc.bedroom = req.body.bedroom;
+        }
+        if(req.body.bathroom != '' || req.body.bathroom != undefined){
+          propertyListDoc.bathroom = req.body.bathroom;
+        }
+        if(req.body.balcony != '' || req.body.balcony != undefined){
+          propertyListDoc.balcony = req.body.balcony;
+        }
+        if(req.body.furnish_type != '' || req.body.furnish_type != undefined){
+          propertyListDoc.furnish_type = req.body.furnish_type;
+        }
+        if(req.body.car_parking != '' || req.body.car_parking != undefined){
+          propertyListDoc.car_parking = req.body.car_parking;
+        }
+        if(req.body.utility != '' || req.body.utility != undefined){
+          propertyListDoc.utility = req.body.utility;
+        }
+        if(req.body.study != '' || req.body.study != undefined){
+          propertyListDoc.study = req.body.study;
+        }
+        if(req.body.pooja != '' || req.body.pooja != undefined){
+          propertyListDoc.pooja = req.body.pooja;
+        }
+        if(req.body.status != '' || req.body.status != undefined){
+          propertyListDoc.status = req.body.status;
+        }
+      
+        
+        await propertyListOperations.updatePropertyList(propertyListDoc._id,propertyListDoc);
+        return res.status(200).json({ success: 1, message: "Property List Updated Successfully" });
+      // } catch (error) {
+      //   return res.status(400).json({ success: 0, message: "Details not found" });
+      // }
+    }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+
+};
+
+module.exports = { getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
