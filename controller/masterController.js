@@ -1679,7 +1679,6 @@ const addPropertyList = async (req, res) => {
       req.body.balcony,
       JSON.stringify(req.body.furnish_type),
       req.body.car_parking,
-      req.body.bedroom,
       JSON.stringify(req.body.utility),
       JSON.stringify(req.body.study),
       JSON.stringify(req.body.pooja),
@@ -1699,11 +1698,11 @@ const addPropertyList = async (req, res) => {
         // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
         // var keys = Object.keys(err.keyPattern);
         // var duplicate = keys[0];
-        if(err.keyPattern){
-          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
-        }else{
-          res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-        }
+        // if(err.keyPattern){
+        //   res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+        // }else{
+        //   res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        // }
       });
     }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
