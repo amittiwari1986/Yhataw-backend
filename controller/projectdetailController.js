@@ -77,6 +77,10 @@ const addProjectDetail = async (req, res) => {
       'NA',
       '',
       '',
+      '',
+      '',
+      '',
+      '',
     );
 
 
@@ -174,6 +178,18 @@ const updateProjectDetail = async (req, res) => {
         }
         if(req.body.property_broucher != '' || req.body.property_broucher != undefined){
         	pDetails.property_broucher = req.body.property_broucher;
+        }
+        if(req.body.utility != '' || req.body.utility != undefined){
+        	pDetails.utility = req.body.utility;
+        }
+        if(req.body.study != '' || req.body.study != undefined){
+        	pDetails.study = req.body.study;
+        }
+        if(req.body.pooja != '' || req.body.pooja != undefined){
+        	pDetails.pooja = req.body.pooja;
+        }
+        if(req.body.furnish_type != '' || req.body.furnish_type != undefined){
+        	pDetails.furnish_type = req.body.furnish_type;
         }
 
         await projectDetailOperations.updateProjectDetail(pDetails._id,pDetails);

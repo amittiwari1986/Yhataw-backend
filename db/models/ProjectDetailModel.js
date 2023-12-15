@@ -20,6 +20,10 @@ const connection  = require('../connect');
      property_image:{type:Schema.Types.String,required:[false, 'Please add property_image']},
      edm_image:{type:Schema.Types.String,required:[false, 'Please add edm_image']},
      property_broucher:{type:Schema.Types.String,required:[false, 'Please add property_broucher']},
+     utility:{type:Schema.Types.String,required:[false, 'Please add utility']},
+     study:{type:Schema.Types.String,required:[false, 'Please add study']},
+     furnish_type:{type:Schema.Types.String,required:[false, 'Please add furnish_type']},
+     pooja:{type:Schema.Types.String,required:[false, 'Please add pooja']},
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
  
