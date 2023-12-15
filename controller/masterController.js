@@ -1677,12 +1677,12 @@ const addPropertyList = async (req, res) => {
       req.body.bedroom,
       req.body.bathroom,
       req.body.balcony,
-      req.body.furnish_type,
+      JSON.stringify(req.body.furnish_type),
       req.body.car_parking,
       req.body.bedroom,
-      req.body.utility,
-      req.body.study,
-      req.body.pooja,
+      JSON.stringify(req.body.utility),
+      JSON.stringify(req.body.study),
+      JSON.stringify(req.body.pooja),
       status,
     );
     const promise = propertyListOperations.addPropertyList(propertyList);
@@ -1742,19 +1742,19 @@ const updatePropertyList= async (req, res) => {
           propertyListDoc.balcony = req.body.balcony;
         }
         if(req.body.furnish_type != '' || req.body.furnish_type != undefined){
-          propertyListDoc.furnish_type = req.body.furnish_type;
+          propertyListDoc.furnish_type = JSON.stringify(req.body.furnish_type);
         }
         if(req.body.car_parking != '' || req.body.car_parking != undefined){
           propertyListDoc.car_parking = req.body.car_parking;
         }
         if(req.body.utility != '' || req.body.utility != undefined){
-          propertyListDoc.utility = req.body.utility;
+          propertyListDoc.utility = JSON.stringify(req.body.utility);
         }
         if(req.body.study != '' || req.body.study != undefined){
-          propertyListDoc.study = req.body.study;
+          propertyListDoc.study = JSON.stringify(req.body.study);
         }
         if(req.body.pooja != '' || req.body.pooja != undefined){
-          propertyListDoc.pooja = req.body.pooja;
+          propertyListDoc.pooja = JSON.stringify(req.body.pooja);
         }
         if(req.body.status != '' || req.body.status != undefined){
           propertyListDoc.status = req.body.status;
