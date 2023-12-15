@@ -11,7 +11,7 @@ const connection  = require('../connect');
      utility:{type:Schema.Types.String,required:false},
      study:{type:Schema.Types.String,required:false},
      pooja:{type:Schema.Types.String,required:false},
-     status:{type:Schema.Types.Number,required:true},
+     status:{type:Schema.Types.Number,required:false},
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
  
