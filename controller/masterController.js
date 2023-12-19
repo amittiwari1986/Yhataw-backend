@@ -1722,10 +1722,10 @@ const updatePropertyList= async (req, res) => {
   });
   if(setdata){
     let data;
-    let id = req.body.id;
+    let id = req.body._id;
       // try {
         let propertyListDoc = await propertyListOperations.getPropertyListById(id);
-        // console.log(req.body.info);
+        // console.log(req.body.id);
         // console.log(JSON.stringify(req.body.info));
 
         if (!propertyListDoc) {
