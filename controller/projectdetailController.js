@@ -30,6 +30,8 @@ const otpGenerator = require('otp-generator');
 const sendEmail = require("../utils/sendEmail");
 const jwt = require("jsonwebtoken");
 const {ObjectID} = require('mongodb');
+const uploadLeadOperations = require("../services/uploadLeadService");
+const UploadLead = require("../dto/uploadleadto");
 
 const {
   PHONE_NOT_FOUND_ERR,
@@ -1092,5 +1094,97 @@ const updatePropertyStatus= async (req, res) => {
         }
 
 };
+const addUploadLeadDetail = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
-module.exports = { addProjectDetail,updateProjectDetail,getProjectDetail,getPropertyType,getPropertyUnitType,getPropertyStatus,getPropertyFor,addPropertyType,addPropertyUnitType,addPropertyStatus,addPropertyFor,updatePropertyType,updatePropertyUnitType,updatePropertyStatus,updatePropertyFor };
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+
+    // let projectCheck = await uploadLeadOperations.findOneUploadId(req.body.projectId);
+    // console.log(projectCheck);
+    // if(projectCheck){
+    //   return res.status(400).json({message: "duplicate data Please check name", success: 0});
+    // }
+
+    let status = 1;
+    const uploadLead = new UploadLead(
+      req.body.upload_file_name,
+      req.body.formId,
+      '',
+      '',
+      status
+    );
+
+
+    const promise = uploadLeadOperations.addUploadLead(uploadLead); 
+    promise
+      .then((data) => {
+       return res.status(201).json({
+          message: "create upload Lead details Successfully",
+          success: 1,
+          data: data,
+        });
+      })
+      .catch((err) => {
+      return  res.status(400).json({message: err.message, success: 0, error_msg: err.message});
+     
+        });
+    }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
+
+const updateUploadLead = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    let data;
+    let id = req.body.uploadLeadId;
+      try {
+        let pDetails = await uploadLeadOperations.getUploadLeadById(id);
+        console.log(pDetails);
+
+        if (!pDetails) {
+          return res.status(400).json({ success: 0, message: "record not found" });
+        }
+
+
+        if(req.body.file_path != '' || req.body.file_path != undefined){
+          pDetails.file_path = req.body.file_path;
+        }
+        if(req.body.mapping_info != '' || req.body.mapping_info != undefined){
+          pDetails.mapping_info = JSON_stringfy(req.body.mapping_info);
+        }
+        if(req.body.status != '' || req.body.status != undefined){
+          pDetails.status = req.body.status;
+        }
+        
+
+        await uploadLeadOperations.updateUploadLead(pDetails._id,pDetails);
+        return res.status(200).json({ success: 1, message: "upload lead Details Updated Successfully" });
+      } catch (error) {
+        return res.status(400).json({ success: 0, message: "Details not found" });
+      }
+    }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+
+};
+
+
+module.exports = { addUploadLeadDetail,updateUploadLead,addProjectDetail,updateProjectDetail,getProjectDetail,getPropertyType,getPropertyUnitType,getPropertyStatus,getPropertyFor,addPropertyType,addPropertyUnitType,addPropertyStatus,addPropertyFor,updatePropertyType,updatePropertyUnitType,updatePropertyStatus,updatePropertyFor };

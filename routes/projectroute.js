@@ -22,6 +22,9 @@ Routes.put("/updatePropetyFor",projectdetailController.updatePropertyFor)
 Routes.put("/updatePropetyUnitType",projectdetailController.updatePropertyUnitType)
 Routes.put("/updatePropetyType",projectdetailController.updatePropertyType)
 Routes.put("/updatePropetyStatus",projectdetailController.updatePropertyStatus)
+Routes.post("/addUploadLead",projectdetailController.addUploadLeadDetail)
+Routes.put("/updateUploadLead",projectdetailController.updateUploadLead)
+// Routes.get("/getUploadLead",projectdetailController.getUploadLeadDetail)
 
 
 module.exports = Routes
