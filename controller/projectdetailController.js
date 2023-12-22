@@ -1168,7 +1168,7 @@ const updateUploadLead = async (req, res) => {
           pDetails.file_path = req.body.file_path;
         }
         if(req.body.mapping_info != '' || req.body.mapping_info != undefined){
-          pDetails.mapping_info = JSON_stringfy(req.body.mapping_info);
+          pDetails.mapping_info = JSON.stringify(req.body.mapping_info);
         }
         if(req.body.status != '' || req.body.status != undefined){
           pDetails.status = req.body.status;
