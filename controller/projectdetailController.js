@@ -1119,7 +1119,10 @@ const addUploadLeadDetail = async (req, res) => {
       req.body.formId,
       '',
       '',
-      status
+      status,
+      '',
+      '',
+      ''
     );
 
 
