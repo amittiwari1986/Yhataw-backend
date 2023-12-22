@@ -24,7 +24,7 @@ Routes.put("/updatePropetyType",projectdetailController.updatePropertyType)
 Routes.put("/updatePropetyStatus",projectdetailController.updatePropertyStatus)
 Routes.post("/addUploadLead",projectdetailController.addUploadLeadDetail)
 Routes.put("/updateUploadLead",projectdetailController.updateUploadLead)
-// Routes.get("/getUploadLead",projectdetailController.getUploadLeadDetail)
+Routes.get("/getUploadLead",projectdetailController.getUploadLead)
 
 
 module.exports = Routes

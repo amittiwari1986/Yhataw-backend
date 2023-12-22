@@ -1186,5 +1186,64 @@ const updateUploadLead = async (req, res) => {
 
 };
 
+const getUploadLead = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             let propertyTypeId = req.params.id
+             // console.log(req.params.id);
+             if(propertyTypeId){
+                 const promise = uploadLeadOperations.findUploadLeadId(propertyTypeId)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  const {others} = data
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                  })
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+             }else{
+               const query = req.query.new 
+              const promise = uploadLeadOperations.getAllUploadLead(query)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  const {others} = data
+                  if(data.length > 0){
+                   res.status(200).json({
+                    data: data,
+                    success: 1
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: [],
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            }
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
 
-module.exports = { addUploadLeadDetail,updateUploadLead,addProjectDetail,updateProjectDetail,getProjectDetail,getPropertyType,getPropertyUnitType,getPropertyStatus,getPropertyFor,addPropertyType,addPropertyUnitType,addPropertyStatus,addPropertyFor,updatePropertyType,updatePropertyUnitType,updatePropertyStatus,updatePropertyFor };
+
+module.exports = { getUploadLead,addUploadLeadDetail,updateUploadLead,addProjectDetail,updateProjectDetail,getProjectDetail,getPropertyType,getPropertyUnitType,getPropertyStatus,getPropertyFor,addPropertyType,addPropertyUnitType,addPropertyStatus,addPropertyFor,updatePropertyType,updatePropertyUnitType,updatePropertyStatus,updatePropertyFor };
