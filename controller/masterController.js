@@ -1274,6 +1274,7 @@ const getMultipleTeamWiseDropDown = (req, res) => {
               .then((data)=>{
                   let arr = [];
                   let arr1 = [];
+                  let dataArray1 = {};
                  var arrrr = Promise.all(data.map(async (element) => {
                     var req = element;
                     var query = '';
