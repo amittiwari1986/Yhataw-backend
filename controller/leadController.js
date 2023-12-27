@@ -660,14 +660,14 @@ const getLeadForm = (req, res) => {
                 convertData.push(data);
                 data = convertData;
                 let arr = [];
-                 var arrrr = Promise.all(data.map(async (element) => {
+                 var arrrr = Promise.all(data.map( (element) => {
                     var req = element;
                     console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     if(req.projectId != 'NA'){
                       // console.log(req.projectId);
-                      var projectData = await projectOperations.getProjectById(req.projectId);
+                      var projectData =  projectOperations.getProjectById(req.projectId);
                       // console.log(projectData);
                       if(projectData){
                           dataArray['projectId'] = req.projectId;
@@ -683,7 +683,7 @@ const getLeadForm = (req, res) => {
                     }
 
                     if(req.developerId != 'NA'){
-                      var developerData = await developerOperations.getDeveloperById(req.developerId);
+                      var developerData = developerOperations.getDeveloperById(req.developerId);
                       if(developerData){
                         dataArray['developerId'] = req.developerId;
                         dataArray['developer_name'] = developerData.developer_name;
@@ -698,7 +698,7 @@ const getLeadForm = (req, res) => {
                     }
                     
                      if(req.projecttypeId != 'NA'){
-                      var projectTypeData = await propertyTypeOperations.getPropertyTypeById(req.projecttypeId);
+                      var projectTypeData = propertyTypeOperations.getPropertyTypeById(req.projecttypeId);
                       if(projectTypeData){
                         dataArray['projecttypeId'] = req.projecttypeId;
                         dataArray['projecttype_name'] = projectTypeData.name;
@@ -717,7 +717,7 @@ const getLeadForm = (req, res) => {
                       var teamId = teamId.replace(/["']/g, "");
                       teamId = teamId.split(',');
                       console.log(teamId);
-                      var teamData = await teamOperations.getMultipleTeam(teamId);
+                      var teamData = teamOperations.getMultipleTeam(teamId);
                       if(teamData){
                         dataArray['AssignTo'] = teamData;
                       }else{
@@ -732,7 +732,7 @@ const getLeadForm = (req, res) => {
                       var userId = req.AssignToUser;
                       var userId = userId.replace(/["']/g, "");
                       userId = userId.split(',');
-                      var userData = await userOperations.getMultipleUser(userId);
+                      var userData = userOperations.getMultipleUser(userId);
                       if(userData){
                         dataArray['AssignToUser'] = userData;
                       }else{
@@ -827,14 +827,14 @@ const getLeadForm = (req, res) => {
                   //   }) 
 
                 let arr = [];
-                 var arrrr = Promise.all(data.map(async (element) => {
+                 var arrrr = Promise.all(data.map( (element) => {
                     var req = element;
                     // console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     if(req.projectId != 'NA'){
                       // console.log(req.projectId);
-                      var projectData = await projectOperations.getProjectById(req.projectId);
+                      var projectData = projectOperations.getProjectById(req.projectId);
                       // console.log(projectData);
                       if(projectData){
                           dataArray['projectId'] = req.projectId;
@@ -850,7 +850,7 @@ const getLeadForm = (req, res) => {
                     }
 
                     if(req.developerId != 'NA'){
-                      var developerData = await developerOperations.getDeveloperById(req.developerId);
+                      var developerData = developerOperations.getDeveloperById(req.developerId);
                       if(developerData){
                         dataArray['developerId'] = req.developerId;
                         dataArray['developer_name'] = developerData.developer_name;
@@ -865,7 +865,7 @@ const getLeadForm = (req, res) => {
                     }
                     
                      if(req.projecttypeId != 'NA'){
-                      var projectTypeData = await propertyTypeOperations.getPropertyTypeById(req.projecttypeId);
+                      var projectTypeData = propertyTypeOperations.getPropertyTypeById(req.projecttypeId);
                       if(projectTypeData){
                         dataArray['projecttypeId'] = req.projecttypeId;
                         dataArray['projecttype_name'] = projectTypeData.name;
@@ -884,7 +884,7 @@ const getLeadForm = (req, res) => {
                       var teamId = teamId.replace(/["']/g, "");
                       teamId = teamId.split(',');
                       // console.log(teamId);
-                      var teamData = await teamOperations.getMultipleTeam(teamId);
+                      var teamData = teamOperations.getMultipleTeam(teamId);
                       if(teamData){
                         dataArray['AssignTo'] = teamData;
                       }else{
@@ -901,7 +901,7 @@ const getLeadForm = (req, res) => {
                       var userId = userId.replace(/["']/g, "");
                       userId = userId.split(',');
                       // console.log(userId);
-                      var userData = await userOperations.getMultipleUser(userId);
+                      var userData = userOperations.getMultipleUser(userId);
                       if(userData){
                         dataArray['AssignToUser'] = userData;
                       }else{
@@ -1238,13 +1238,13 @@ const getLeadReminder = (req, res) => {
                 // convertData.push(data);
                 // data = convertData;
                 let arr = [];
-                 var arrrr = Promise.all(data.map(async (element) => {
+                 var arrrr = Promise.all(data.map( (element) => {
                     var req = element;
                     console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     if(req.leadId != 'NA'){
-                      var leadData = await leadOperations.getLeadById(req.leadId);
+                      var leadData = leadOperations.getLeadById(req.leadId);
                       if(leadData){
                           dataArray['leadId'] = req.leadId;
                           dataArray['lead_name'] = leadData.uid;
@@ -1259,7 +1259,7 @@ const getLeadReminder = (req, res) => {
                     }
 
                     if(req.userId != 'NA'){
-                      var userData = await userOperations.getUserById(req.userId);
+                      var userData = userOperations.getUserById(req.userId);
                       if(userData){
                         dataArray['userId'] = req.userId;
                         dataArray['user_name'] = userData.name;

@@ -25,7 +25,7 @@ const leadServices = {
         return promise 
     },
     async getLeadById(id){
-        const promise = await leadModel.findById(id)
+        const promise = await leadModel.findById(id).sort({updatedAt:-1})
         return promise
     },
     async getAllLead(query){
