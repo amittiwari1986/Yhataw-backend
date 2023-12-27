@@ -1285,7 +1285,7 @@ const getMultipleTeamWiseDropDown = (req, res) => {
                     dataArray['status'] = req.status;
                     dataArray['is_remove'] = req.is_remove;
                     if(req.projectId != 'NA'){
-                      var projectData = await userOfficeOperations.getMultipleTeamWiseDropDown(query1);
+                      var projectData = await userOfficeOperations.getMultipleTeamWiseDropDown(req._id.toString());
                       if(leadId){
                         var leadData = await leadOperations.getLeadById(leadId);
                         // console.log(leadData.AssignToUser);
@@ -1297,6 +1297,7 @@ const getMultipleTeamWiseDropDown = (req, res) => {
                         // console.log(projectData);
                       if(projectData){
                         let dataArray1 = {};
+                        let arr1 = [];
                         projectData.forEach(ele => {
                           let dataArray1 = {};
                           // console.log(ele);
