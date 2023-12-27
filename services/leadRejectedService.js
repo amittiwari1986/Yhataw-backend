@@ -1,5 +1,5 @@
-const leadModel = require("../db/models/LeadModel");
-const leadServices = {
+const leadModel = require("../db/models/LeadRejectedModel");
+const leadRejectedServices = {
    async addLead(UserObject){
         const promise = await leadModel.create(UserObject);
         return promise
@@ -173,4 +173,4 @@ const leadServices = {
     },
 }
 
-module.exports = leadServices;
+module.exports = leadRejectedServices;

@@ -122,6 +122,30 @@ const userSerives = {
         
         return promise
     }, 
+    async getAllActiveUsers(query){
+        // const promise = await UserModel.find({ _id: { $ne: id } }).populate({path: 'user_leaves',populate: { path: 'user_offices' } })
+        // let ids = mongoose.Types.ObjectId(id);
+        const promise = await UserModel.aggregate(
+            [
+             {
+                "$match": {"status": {"$gte": "1"}}
+             },
+            { "$project": { "user_id": { "$toString": "$_id" },
+                "name": { "$toString": "$name" },
+                "phone": { "$toString": "$phone" },
+                "email": { "$toString": "$email" },
+            }},
+                {$lookup: 
+                    {from: "user_salary_declarations", 
+                    localField: "user_id", 
+                    foreignField: "userId", 
+                    as: "user_salary"}
+                },
+                { $sort : { updatedAt : -1} }])
+
+        
+        return promise
+    }, 
     async findOneUserId(userId){
         const promise = await UserModel.findOne({userId})
         return promise

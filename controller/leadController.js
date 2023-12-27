@@ -417,7 +417,8 @@ const addLeadForm = async (req, res) => {
     var random = Math.floor(1000 + Math.random() * 9000);
     var uid = "LD" + random;
     var stage = "new";
-    var source = "FACEBOOK"
+    var source = "FACEBOOK";
+    var type = "individual";
     statusData = 1;
     const lead = new Lead(
       req.body.form_name,
@@ -436,6 +437,9 @@ const addLeadForm = async (req, res) => {
       uid,
       stage,
       date,
+      type,
+      '',
+      ''
     );
     const promise = leadOperations.addLead(lead);
     promise

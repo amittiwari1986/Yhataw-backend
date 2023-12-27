@@ -71,6 +71,7 @@ Routes.get("/getUserApplyLeaveByIds",verifyToken,userController.getUserApplyLeav
 Routes.get("/getOrganizationByIds",userController.getOrganizationByIds)
 Routes.get("/getAllSalesHead",userController.getAllSalesHead)
 Routes.get("/getAllManagerByTeamWise/:id",userController.getAllManagerByTeamWise)
+Routes.get("/insertLead",uploadController.insertLead)
 
 // Routes.post("/upload-image",uploadController.uploadImage)
 

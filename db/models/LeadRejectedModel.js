@@ -1,7 +1,7 @@
 
 const connection  = require('../connect');
  const {Schema} = require('mongoose');
- const LeadSchema = new Schema({
+ const LeadRejectedSchema = new Schema({
             form_name:{type:Schema.Types.String,required:true},
             formId:{type:Schema.Types.String,required:true,ref: "forms"},
             developerId:{type:Schema.Types.String,required:true,ref: "developers"},
@@ -24,5 +24,5 @@ const connection  = require('../connect');
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
  
- const lead= connection.model('lead',LeadSchema);
- module.exports = lead;
+ const lead_rejected= connection.model('lead_rejected',LeadRejectedSchema);
+ module.exports = lead_rejected;

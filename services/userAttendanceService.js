@@ -28,6 +28,29 @@ const userAttendanceSerives = {
         const promise = await UserAttendanceModel.findById(id)
         return promise
     },
+    async getAllAttendanceSum(query){
+        // const promise = query ? await UserAttendanceModel.find().sort({_id:-1}).limit(5): await UserAttendanceModel.find()
+        // return promise
+
+        console.log(query);
+
+            const promise = await UserAttendanceModel.aggregate(
+                [
+                {
+                    "$match": {"userId":query.userId, "month": query.month}
+                },
+                { "$project": {
+                    "userId": { "$toObjectId": "$userId" },
+                    "month": { "$toString": "$month" },
+                    "date": { "$toString": "$date" },
+                    "working_hours": { "$toString": "$working_hours" },
+                }},
+                    { $sort : { updatedAt : -1} }])
+            return promise
+
+
+    
+    },
     async getAllAttendance(query){
         // const promise = query ? await UserAttendanceModel.find().sort({_id:-1}).limit(5): await UserAttendanceModel.find()
         // return promise
