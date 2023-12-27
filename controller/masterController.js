@@ -1297,6 +1297,7 @@ const getMultipleTeamWiseDropDown = (req, res) => {
                       if(projectData){
                         let dataArray1 = {};
                         projectData.forEach(ele => {
+                          let dataArray1 = {};
                           // console.log(ele);
                           var matchId = ele.userId;
                           if(ss.length > 0){
