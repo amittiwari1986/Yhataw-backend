@@ -732,7 +732,7 @@ const getLeadForm = (req, res) => {
                       var userId = req.AssignToUser;
                       var userId = userId.replace(/["']/g, "");
                       userId = userId.split(',');
-                      var userData = userOperations.getMultipleUser(userId);
+                      var userData = await userOperations.getMultipleUser(userId);
                       if(userData){
                         dataArray['AssignToUser'] = userData;
                       }else{
@@ -829,12 +829,12 @@ const getLeadForm = (req, res) => {
                 let arr = [];
                  var arrrr = Promise.all(data.map(async (element) => {
                     var req = element;
-                    // console.log(req);
+                    console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     if(req.projectId != 'NA'){
                       // console.log(req.projectId);
-                      var projectData = projectOperations.getProjectById(req.projectId);
+                      var projectData = await projectOperations.getProjectById(req.projectId);
                       // console.log(projectData);
                       if(projectData){
                           dataArray['projectId'] = req.projectId;
@@ -850,7 +850,7 @@ const getLeadForm = (req, res) => {
                     }
 
                     if(req.developerId != 'NA'){
-                      var developerData = developerOperations.getDeveloperById(req.developerId);
+                      var developerData = await developerOperations.getDeveloperById(req.developerId);
                       if(developerData){
                         dataArray['developerId'] = req.developerId;
                         dataArray['developer_name'] = developerData.developer_name;
@@ -865,7 +865,7 @@ const getLeadForm = (req, res) => {
                     }
                     
                      if(req.projecttypeId != 'NA'){
-                      var projectTypeData = propertyTypeOperations.getPropertyTypeById(req.projecttypeId);
+                      var projectTypeData = await propertyTypeOperations.getPropertyTypeById(req.projecttypeId);
                       if(projectTypeData){
                         dataArray['projecttypeId'] = req.projecttypeId;
                         dataArray['projecttype_name'] = projectTypeData.name;
@@ -884,7 +884,7 @@ const getLeadForm = (req, res) => {
                       var teamId = teamId.replace(/["']/g, "");
                       teamId = teamId.split(',');
                       // console.log(teamId);
-                      var teamData = teamOperations.getMultipleTeam(teamId);
+                      var teamData = await teamOperations.getMultipleTeam(teamId);
                       if(teamData){
                         dataArray['AssignTo'] = teamData;
                       }else{
@@ -901,7 +901,7 @@ const getLeadForm = (req, res) => {
                       var userId = userId.replace(/["']/g, "");
                       userId = userId.split(',');
                       // console.log(userId);
-                      var userData = userOperations.getMultipleUser(userId);
+                      var userData = await userOperations.getMultipleUser(userId);
                       if(userData){
                         dataArray['AssignToUser'] = userData;
                       }else{
@@ -922,6 +922,7 @@ const getLeadForm = (req, res) => {
                     dataArray['source'] = req.source;
                     dataArray['stage'] = req.stage;
                     dataArray['uid'] = req.uid;
+                    dataArray['updatedAt'] = req.updatedAt;
                     if(req.dynamicFields){
                       dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
                     }
@@ -939,6 +940,11 @@ const getLeadForm = (req, res) => {
                     //   dataArray['dynamicFields'] = '';
                     // }
                     arr.push(dataArray);
+                    arr.sort(function compare(a, b) {
+                      var dateA = new Date(a.updatedAt);
+                      var dateB = new Date(b.updatedAt);
+                      return dateB - dateA;
+                    });
                     return arr;
                    
                     }
