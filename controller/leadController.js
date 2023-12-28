@@ -1010,7 +1010,7 @@ const getMyLeadForm = (req, res) => {
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     if(req.projectId != 'NA'){
-                      console.log(req);
+                      // console.log(req);
                       var projectData = await projectOperations.getProjectById(req.projectId);
                       // console.log(projectData);
                       if(projectData){
@@ -1082,6 +1082,7 @@ const getMyLeadForm = (req, res) => {
                     dataArray['source'] = req.source;
                     dataArray['stage'] = req.stage;
                     dataArray['uid'] = req.uid;
+                    dataArray['updatedAt'] = req.updatedAt;
                     if(req.dynamicFields){
                       dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
                     }
@@ -1100,6 +1101,11 @@ const getMyLeadForm = (req, res) => {
                     // }
                     
                     arr.push(dataArray);
+                    arr.sort(function compare(a, b) {
+                      var dateA = new Date(a.updatedAt);
+                      var dateB = new Date(b.updatedAt);
+                      return dateB - dateA;
+                    });
                     return arr;
                    
                     }
