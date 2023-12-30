@@ -221,20 +221,20 @@ const updateProjectDetail = async (req, res) => {
         if(req.body.AssignToUser != '' || req.body.AssignToUser != undefined){
           pDetails.AssignToUser = JSON.stringify(req.body.AssignToUser);
 
-          await projectMappingOperations.deleteProjectId(id);
-          var obj = req.body.AssignToUser;
-          var obj = obj.replace(/["']/g, "");
-          obj = obj.split(',');
-          obj.forEach(element => {
+          // await projectMappingOperations.deleteProjectId(id);
+          // var obj = req.body.AssignToUser;
+          // var obj = obj.replace(/["']/g, "");
+          // obj = obj.split(',');
+          // obj.forEach(element => {
 
-                var projectMapping = new ProjectMapping(
-                  req.body.id,
-                  element,
-                  "user",
-                );
+          //       var projectMapping = new ProjectMapping(
+          //         req.body.id,
+          //         element,
+          //         "user",
+          //       );
 
-                  projectMappingOperations.addProjectMapping(projectMapping);
-            }); 
+          //         projectMappingOperations.addProjectMapping(projectMapping);
+          //   }); 
 
         }
 
