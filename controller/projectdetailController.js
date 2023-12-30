@@ -439,6 +439,8 @@ const getProjectDetail = (req, res) => {
                     dataArray['study'] = req.study;
                     dataArray['pooja'] = req.pooja;
                     dataArray['furnish_type'] = req.furnish_type;
+                    dataArray['AssignTo'] = req.AssignTo;
+                    dataArray['AssignToUser'] = req.AssignToUser;
                     
                     arr.push(dataArray);
                     return arr;
