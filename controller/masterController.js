@@ -1395,11 +1395,19 @@ const getMultipleTeamWiseDropDownProject = (req, res) => {
                     dataArray['is_remove'] = req.is_remove;
                     if(req.projectId != 'NA'){
                       var projectData = await userOfficeOperations.getMultipleTeamWiseDropDown(req._id.toString());
-                      if(projectId){
+                      if(projectData){
                         var leadData = await projectDetailOperations.findOneProjectId(projectId);
                         // console.log(leadData.AssignToUser);
-                        var ss = leadData.AssignToUser;
-                        ss = ss.split(',');
+                        if(leadData){
+                          var ss = leadData.AssignToUser;
+                        }
+                        
+                        if(ss){
+                          ss = ss.split(',');
+                        }else{
+                          var ss = [];
+                        }
+                        
                         }else{
                           var ss = [];
                         }
