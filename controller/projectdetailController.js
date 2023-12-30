@@ -85,6 +85,9 @@ const addProjectDetail = async (req, res) => {
       '',
       '',
       '',
+      '',
+      '',
+      '',
       JSON.stringify(req.body.AssignTo),
       JSON.stringify(req.body.AssignToUser),
     );
