@@ -32,6 +32,8 @@ const User = require("../dto/userdto");
 const userOfficeOperations = require("../services/userOfficeService");
 const leadOperations = require("../services/leadService");
 const Lead = require("../dto/leadto");
+const projectDetailOperations = require("../services/projectDetailsService");
+const ProjectDetail = require("../dto/projectdetailsto");
 
 const propertyListOperations = require("../services/propertyListService");
 const PropertyList = require("../dto/propertylistto");
@@ -1360,6 +1362,113 @@ const getMultipleTeamWiseDropDown = (req, res) => {
         }
 };
 
+const getMultipleTeamWiseDropDownProject = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             
+               const query = req.body.team_id;
+               const projectId = req.body.project_id;
+               const query1 = query;
+              const promise = teamOperations.getMultipleTeam(query)
+              promise
+              .then((data)=>{
+                  let arr = [];
+                  let arr1 = [];
+                  let dataArray1 = {};
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+                    var query = '';
+                    // console.log(req);
+                    var dataArray = {};
+                    dataArray['_id'] = req._id; 
+                    dataArray['team_name'] = req.team_name;
+                    dataArray['status'] = req.status;
+                    dataArray['is_remove'] = req.is_remove;
+                    if(req.projectId != 'NA'){
+                      var projectData = await userOfficeOperations.getMultipleTeamWiseDropDown(req._id.toString());
+                      if(projectId){
+                        var leadData = await projectDetailOperations.findOneProjectId(projectId);
+                        // console.log(leadData.AssignToUser);
+                        var ss = leadData.AssignToUser;
+                        ss = ss.split(',');
+                        }else{
+                          var ss = [];
+                        }
+                        // console.log(projectData);
+                      if(projectData){
+                        let dataArray1 = {};
+                        let arr1 = [];
+                        projectData.forEach(ele => {
+                          let dataArray1 = {};
+                          // console.log(ele);
+                          var matchId = ele.userId;
+                          if(ss.length > 0){
+                            var matches = ss.filter(s => s.includes(matchId));
+                          }else{
+                            var matches = [];
+                          }
+                          // console.log(matches);
+                          dataArray1['_id'] = ele._id;
+                          dataArray1['userId'] = ele.userId;
+                          if(matches.length > 0){
+                            dataArray1['is_available'] = 1;
+                          }else{
+                            dataArray1['is_available'] = 0;
+                          }
+                          dataArray1['users'] = ele.users;
+                          arr1.push(dataArray1);
+                        });
+                        // console.log(dataArray1);
+                          dataArray['team_members'] = arr1;
+                      }else{
+                        dataArray['team_members'] = '';
+                      }
+                     
+                    }else{
+                      dataArray['team_members'] = '';
+                    }
+                    
+                    
+                    arr.push(dataArray);
+                    return arr;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
+
 
 const updateTeam= async (req, res) => {
   let token=req.headers.token;
@@ -1774,4 +1883,4 @@ const updatePropertyList= async (req, res) => {
 
 };
 
-module.exports = { getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
+module.exports = { getMultipleTeamWiseDropDownProject,getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }

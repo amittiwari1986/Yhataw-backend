@@ -1,5 +1,5 @@
 class ProjectDetails{
-    constructor(developerId,projectId,countryId,stateId,city,description,location,zipcode,status,projectforId,projecttypeId,projectunittypeId,projectstatusId,bathroom,washroom,property_image,edm_image,property_broucher,study,pooja,utility,furnish_type){
+    constructor(developerId,projectId,countryId,stateId,city,description,location,zipcode,status,projectforId,projecttypeId,projectunittypeId,projectstatusId,bathroom,washroom,property_image,edm_image,property_broucher,study,pooja,utility,furnish_type,AssignTo,AssignToUser){
         this.developerId = developerId
         this.projectId = projectId
         this.countryId = countryId
@@ -22,6 +22,8 @@ class ProjectDetails{
         this.pooja = pooja
         this.utility = utility
         this.furnish_type = furnish_type
+        this.AssignTo = AssignTo
+        this.AssignToUser = AssignToUser
     }
 }
 
