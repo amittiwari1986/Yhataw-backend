@@ -27,6 +27,7 @@ const connection  = require('../connect');
      AssignTo:{type:Schema.Types.String,required:false},
      AssignToUser:{type:Schema.Types.String,required:false},
      car_parking:{type:Schema.Types.String,required:false},
+     bedroom:{type:Schema.Types.String,required:false},
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
  
