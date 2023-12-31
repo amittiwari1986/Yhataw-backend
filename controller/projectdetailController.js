@@ -90,6 +90,7 @@ const addProjectDetail = async (req, res) => {
       '',
       JSON.stringify(req.body.AssignTo),
       JSON.stringify(req.body.AssignToUser),
+      '',
     );
     // await leadOperations.updateLead(lead._id,lead);
     //     await leadMappingOperations.deleteLeadId(id);
@@ -217,6 +218,9 @@ const updateProjectDetail = async (req, res) => {
         }
         if(req.body.AssignTo != '' || req.body.AssignTo != undefined){
           pDetails.AssignTo = JSON.stringify(req.body.AssignTo);
+        }
+        if(req.body.car_parking != '' || req.body.car_parking != undefined){
+          pDetails.car_parking = req.body.car_parking;
         }
         if(req.body.AssignToUser != '' || req.body.AssignToUser != undefined){
           pDetails.AssignToUser = JSON.stringify(req.body.AssignToUser);
@@ -441,6 +445,7 @@ const getProjectDetail = (req, res) => {
                     dataArray['furnish_type'] = req.furnish_type;
                     dataArray['AssignTo'] = req.AssignTo;
                     dataArray['AssignToUser'] = req.AssignToUser;
+                    dataArray['car_parking'] = req.car_parking;
                     
                     arr.push(dataArray);
                     return arr;
