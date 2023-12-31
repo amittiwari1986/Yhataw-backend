@@ -570,6 +570,7 @@ const getProjectDetail = (req, res) => {
                     dataArray['furnish_type'] = req.furnish_type;
                     dataArray['AssignTo'] = req.AssignTo;
                     dataArray['AssignToUser'] = req.AssignToUser;
+                    dataArray['car_parking'] = req.car_parking;
                     
                     arr.push(dataArray);
                     return arr;
