@@ -111,6 +111,8 @@ const register = async (req, res) => {
       inComplete,
       role_id,
       date,
+      req.body.phoneCountryCode,
+      req.body.whatsappCountryCode
     );
 
 
@@ -801,6 +803,9 @@ const updateUserPersonal = async (req, res) => {
         user.doj = req.body.doj;
         user.employee_id = req.body.employee_id;
         user.profile_image = req.body.profile_image;
+        user.phoneCountryCode =req.body.phoneCountryCode;
+        user.whatsappCountryCode =req.body.whatsappCountryCode;
+        user.whatsapp =req.body.whatsapp;
 
         await userOperations.updateUser(user._id,user);
         return res.status(200).json({ success: 1, message: "User Personal Details Updated Successfully" });
@@ -2280,21 +2285,21 @@ const getRole= async (req, res) => {
             //   req.body.net_pay,
             // );
              const userSalary = new UserSalary(
-              "65276fc923416aea55af35be",
-              20000.00,
-              20000.00,
-              10000.00,
+              "6540ee334deef597cddbd055",
+              6667.00,
+              5000.00,
+              734.00,
+              3334.00,
+              4000.00,
               0.00,
-              1000.00,
               0.00,
-              1200.00,
-              200.00,
               0.00,
-              2000.00, 
-              50000.00,
-              3400.00,
-              46600.00,
-              10,
+              0.00,
+              0.00, 
+              19735.00,
+              0.00,
+              19735.00,
+              11,
               2023,
             );
             const promise = userSalaryOperations.addUserSalary(userSalary);
