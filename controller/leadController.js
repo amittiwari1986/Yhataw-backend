@@ -34,6 +34,8 @@ const LeadReminder = require("../dto/leadreminderto");
 const leadReminderOperations = require("../services/leadReminderService");
 const LeadMapping = require("../dto/leadmappingto");
 const leadMappingOperations = require("../services/leadMappingService");
+const projectDetailOperations = require("../services/projectDetailsService");
+const ProjectDetail = require("../dto/projectdetailsto");
 const jwt = require("jsonwebtoken");
 const db  = require('../db/connect');
 
@@ -419,6 +421,7 @@ const addLeadForm = async (req, res) => {
     var stage = "new";
     var source = "FACEBOOK";
     var type = "individual";
+    var projectDetails = await projectDetailOperations.findOneProjectId(req.body.projectId);
     statusData = 1;
     const lead = new Lead(
       req.body.form_name,
@@ -431,8 +434,8 @@ const addLeadForm = async (req, res) => {
       req.body.leadPhone,
       JSON.stringify(req.body.dynamicFields),
       statusData,
-      "NA",
-      "NA",
+      projectDetails.AssignTo,
+      projectDetails.AssignToUser,
       source,
       uid,
       stage,
