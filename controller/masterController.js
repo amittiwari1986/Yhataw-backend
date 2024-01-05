@@ -2080,11 +2080,7 @@ const updateDepartment = async (req, res) => {
       setdata = decoded.id.id;
   });
   if(setdata){
-    const department = new Department(
-      req.body.department_name,
-    );
-    const promise = departmentOperations.addDepartment(department);
-    promise
+    
     let data;
     let id = req.body._id;
       // try {
@@ -2102,6 +2098,5 @@ const updateDepartment = async (req, res) => {
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 };
-
 
 module.exports = { updateDepartment,updateDeveloper,updateProject,getTeamDropDownProject,getMultipleTeamWiseDropDownProject,getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
