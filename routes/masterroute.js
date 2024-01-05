@@ -47,4 +47,6 @@ Routes.get("/getTeamDropDownProject",mastercontroller.getTeamDropDownProject)
 Routes.get("/getTeamDropDownProject/:id",mastercontroller.getTeamDropDownProject)
 Routes.put("/updateProject",mastercontroller.updateProject)
 Routes.put("/updateDeveloper",mastercontroller.updateDeveloper)
+Routes.post("/updateDepartment",mastercontroller.updateDepartment)
 module.exports = Routes
+
