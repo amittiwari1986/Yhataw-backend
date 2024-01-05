@@ -2027,7 +2027,7 @@ const updateProject = async (req, res) => {
           project.developerId = req.body.developerId;
         }
         
-        await projectOperations.updateDeveloper(project._id,project);
+        await projectOperations.updateProject(project._id,project);
         return res.status(200).json({ success: 1, message: "Project name Updated Successfully" });
     }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});

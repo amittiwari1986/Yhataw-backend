@@ -15,6 +15,8 @@ const uploadLeadOperations = require("../services/uploadLeadService");
 const UploadLead = require("../dto/uploadleadto");
 const From = require("../dto/formto");
 const formOperations = require("../services/formService");
+const projectDetailOperations = require("../services/projectDetailsService");
+const ProjectDetail = require("../dto/projectdetailsto");
 
 aws.config.update({
 	secretAccessKey: 'pSD+OEcgsCzItA1bVzIuDICxg/bM+U1hps19638Q',
@@ -75,6 +77,7 @@ const insertLead = async (req, res) => {
             // console.log(myArray[3]);
             // exit;
             var formDetails = await formOperations.getFormById(element.formId);
+            var projectDetails = await projectDetailOperations.findOneProjectId(formDetails.projectId);
                 const params = {
                     Bucket: 'team-document',
                     Key: myArray[3],
@@ -108,8 +111,8 @@ const insertLead = async (req, res) => {
                                           "leadPhone": data.lead_phone,
                                           "dynamicFields": "",
                                           "status": statusData,
-                                          "AssignTo": "NA",
-                                          "AssignToUser": "NA",
+                                          "AssignTo": projectDetails.AssignTo,
+                                          "AssignToUser": projectDetails.AssignToUser,
                                           "source": data.source,
                                           "uid": uid,
                                           "stage": stage,
@@ -134,8 +137,8 @@ const insertLead = async (req, res) => {
                                           "leadPhone": data.work_phone_number,
                                           "dynamicFields": "",
                                           "status": "1",
-                                          "AssignTo": "NA",
-                                          "AssignToUser": "NA",
+                                          "AssignTo": projectDetails.AssignTo,
+                                          "AssignToUser": projectDetails.AssignToUser,
                                           "source": data.Source,
                                           "uid": "",
                                           "stage": "",
