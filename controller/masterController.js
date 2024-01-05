@@ -1997,5 +1997,77 @@ const updatePropertyList= async (req, res) => {
         }
 
 };
+const updateProject = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
 
-module.exports = { getTeamDropDownProject,getMultipleTeamWiseDropDownProject,getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+    var checkdata = await projectOperations.getProjectByName(req.body.project_name);
+  if(checkdata > 0){
+   return res.status(400).send({ auth: false, message: 'This project name all ready exist.', success: 0});
+  }
+  if(setdata){
+    let data;
+    let id = req.body._id;
+      // try {
+        let project = await projectOperations.getProjectById(id);
+        if (!project) {
+          return res.status(400).json({ success: 0, message: "Project name not found" });
+        }
+        if(req.body.project_name != '' || req.body.project_name != undefined){
+          project.project_name = req.body.project_name;
+        }
+        if(req.body.developerId != '' || req.body.developerId != undefined){
+          project.developerId = req.body.developerId;
+        }
+        
+        await projectOperations.updateDeveloper(project._id,project);
+        return res.status(200).json({ success: 1, message: "Project name Updated Successfully" });
+    }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
+const updateDeveloper = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  var checkdata = await developerOperations.getDeveloperByName(req.body.developer_name);
+  if(checkdata > 0){
+   return res.status(400).send({ auth: false, message: 'This developer name all ready exist.', success: 0});
+  }
+ 
+  if(setdata){
+    let data;
+    let id = req.body._id;
+      // try {
+        let propertyListDoc = await developerOperations.getDeveloperById(id);
+        if (!propertyListDoc) {
+          return res.status(400).json({ success: 0, message: "Developer name not found" });
+        }
+        if(req.body.developer_name != '' || req.body.developer_name != undefined){
+          propertyListDoc.developer_name = req.body.developer_name;
+        }
+        
+        await developerOperations.updateDeveloper(propertyListDoc._id,propertyListDoc);
+        return res.status(200).json({ success: 1, message: "Developer name Updated Successfully" });
+      }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
+
+
+
+module.exports = { updateDeveloper,updateProject,getTeamDropDownProject,getMultipleTeamWiseDropDownProject,getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
