@@ -2068,6 +2068,40 @@ const updateDeveloper = async (req, res) => {
         }
 };
 
+const updateDepartment = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    const department = new Department(
+      req.body.department_name,
+    );
+    const promise = departmentOperations.addDepartment(department);
+    promise
+    let data;
+    let id = req.body._id;
+      // try {
+        let propertyListDoc = await departmentOperations.getdepartmentById(id);
+        if (!propertyListDoc) {
+          return res.status(400).json({ success: 0, message: "Department name not found" });
+        }
+        if(req.body.department_name != '' || req.body.department_name != undefined){
+          propertyListDoc.department_name = req.body.department_name;
+        }
+        
+        await departmentOperations.updateDepartment(propertyListDoc._id,propertyListDoc);
+        return res.status(200).json({ success: 1, message: "Department name Updated Successfully" });
+    }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
 
 
-module.exports = { updateDeveloper,updateProject,getTeamDropDownProject,getMultipleTeamWiseDropDownProject,getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
+module.exports = { updateDepartment,updateDeveloper,updateProject,getTeamDropDownProject,getMultipleTeamWiseDropDownProject,getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
