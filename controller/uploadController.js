@@ -90,7 +90,7 @@ const insertLead = async (req, res) => {
                             if(data.email != ''){
                                 // parser.pause();
                             
-                            // console.log('One line from .csv >> ', data);
+                            console.log('One line from .csv >> ', data);
                             var random = Math.floor(1000 + Math.random() * 9000);
                                         var uid = "LD" + random;
                                         var stage = "new";
@@ -103,17 +103,17 @@ const insertLead = async (req, res) => {
                                           "developerId": formDetails.developerId,
                                           "projectId": formDetails.projectId,
                                           "projecttypeId": formDetails.projecttypeId,
-                                          "leadName": data.Name,
+                                          "leadName": data.lead_name,
                                           "leadEmail": data.email,
-                                          "leadPhone": data.work_phone_number,
+                                          "leadPhone": data.lead_phone,
                                           "dynamicFields": "",
                                           "status": statusData,
                                           "AssignTo": "NA",
                                           "AssignToUser": "NA",
-                                          "source": data.Source,
+                                          "source": data.source,
                                           "uid": uid,
                                           "stage": stage,
-                                          "date": data.Date,
+                                          "date": data.date,
                                           "lead_type": "upload_file",
                                           "upload_file_name": element.formId,
                                           "uploadLeadId": element._id.toString()
