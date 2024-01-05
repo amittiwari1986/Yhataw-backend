@@ -24,6 +24,10 @@ const projectSerives = {
         const promise = await projectModel.findById(id)
         return promise
     },
+    async getProjectByName(project_name){
+        const promise = await projectModel.find({project_name}).count();
+        return promise
+    },
     async getAllProject(query){
         const promise = query ? await projectModel.find().sort({_id:-1}).limit(5): await projectModel.find()
         return promise

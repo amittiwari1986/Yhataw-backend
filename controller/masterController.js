@@ -787,6 +787,11 @@ const addDeveloper = async (req, res) => {
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
   });
+  var checkdata = await developerOperations.getDeveloperByName(req.body.developer_name);
+  if(checkdata > 0){
+   return res.status(400).send({ auth: false, message: 'This developer name all ready exist.', success: 0});
+  }
+ 
   if(setdata){
     const developer = new Developer(
       req.body.developer_name
@@ -885,6 +890,10 @@ const addProject = async (req, res) => {
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
   });
+    var checkdata = await projectOperations.getProjectByName(req.body.project_name);
+  if(checkdata > 0){
+   return res.status(400).send({ auth: false, message: 'This project name all ready exist.', success: 0});
+  }
   if(setdata){
     const project = new Project(
       req.body.developerId,

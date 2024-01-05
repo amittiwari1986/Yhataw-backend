@@ -24,6 +24,10 @@ const developerSerives = {
         const promise = query ? await developerModel.find().sort({_id:-1}).limit(5): await developerModel.find()
         return promise
     },
+    async getDeveloperByName(developer_name){
+        const promise = await developerModel.find({developer_name}).count()
+        return promise
+    },
     async getAllDeveloper1(id){
         if(id){
             const promise = await developerModel.aggregate([
