@@ -137,7 +137,10 @@ const leadServices = {
                 },
                 {"$unwind":"$mapping"},
                 {"$match":{"mapping.user_id": query.user_id}},
-                { $sort : { updatedAt : -1} }])
+                { $sort : { updatedAt : -1} },
+                 { $facet : { metadata: [ { $count: "total" }, { $addFields: { page: query.page } } ],
+                            data: [ { $skip: query.skip }, { $limit: query.limit } ]
+    } }])
 
         return promise
 

@@ -36,6 +36,8 @@ const LeadMapping = require("../dto/leadmappingto");
 const leadMappingOperations = require("../services/leadMappingService");
 const projectDetailOperations = require("../services/projectDetailsService");
 const ProjectDetail = require("../dto/projectdetailsto");
+const LeadLog = require("../dto/leadlogto");
+const leadLogOperations = require("../services/leadLogService");
 const jwt = require("jsonwebtoken");
 const db  = require('../db/connect');
 
@@ -527,6 +529,7 @@ const updateLeadStage = async (req, res) => {
   if(setdata){
     let data;
     let id = req.body.id;
+    var dataArrayPushLog = [];
       try {
         let lead = await leadOperations.getLeadById(id);
 
@@ -535,8 +538,16 @@ const updateLeadStage = async (req, res) => {
         }
 
         lead.stage = req.body.stage;
+        var oneRow3 = {
+                          "leadId": lead._id.toString(),
+                          "userId": setdata,
+                          "old_value": "change stage",
+                          "new_value": req.body.stage
+                      }
+                      dataArrayPushLog.push(oneRow3);
 
         await leadOperations.updateLead(lead._id,lead);
+        leadLogOperations.addManyLeadLog(dataArrayPushLog);
         return res.status(200).json({ success: 1, message: "Lead stage Updated Successfully" });
       } catch (error) {
         return res.status(400).json({ success: 0, message: "Details not found" });
@@ -1007,13 +1018,16 @@ const getMyLeadForm = (req, res) => {
              let id = setdata;
              let start_date = req.query.start_date
             let end_date = req.query.end_date
-             query = {"user_id":id, "start_date": start_date, "end_date": end_date};
+            let page = req.query.page
+            let limit = req.query.limit
+            var skip = limit * page;
+             query = {"user_id":id, "start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page)};
                  const promise = leadOperations.getAllMyLead(query)
               promise
               .then((data)=>{
                 // console.log(data);
                 let arr = [];
-                 var arrrr = Promise.all(data.map(async (element) => {
+                 var arrrr = Promise.all(data[0].data.map(async (element) => {
                     var req = element;
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
@@ -1123,6 +1137,7 @@ const getMyLeadForm = (req, res) => {
                     if(responseText.length > 0){
                          res.status(200).json({
                           data: responseText[0],
+                          metadata: data[0].metadata,
                           success: 1
                           }) 
                       }else{
