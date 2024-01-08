@@ -1209,18 +1209,51 @@ const saveChangePassword = async (req, res) => {
   // }
 };
 
+const saveChangePasswordByAdmin = async (req, res) => {
+   let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    let id = req.body.id;
+    const user = await userOperations.getUserById(id);
+    if (!user) {
+            return res.status(400).json({ success: 0, message: "User Id not found" });
+          };
+   
+      try {
+        user.password = bcrypt.doEncrypt(req.body.password);
+        await userOperations.updateUser(user._id,user);
+        res.status(200);
+        res.json({ success: 1, message: `Password change Successfully` });
+      } catch (error) {
+        res.status(404);
+        res.json({ success: 0, message: `an error occured: ${error}` });
+      }
+    }else{
+          return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      }
+  
+};
+
 const checkPunchIn = async (req, res) => {
   let token=req.headers.token;
   let setdata = "";
-  // if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
-  //   jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-  //     if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
-  //     // return res.status(200).send(decoded.id.id);
-  //     setdata = decoded.id.id;
-  // });
-  if(!setdata){
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
     const { id, authorization } = req.params;
     // var datetime = new Date();
     var dt = new Date();
@@ -2589,4 +2622,4 @@ const testDT = async (req, res) => {
 
 
 
-module.exports = { dashboard,checkPunchIn,testDT,updateUserLoan,createSalary,getSalary,getRole,addRole,updateRole,getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
+module.exports = { saveChangePasswordByAdmin,dashboard,checkPunchIn,testDT,updateUserLoan,createSalary,getSalary,getRole,addRole,updateRole,getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
