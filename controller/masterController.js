@@ -1599,7 +1599,7 @@ const updateTeam= async (req, res) => {
   if(setdata){
     let data;
     let id = req.body.id;
-      // try {
+      try {
         let teamDoc = await teamOperations.getTeamById(id);
         // console.log(req.body.info);
         // console.log(JSON.stringify(req.body.info));
@@ -1620,9 +1620,9 @@ const updateTeam= async (req, res) => {
         
         await teamOperations.updateTeam(teamDoc._id,teamDoc);
         return res.status(200).json({ success: 1, message: "Team Updated Successfully" });
-      // } catch (error) {
-      //   return res.status(400).json({ success: 0, message: "Details not found" });
-      // }
+      } catch (error) {
+        return res.status(400).json({ success: 0, message: "Details not found" });
+      }
     }else{
             return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
@@ -1921,6 +1921,7 @@ const addPropertyList = async (req, res) => {
         });
       })
       .catch((err) => {
+        res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
         // res.status(500).json(err.message);
         // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
         // var keys = Object.keys(err.keyPattern);
@@ -1950,7 +1951,7 @@ const updatePropertyList= async (req, res) => {
   if(setdata){
     let data;
     let id = req.body._id;
-      // try {
+      try {
         let propertyListDoc = await propertyListOperations.getPropertyListById(id);
         // console.log(req.body.id);
         // console.log(JSON.stringify(req.body.info));
@@ -1989,9 +1990,9 @@ const updatePropertyList= async (req, res) => {
         
         await propertyListOperations.updatePropertyList(propertyListDoc._id,propertyListDoc);
         return res.status(200).json({ success: 1, message: "Property List Updated Successfully" });
-      // } catch (error) {
-      //   return res.status(400).json({ success: 0, message: "Details not found" });
-      // }
+      } catch (error) {
+        return res.status(400).json({ success: 0, message: "Details not found" });
+      }
     }else{
             return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
@@ -2015,7 +2016,7 @@ const updateProject = async (req, res) => {
   if(setdata){
     let data;
     let id = req.body._id;
-      // try {
+      try {
         let project = await projectOperations.getProjectById(id);
         if (!project) {
           return res.status(400).json({ success: 0, message: "Project name not found" });
@@ -2029,6 +2030,10 @@ const updateProject = async (req, res) => {
         
         await projectOperations.updateProject(project._id,project);
         return res.status(200).json({ success: 1, message: "Project name Updated Successfully" });
+      } catch (error) {
+        res.status(404);
+        res.json({ success: 0, message: `an error occured: ${error}` });
+      }
     }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
@@ -2052,7 +2057,7 @@ const updateDeveloper = async (req, res) => {
   if(setdata){
     let data;
     let id = req.body._id;
-      // try {
+      try {
         let propertyListDoc = await developerOperations.getDeveloperById(id);
         if (!propertyListDoc) {
           return res.status(400).json({ success: 0, message: "Developer name not found" });
@@ -2063,6 +2068,10 @@ const updateDeveloper = async (req, res) => {
         
         await developerOperations.updateDeveloper(propertyListDoc._id,propertyListDoc);
         return res.status(200).json({ success: 1, message: "Developer name Updated Successfully" });
+      } catch (error) {
+        res.status(404);
+        res.json({ success: 0, message: `an error occured: ${error}` });
+      }
       }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
@@ -2083,7 +2092,7 @@ const updateDepartment = async (req, res) => {
     
     let data;
     let id = req.body._id;
-      // try {
+      try {
         let propertyListDoc = await departmentOperations.getdepartmentById(id);
         if (!propertyListDoc) {
           return res.status(400).json({ success: 0, message: "Department name not found" });
@@ -2094,6 +2103,10 @@ const updateDepartment = async (req, res) => {
         
         await departmentOperations.updateDepartment(propertyListDoc._id,propertyListDoc);
         return res.status(200).json({ success: 1, message: "Department name Updated Successfully" });
+      } catch (error) {
+        res.status(404);
+        res.json({ success: 0, message: `an error occured: ${error}` });
+      }
     }else{
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
