@@ -56,7 +56,9 @@ const leadServices = {
                 "create_date": { "$toString": "$date" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
-                { $sort : { updatedAt : -1} }])
+                { $sort : { updatedAt : -1} },
+                { $limit: 25 },
+                { $skip: 1 }])
 
         return promise
 
@@ -83,7 +85,10 @@ const leadServices = {
                 "create_date": { "$toString": "$date" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
-                { $sort : { updatedAt : -1} }])
+                { $sort : { updatedAt : -1} },
+                { $facet : { metadata: [ { $count: "total" }, { $addFields: { page: query.page } } ],
+                            data: [ { $skip: query.skip }, { $limit: query.limit } ]
+    } }])
 
         return promise
 

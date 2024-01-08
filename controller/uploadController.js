@@ -17,6 +17,8 @@ const From = require("../dto/formto");
 const formOperations = require("../services/formService");
 const projectDetailOperations = require("../services/projectDetailsService");
 const ProjectDetail = require("../dto/projectdetailsto");
+const LeadMapping = require("../dto/leadmappingto");
+const leadMappingOperations = require("../services/leadMappingService");
 
 aws.config.update({
 	secretAccessKey: 'pSD+OEcgsCzItA1bVzIuDICxg/bM+U1hps19638Q',
@@ -150,6 +152,20 @@ const insertLead = async (req, res) => {
                                  dataArrayError.push(oneRow1);
 
                              }
+                                // leadMappingOperations.deleteLeadId(id);
+                                // var obj = projectDetails.AssignToUser;
+                                // var obj = obj.replace(/["']/g, "");
+                                // obj = obj.split(',');
+                                // obj.forEach(element => {
+
+                                //       var leadMapping = new LeadMapping(
+                                //         req.body.id,
+                                //         element,
+                                //         "user",
+                                //       );
+
+                                //         leadMappingOperations.addLeadMapping(leadMapping);
+                                //   }); 
                             // parser.resume(); // to continue reading
                         }).on("end", async function () {
                             // console.log(dataArrayError);

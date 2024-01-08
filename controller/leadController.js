@@ -802,6 +802,9 @@ const getLeadForm = (req, res) => {
              }else{
                let start_date = req.query.start_date
                 let end_date = req.query.end_date
+                let page = req.query.page
+                let limit = req.query.limit
+                var skip = limit * page;
 
                 var dt = new Date();
                 year  = dt.getFullYear();
@@ -815,13 +818,13 @@ const getLeadForm = (req, res) => {
                 // if(end_date == ''){
                 //     end_date = day + '/' + month + '/' + year;
                 // }
-                 query = {"start_date": start_date, "end_date": end_date};
+                 query = {"start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page)};
                  console.log(query);
 
               const promise = leadOperations.getAllLead(query)
               promise
               .then((data)=>{
-                  // console.log(data)
+                  // console.log(data[0].data)
                   // const {others} = data
                   // if(data.length > 0){
                   //  res.status(200).json({
@@ -830,7 +833,7 @@ const getLeadForm = (req, res) => {
                   //   }) 
 
                 let arr = [];
-                 var arrrr = Promise.all(data.map(async (element) => {
+                 var arrrr = Promise.all(data[0].data.map(async (element) => {
                     var req = element;
                     console.log(req);
                     var dataArray = {};
@@ -957,11 +960,13 @@ const getLeadForm = (req, res) => {
                     if(responseText.length > 0){
                          res.status(200).json({
                           data: responseText[0],
+                          metadata: data[0].metadata,
                           success: 1
                           }) 
                       }else{
                           res.status(200).json({
                           data: [],
+                          metadata: [],
                           message: "No Data found",
                           success: 0
                         }) 
