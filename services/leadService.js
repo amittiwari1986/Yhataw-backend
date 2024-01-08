@@ -28,6 +28,10 @@ const leadServices = {
         const promise = await leadModel.findById(id).sort({updatedAt:-1})
         return promise
     },
+    async getLeadByUploadLeadId(uploadLeadId){
+        const promise = await leadModel.find({uploadLeadId})
+        return promise
+    },
     async getAllLead(query){
         // const promise = query ? await leadModel.find().sort({_id:-1}).limit(5): await leadModel.find()
         if(query.start_date != ''){

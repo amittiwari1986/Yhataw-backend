@@ -19,6 +19,8 @@ const projectDetailOperations = require("../services/projectDetailsService");
 const ProjectDetail = require("../dto/projectdetailsto");
 const LeadMapping = require("../dto/leadmappingto");
 const leadMappingOperations = require("../services/leadMappingService");
+const LeadLog = require("../dto/leadlogto");
+const leadLogOperations = require("../services/leadLogService");
 
 aws.config.update({
 	secretAccessKey: 'pSD+OEcgsCzItA1bVzIuDICxg/bM+U1hps19638Q',
@@ -95,7 +97,7 @@ const insertLead = async (req, res) => {
                             if(data.email != ''){
                                 // parser.pause();
                             
-                            console.log('One line from .csv >> ', data);
+                            // console.log('One line from .csv >> ', data);
                             var random = Math.floor(1000 + Math.random() * 9000);
                                         var uid = "LD" + random;
                                         var stage = "new";
@@ -169,9 +171,35 @@ const insertLead = async (req, res) => {
                             // parser.resume(); // to continue reading
                         }).on("end", async function () {
                             // console.log(dataArrayError);
-                            const sdf = await leadOperations.addManyLead(dataArray);
+                            const addLead = await leadOperations.addManyLead(dataArray);
                             const rejected = await leadRejectedOperations.addManyLead(dataArrayError);
 
+                            let getLead = await leadOperations.getLeadByUploadLeadId(element._id.toString());
+                                var obj = projectDetails.AssignToUser;
+                                var obj = obj.replace(/["']/g, "");
+                                obj = obj.split(',');
+                                var dataArrayPush = [];
+                                var dataArrayPushLog = [];
+                            getLead.forEach(ele => {
+                                 var oneRow3 = {
+                                          "leadId": ele._id.toString(),
+                                          "userId": "6540ee334deef597cddbd055",
+                                          "old_value": "create new",
+                                          "new_value": "create new"
+                                      }
+                                      dataArrayPushLog.push(oneRow3);
+                                obj.forEach(element => {
+
+                                     var oneRow2 = {
+                                          "lead_id": ele._id.toString(),
+                                          "user_id": element,
+                                          "type": "user"
+                                      }
+                                      dataArrayPush.push(oneRow2); 
+                                  }); 
+                            });
+                            leadMappingOperations.addManyLeadMapping(dataArrayPush);
+                            leadLogOperations.addManyLeadLog(dataArrayPushLog);
                             let lead = await uploadLeadOperations.getUploadLeadById(element._id.toString());
                             lead.fail_count = dataArrayError.length;
                             lead.success_count = dataArray.length;

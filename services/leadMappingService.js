@@ -8,6 +8,10 @@ const LeadMappingSerives = {
         const promise = await LeadMappingModel.findByIdAndUpdate(id,data,{new:true})
         return promise
     },
+    async addManyLeadMapping(UserObject){
+        const promise = await LeadMappingModel.insertMany(UserObject);
+        return promise
+    },
     async delete(id){
         const promise = LeadMappingModel.findByIdAndDelete(id);
         return promise
