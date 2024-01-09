@@ -1106,6 +1106,7 @@ const getMyLeadForm = (req, res) => {
                     dataArray['source'] = req.source;
                     dataArray['stage'] = req.stage;
                     dataArray['uid'] = req.uid;
+                    dataArray['lead_type'] = req.lead_type;
                     dataArray['updatedAt'] = req.updatedAt;
                     if(req.dynamicFields){
                       dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
