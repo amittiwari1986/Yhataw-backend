@@ -59,16 +59,6 @@ return res.status(401).send({ auth: false, message: 'Failed to authenticate toke
 };
 
 const insertLead = async (req, res) => {
-    // const filename = require("https://team-document.s3.ap-south-1.amazonaws.com/IIRXfgqgj-helooooooooooooooooo.csv");
-    // var arrayToInsert = [];
-    // csvtojson().fromFile(filename).then(sourse => {
-    //     for (var i = 0; i < sourse.length; i++){
-    //         // var oneRow = {
-    //         //     first: sourse[i]
-    //         // }
-    //         console.log(sourse.length);
-    //     }
-    // })
     var query = "";
     const promise = uploadLeadOperations.getAllUploadLead(query)
       promise
@@ -78,6 +68,8 @@ const insertLead = async (req, res) => {
           dataStart.forEach(async function(element) { 
           if(element.status == '1'){
             const myArray = element.file_path.split("/");
+            var getMapData = JSON.parse(element.mapping_info);
+            
             // console.log(myArray[3]);
             // exit;
             var formDetails = await formOperations.getFormById(element.formId);
@@ -93,7 +85,25 @@ const insertLead = async (req, res) => {
                     var dataArray = [];
                     var dataArrayError = [];
                         const parser = csv.parseStream(csvFile, { headers: true }).on("data", function (data) {
-                            // parser.pause();  // can pause reading using this at a particular row
+                            console.log(data);
+                            var objec = {};
+                            var Things = Object.keys(data);
+                            var dynamic = [];
+                            getMapData.forEach(function(eleData) { 
+                                 for (var i = 0; i < Things.length; i++) {
+                                     Things[i]
+                                     var notdat = Object.keys(eleData)[0];
+                                    if(Things[i] == Object.values(eleData)[0]){
+                                        console.log(Object.keys(eleData)[0] != "lead_name");
+                                        if((notdat == "lead_name") || (notdat == "lead_email") || (notdat == "lead_phone") || (notdat == "lead_source")){
+                                            
+                                        }else{
+                                            objec[Object.keys(eleData)[0]] = data[Things[i]];
+                                        }
+                                    }
+                                 }
+                            });
+                            dynamic.push(objec);
                             if(data.email != ''){
                                 // parser.pause();
                                 var lead_name = data.lead_name;
@@ -101,14 +111,14 @@ const insertLead = async (req, res) => {
                                 var lead_phone = data.lead_phone;
                                 var source = data.source;
                                 var date = data.date;
-                                var dynamic = [];
-                                var dataAssign = data;
-                                delete dataAssign.lead_name;
-                                delete dataAssign.email;
-                                delete dataAssign.lead_phone;
-                                delete dataAssign.source;
-                                dynamic.push(dataAssign);
-                            
+                                // var dynamic = [];
+                                // var dataAssign = data;
+                                // delete dataAssign.lead_name;
+                                // delete dataAssign.email;
+                                // delete dataAssign.lead_phone;
+                                // delete dataAssign.source;
+                                // dynamic.push(dataAssign);
+                                dynamic = JSON.stringify(dynamic);
                             //console.log('One line from .csv >> ', data);
                             var random = Math.floor(1000 + Math.random() * 9000);
                                         var uid = "LD" + random;
@@ -166,58 +176,44 @@ const insertLead = async (req, res) => {
                                  dataArrayError.push(oneRow1);
 
                              }
-                                // leadMappingOperations.deleteLeadId(id);
-                                // var obj = projectDetails.AssignToUser;
-                                // var obj = obj.replace(/["']/g, "");
-                                // obj = obj.split(',');
-                                // obj.forEach(element => {
-
-                                //       var leadMapping = new LeadMapping(
-                                //         req.body.id,
-                                //         element,
-                                //         "user",
-                                //       );
-
-                                //         leadMappingOperations.addLeadMapping(leadMapping);
-                                //   }); 
-                            // parser.resume(); // to continue reading
+                                
                         }).on("end", async function () {
-                            // console.log(dataArrayError);
-                            // const addLead = await leadOperations.addManyLead(dataArray);
-                            // const rejected = await leadRejectedOperations.addManyLead(dataArrayError);
+                            // console.log(dataArray);
+                            const addLead = await leadOperations.addManyLead(dataArray);
+                            const rejected = await leadRejectedOperations.addManyLead(dataArrayError);
 
-                            // let getLead = await leadOperations.getLeadByUploadLeadId(element._id.toString());
-                            //     var obj = projectDetails.AssignToUser;
-                            //     var obj = obj.replace(/["']/g, "");
-                            //     obj = obj.split(',');
-                            //     var dataArrayPush = [];
-                            //     var dataArrayPushLog = [];
-                            // getLead.forEach(ele => {
-                            //      var oneRow3 = {
-                            //               "leadId": ele._id.toString(),
-                            //               "userId": "6540ee334deef597cddbd055",
-                            //               "old_value": "create new",
-                            //               "new_value": "create new"
-                            //           }
-                            //           dataArrayPushLog.push(oneRow3);
-                            //     obj.forEach(element => {
+                            let getLead = await leadOperations.getLeadByUploadLeadId(element._id.toString());
+                                var obj = projectDetails.AssignToUser;
+                                var obj = obj.replace(/["']/g, "");
+                                obj = obj.split(',');
+                                var dataArrayPush = [];
+                                var dataArrayPushLog = [];
+                            getLead.forEach(ele => {
+                                 var oneRow3 = {
+                                          "leadId": ele._id.toString(),
+                                          "userId": "6540ee334deef597cddbd055",
+                                          "old_value": "create new",
+                                          "new_value": "create new"
+                                      }
+                                      dataArrayPushLog.push(oneRow3);
+                                obj.forEach(element => {
 
-                            //          var oneRow2 = {
-                            //               "lead_id": ele._id.toString(),
-                            //               "user_id": element,
-                            //               "type": "user"
-                            //           }
-                            //           dataArrayPush.push(oneRow2); 
-                            //       }); 
-                            // });
-                            // leadMappingOperations.addManyLeadMapping(dataArrayPush);
-                            // leadLogOperations.addManyLeadLog(dataArrayPushLog);
-                            // let lead = await uploadLeadOperations.getUploadLeadById(element._id.toString());
-                            // lead.fail_count = dataArrayError.length;
-                            // lead.success_count = dataArray.length;
-                            // lead.status = "3";
+                                     var oneRow2 = {
+                                          "lead_id": ele._id.toString(),
+                                          "user_id": element,
+                                          "type": "user"
+                                      }
+                                      dataArrayPush.push(oneRow2); 
+                                  }); 
+                            });
+                            leadMappingOperations.addManyLeadMapping(dataArrayPush);
+                            leadLogOperations.addManyLeadLog(dataArrayPushLog);
+                            let lead = await uploadLeadOperations.getUploadLeadById(element._id.toString());
+                            lead.fail_count = dataArrayError.length;
+                            lead.success_count = dataArray.length;
+                            lead.status = "3";
 
-                            // await uploadLeadOperations.updateUploadLead(lead._id,lead);
+                            await uploadLeadOperations.updateUploadLead(lead._id,lead);
 
                             return res.status(200).send({ auth: true,data: dataArray, message: 'csv parse process finished', success: 1});
                         }).on("error", function () {
