@@ -767,6 +767,7 @@ const getLeadForm = (req, res) => {
                     dataArray['source'] = req.source;
                     dataArray['stage'] = req.stage;
                     dataArray['uid'] = req.uid;
+                    dataArray['lead_type'] = req.lead_type;
                     if(req.dynamicFields){
                       dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
                     }
@@ -940,6 +941,7 @@ const getLeadForm = (req, res) => {
                     dataArray['stage'] = req.stage;
                     dataArray['uid'] = req.uid;
                     dataArray['updatedAt'] = req.updatedAt;
+                    dataArray['lead_type'] = req.lead_type;
                     if(req.dynamicFields){
                       dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
                     }
