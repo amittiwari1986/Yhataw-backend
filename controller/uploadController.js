@@ -7,6 +7,8 @@ const uploadfile = multer({ dest: 'uploads/' })
 const csvtojson = require('csvtojson');
 const csv = require('@fast-csv/parse');
 
+const User = require("../dto/userdto");
+const userOperations = require("../services/userService");
 const LeadRejected = require("../dto/leadrejectedto");
 const leadRejectedOperations = require("../services/leadRejectedService");
 const Lead = require("../dto/leadto");
@@ -21,6 +23,8 @@ const LeadMapping = require("../dto/leadmappingto");
 const leadMappingOperations = require("../services/leadMappingService");
 const LeadLog = require("../dto/leadlogto");
 const leadLogOperations = require("../services/leadLogService");
+const LeadUserStage = require("../dto/leaduserstageto");
+const leadUserStageOperations = require("../services/leadUserStageService");
 
 aws.config.update({
 	secretAccessKey: 'pSD+OEcgsCzItA1bVzIuDICxg/bM+U1hps19638Q',
@@ -85,7 +89,7 @@ const insertLead = async (req, res) => {
                     var dataArray = [];
                     var dataArrayError = [];
                         const parser = csv.parseStream(csvFile, { headers: true }).on("data", function (data) {
-                            console.log(data);
+                            // console.log(data);
                             var objec = {};
                             var Things = Object.keys(data);
                             var dynamic = [];
@@ -94,7 +98,7 @@ const insertLead = async (req, res) => {
                                      Things[i]
                                      var notdat = Object.keys(eleData)[0];
                                     if(Things[i] == Object.values(eleData)[0]){
-                                        console.log(Object.keys(eleData)[0] != "lead_name");
+                                        // console.log(Object.keys(eleData)[0] != "lead_name");
                                         if((notdat == "lead_name") || (notdat == "lead_email") || (notdat == "lead_phone") || (notdat == "lead_source")){
                                             
                                         }else{
@@ -188,6 +192,7 @@ const insertLead = async (req, res) => {
                                 obj = obj.split(',');
                                 var dataArrayPush = [];
                                 var dataArrayPushLog = [];
+                                var dataArrayPushStage = [];
                             getLead.forEach(ele => {
                                  var oneRow3 = {
                                           "leadId": ele._id.toString(),
@@ -196,18 +201,30 @@ const insertLead = async (req, res) => {
                                           "new_value": "create new"
                                       }
                                       dataArrayPushLog.push(oneRow3);
-                                obj.forEach(element => {
-
+                                obj.forEach(async element => {
+                                    var userData = await userOperations.getUserById(element);
+                                    // console.log(userData);
                                      var oneRow2 = {
                                           "lead_id": ele._id.toString(),
                                           "user_id": element,
                                           "type": "user"
                                       }
-                                      dataArrayPush.push(oneRow2); 
+                                      dataArrayPush.push(oneRow2);
+                                      var oneRow4 = {
+                                          "lead_id": ele._id.toString(),
+                                          "user_id": element,
+                                          "type": "user",
+                                          "user_name": userData.name,
+                                          "stage": "new",
+                                          "status": "1"
+                                      }
+                                      // console.log(oneRow4);
+                                      dataArrayPushStage.push(oneRow4); 
                                   }); 
                             });
                             leadMappingOperations.addManyLeadMapping(dataArrayPush);
-                            leadLogOperations.addManyLeadLog(dataArrayPushLog);
+                            await leadLogOperations.addManyLeadLog(dataArrayPushLog);
+                            await leadUserStageOperations.addManyLeadUserStage(dataArrayPushStage);
                             let lead = await uploadLeadOperations.getUploadLeadById(element._id.toString());
                             lead.fail_count = dataArrayError.length;
                             lead.success_count = dataArray.length;

@@ -38,6 +38,8 @@ const projectDetailOperations = require("../services/projectDetailsService");
 const ProjectDetail = require("../dto/projectdetailsto");
 const LeadLog = require("../dto/leadlogto");
 const leadLogOperations = require("../services/leadLogService");
+const LeadUserStage = require("../dto/leaduserstageto");
+const leadUserStageOperations = require("../services/leadUserStageService");
 const jwt = require("jsonwebtoken");
 const db  = require('../db/connect');
 
@@ -537,6 +539,7 @@ const updateLeadStage = async (req, res) => {
           return res.status(400).json({ success: 0, message: "Lead Details not found" });
         }
 
+
         lead.stage = req.body.stage;
         var oneRow3 = {
                           "leadId": lead._id.toString(),
@@ -548,6 +551,12 @@ const updateLeadStage = async (req, res) => {
 
         await leadOperations.updateLead(lead._id,lead);
         leadLogOperations.addManyLeadLog(dataArrayPushLog);
+
+         let leadUserStage = await leadUserStageOperations.findLeadUserStageByleadIdUserId(lead._id.toString(),setdata);
+         // console.log(leadUserStage);
+         leadUserStage.stage = req.body.stage;
+         await leadUserStageOperations.updateLeadUserStage(leadUserStage._id,leadUserStage);
+
         return res.status(200).json({ success: 1, message: "Lead stage Updated Successfully" });
       } catch (error) {
         return res.status(400).json({ success: 0, message: "Details not found" });
@@ -742,19 +751,26 @@ const getLeadForm = (req, res) => {
                       dataArray['AssignTo'] = '';
                     }
 
-                    if(req.AssignToUser != 'NA'){
-                      var userId = req.AssignToUser;
+                     if(req.AssignToUser != 'NA'){
+                      // var userId =JSON.parse(req.AssignToUser);
+                       var userId = req.AssignToUser;
                       var userId = userId.replace(/["']/g, "");
                       userId = userId.split(',');
+                      // console.log(userId);
                       var userData = await userOperations.getMultipleUser(userId);
+                      var qurData = {"user": userId, "leadId": req._id.toString()};
+                      var leadUserStageData = await leadUserStageOperations.getMultipleUser(qurData);
+                        dataArray['AssignToUserStage'] = leadUserStageData;
                       if(userData){
                         dataArray['AssignToUser'] = userData;
                       }else{
                         dataArray['AssignToUser'] = '';
+                        dataArray['AssignToUserStage'] = '';
                       }
                       
                     }else{
                       dataArray['AssignToUser'] = '';
+                      dataArray['AssignToUserStage'] = '';
                     }
 
                     dataArray['form_name'] = req.form_name;
@@ -920,14 +936,19 @@ const getLeadForm = (req, res) => {
                       userId = userId.split(',');
                       // console.log(userId);
                       var userData = await userOperations.getMultipleUser(userId);
+                      var qurData = {"user": userId, "leadId": req._id.toString()}
+                      var leadUserStageData = await leadUserStageOperations.getMultipleUser(qurData);
+                        dataArray['AssignToUserStage'] = leadUserStageData;
                       if(userData){
                         dataArray['AssignToUser'] = userData;
                       }else{
                         dataArray['AssignToUser'] = '';
+                        dataArray['AssignToUserStage'] = '';
                       }
                       
                     }else{
                       dataArray['AssignToUser'] = '';
+                      dataArray['AssignToUserStage'] = '';
                     }
 
                     dataArray['form_name'] = req.form_name;
@@ -1094,6 +1115,8 @@ const getMyLeadForm = (req, res) => {
                     //   dataArray['AssignTo'] = '';
                     //   dataArray['AssignTo_name'] = '';
                     // }
+                    var leadUserStageData = await leadUserStageOperations.findLeadUserStageId(req._id.toString());
+                    dataArray['AssignToUserStage'] = leadUserStageData;
 
                     dataArray['form_name'] = req.form_name;
                     dataArray['formId'] = req.formId;
