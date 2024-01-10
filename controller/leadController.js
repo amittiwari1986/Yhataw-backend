@@ -758,9 +758,23 @@ const getLeadForm = (req, res) => {
                       userId = userId.split(',');
                       // console.log(userId);
                       var userData = await userOperations.getMultipleUser(userId);
-                      var qurData = {"user": userId, "leadId": req._id.toString()};
+                      var qurData = {"user": userId, "leadId": req._id.toString()}
                       var leadUserStageData = await leadUserStageOperations.getMultipleUser(qurData);
-                        dataArray['AssignToUserStage'] = leadUserStageData;
+                      var stageArray = [];
+                      leadUserStageData.forEach(element => {
+                        var userData = userOperations.getUserById(element.user_id);
+                        var oneRow = {
+                                          "lead_id": element.lead_id,
+                                          "user_id": element.user_id,
+                                          "type": element.type,
+                                          "user_name": userData.name,
+                                          "stage": element.stage
+                                      }
+                        // console.log(oneRow4);
+                        stageArray.push(oneRow); 
+
+                      });
+                        dataArray['AssignToUserStage'] = stageArray;
                       if(userData){
                         dataArray['AssignToUser'] = userData;
                       }else{
@@ -938,7 +952,22 @@ const getLeadForm = (req, res) => {
                       var userData = await userOperations.getMultipleUser(userId);
                       var qurData = {"user": userId, "leadId": req._id.toString()}
                       var leadUserStageData = await leadUserStageOperations.getMultipleUser(qurData);
-                        dataArray['AssignToUserStage'] = leadUserStageData;
+                      var stageArray = [];
+                      leadUserStageData.forEach((ele) => {
+                        var userData = userOperations.getUserById(ele.user_id);
+                        var oneRow = {
+                                          "lead_id": ele.lead_id,
+                                          "user_id": ele.user_id,
+                                          "type": ele.type,
+                                          "user_name": userData.name,
+                                          "stage": ele.stage
+                                      }
+                        // console.log(oneRow4);
+                        stageArray.push(oneRow); 
+                        // console.log(stageArray);
+
+                      });
+                        dataArray['AssignToUserStage'] = stageArray;
                       if(userData){
                         dataArray['AssignToUser'] = userData;
                       }else{
@@ -1115,8 +1144,8 @@ const getMyLeadForm = (req, res) => {
                     //   dataArray['AssignTo'] = '';
                     //   dataArray['AssignTo_name'] = '';
                     // }
-                    var leadUserStageData = await leadUserStageOperations.findLeadUserStageId(req._id.toString());
-                    dataArray['AssignToUserStage'] = leadUserStageData;
+                    // var leadUserStageData = await leadUserStageOperations.findLeadUserStageId(req._id.toString());
+                    // dataArray['AssignToUserStage'] = leadUserStageData;
 
                     dataArray['form_name'] = req.form_name;
                     dataArray['formId'] = req.formId;

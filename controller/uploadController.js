@@ -201,8 +201,8 @@ const insertLead = async (req, res) => {
                                           "new_value": "create new"
                                       }
                                       dataArrayPushLog.push(oneRow3);
-                                obj.forEach(async element => {
-                                    var userData = await userOperations.getUserById(element);
+                                obj.forEach(element => {
+                                    // var userData = await userOperations.getUserById(element);
                                     // console.log(userData);
                                      var oneRow2 = {
                                           "lead_id": ele._id.toString(),
@@ -214,7 +214,7 @@ const insertLead = async (req, res) => {
                                           "lead_id": ele._id.toString(),
                                           "user_id": element,
                                           "type": "user",
-                                          "user_name": userData.name,
+                                          "user_name": "",
                                           "stage": "new",
                                           "status": "1"
                                       }
@@ -222,9 +222,9 @@ const insertLead = async (req, res) => {
                                       dataArrayPushStage.push(oneRow4); 
                                   }); 
                             });
-                            leadMappingOperations.addManyLeadMapping(dataArrayPush);
-                            await leadLogOperations.addManyLeadLog(dataArrayPushLog);
-                            await leadUserStageOperations.addManyLeadUserStage(dataArrayPushStage);
+                             leadMappingOperations.addManyLeadMapping(dataArrayPush);
+                            leadUserStageOperations.addManyLeadUserStage(dataArrayPushStage);
+                            leadLogOperations.addManyLeadLog(dataArrayPushLog);
                             let lead = await uploadLeadOperations.getUploadLeadById(element._id.toString());
                             lead.fail_count = dataArrayError.length;
                             lead.success_count = dataArray.length;

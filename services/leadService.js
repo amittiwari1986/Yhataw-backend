@@ -62,8 +62,9 @@ const leadServices = {
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
                 { $sort : { updatedAt : -1} },
-                { $limit: 25 },
-                { $skip: 1 }])
+                  { $facet : { metadata: [ { $count: "total" }, { $addFields: { page: query.page } } ],
+                            data: [ { $skip: query.skip }, { $limit: query.limit } ]
+    } }])
 
         return promise
 
@@ -102,7 +103,6 @@ const leadServices = {
          
     },
     async getAllMyLead(query){
-        console.log(query);
         // const promise = query ? await leadModel.find().sort({_id:-1}).limit(5): await leadModel.find()
         if(query.start_date != ''){
 
@@ -180,7 +180,10 @@ const leadServices = {
                 },
                 {"$unwind":"$mapping"},
                 {"$match":{"mapping.user_id": query.user_id}},
-                { $sort : { updatedAt : -1} }])
+                { $sort : { updatedAt : -1} },
+                { $facet : { metadata: [ { $count: "total" }, { $addFields: { page: query.page } } ],
+                            data: [ { $skip: query.skip }, { $limit: query.limit } ]
+    } }])
 
         return promise
 
