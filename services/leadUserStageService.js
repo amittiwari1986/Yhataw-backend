@@ -41,7 +41,7 @@ const LeadUserStageSerives = {
         return promise
     },
     async getMultipleUser(query){
-        const promise = query ? await LeadUserStageModel.find({ "lead_id": query.leadId,"user_id": { "$in": query.user } }).sort({_id:-1}).limit(5): await LeadUserStageModel.find({ "lead_id": query.leadId,"user_id": { "$in": query.user } })
+        const promise = query ? await LeadUserStageModel.find({ "lead_id": query.leadId,"user_id": { "$in": query.user } }).sort({_id:-1}).limit(100): await LeadUserStageModel.find({ "lead_id": query.leadId,"user_id": { "$in": query.user } })
         return promise
     },
 }
