@@ -752,22 +752,27 @@ const getLeadForm = (req, res) => {
                     }
 
                      if(req.AssignToUser != 'NA'){
-                      // var userId =JSON.parse(req.AssignToUser);
-                       var userId = req.AssignToUser;
-                      var userId = userId.replace(/["']/g, "");
-                      userId = userId.split(',');
-                      // console.log(userId);
+                      if(req.stage == "Pipeline"){
+                        var projectDetailsData = await projectDetailOperations.findOneProjectId(req.projectId);
+                        var userId = projectDetailsData.AssignToUser;
+                        var userId = userId1.replace(/["']/g, "");
+                        userId = userId1.split(',');
+                      }else{
+                        var userId = req.AssignToUser;
+                        var userId = userId.replace(/["']/g, "");
+                        userId = userId.split(',');
+                      }
                       var userData = await userOperations.getMultipleUser(userId);
                       var qurData = {"user": userId, "leadId": req._id.toString()}
                       var leadUserStageData = await leadUserStageOperations.getMultipleUser(qurData);
                       var stageArray = [];
                       leadUserStageData.forEach(element => {
-                        var userData = userOperations.getUserById(element.user_id);
+                        var userDataSet = userOperations.getUserById(element.user_id);
                         var oneRow = {
                                           "lead_id": element.lead_id,
                                           "user_id": element.user_id,
                                           "type": element.type,
-                                          "user_name": userData.name,
+                                          "user_name": userDataSet.name,
                                           "stage": element.stage
                                       }
                         // console.log(oneRow4);
@@ -945,21 +950,29 @@ const getLeadForm = (req, res) => {
 
                     if(req.AssignToUser != 'NA'){
                       // var userId =JSON.parse(req.AssignToUser);
-                       var userId = req.AssignToUser;
-                      var userId = userId.replace(/["']/g, "");
-                      userId = userId.split(',');
+                      if(req.stage == "Pipeline"){
+                        var projectDetailsData = await projectDetailOperations.findOneProjectId(req.projectId);
+                        var userId = projectDetailsData.AssignToUser;
+                        var userId = userId.replace(/["']/g, "");
+                        userId = userId.split(',');
+                      }else{
+                        var userId = req.AssignToUser;
+                        var userId = userId.replace(/["']/g, "");
+                        userId = userId.split(',');
+                      }
+                      
                       // console.log(userId);
                       var userData = await userOperations.getMultipleUser(userId);
                       var qurData = {"user": userId, "leadId": req._id.toString()}
                       var leadUserStageData = await leadUserStageOperations.getMultipleUser(qurData);
                       var stageArray = [];
                       leadUserStageData.forEach((ele) => {
-                        var userData = userOperations.getUserById(ele.user_id);
+                        var userDataSet = userOperations.getUserById(ele.user_id);
                         var oneRow = {
                                           "lead_id": ele.lead_id,
                                           "user_id": ele.user_id,
                                           "type": ele.type,
-                                          "user_name": userData.name,
+                                          "user_name": userDataSet.name,
                                           "stage": ele.stage
                                       }
                         // console.log(oneRow4);
