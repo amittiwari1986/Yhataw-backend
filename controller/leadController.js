@@ -1160,6 +1160,13 @@ const getMyLeadForm = (req, res) => {
                     // var leadUserStageData = await leadUserStageOperations.findLeadUserStageId(req._id.toString());
                     // dataArray['AssignToUserStage'] = leadUserStageData;
 
+                    
+                    var leadUserStageData = await leadUserStageOperations.findLeadUserStageByleadIdUserId(req._id.toString(), setdata);
+                    if(leadUserStageData){
+                      var stage = leadUserStageData.stage;
+                    }else{
+                      var stage = req.stage;
+                    }
                     dataArray['form_name'] = req.form_name;
                     dataArray['formId'] = req.formId;
                     dataArray['leadName'] = req.leadName;
@@ -1169,7 +1176,7 @@ const getMyLeadForm = (req, res) => {
                     dataArray['AssignTo'] = req.AssignTo;
                     dataArray['AssignToUser'] = req.AssignToUser;
                     dataArray['source'] = req.source;
-                    dataArray['stage'] = req.stage;
+                    dataArray['stage'] = stage;
                     dataArray['uid'] = req.uid;
                     dataArray['lead_type'] = req.lead_type;
                     dataArray['updatedAt'] = req.updatedAt;
