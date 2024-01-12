@@ -1,5 +1,5 @@
 class User{
-    constructor(name,password,userRole,phone,email,phoneOtp,whatsapp,dob,martial_status,gender,address1,address2,country_id,state_id,city,zipcode,doj,employee_id,status,profile_image,in_complete,time_zone,role_id,date,phoneCountryCode,whatsappCountryCode){
+    constructor(name,password,userRole,phone,email,phoneOtp,whatsapp,dob,martial_status,gender,address1,address2,country_id,state_id,city,zipcode,doj,employee_id,status,profile_image,in_complete,time_zone,role_id,date,phoneCountryCode,whatsappCountryCode,team_id,team_name){
         this.name = name
         this.password = password
         this.userRole = userRole
@@ -26,6 +26,8 @@ class User{
         this.date = date
         this.phoneCountryCode = phoneCountryCode
         this.whatsappCountryCode = whatsappCountryCode
+        this.team_id = team_id
+        this.team_name = team_name
 
     }
 }

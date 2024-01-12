@@ -112,7 +112,8 @@ const register = async (req, res) => {
       role_id,
       date,
       req.body.phoneCountryCode,
-      req.body.whatsappCountryCode
+      req.body.whatsappCountryCode,
+      ''
     );
 
 
@@ -172,10 +173,19 @@ const addUserOffice = async (req, res) => {
 
       // if(getrole.length>0){
         let id = req.body.userId;
+        if(req.body.team_id){
+          teamId = req.body.team_id;
+          team_name = req.body.team_name;
+        }else{
+          teamId = 'NA';
+          team_name = '';
+        }
         let user = await userOperations.getUserById(id);
         // console.log(user);
         user.userRole = getrole.roleId;
         user.role_id = req.body.role_id;
+        user.team_id = teamId;
+        user.team_name = team_name;
        await userOperations.updateUser(user._id,user);
       // }
 
