@@ -958,6 +958,8 @@ const updateUserOffice = async (req, res) => {
           // console.log(user);
           userD.userRole = getrole.roleId;
           userD.role_id = req.body.role_id;
+          userD.team_id = req.body.team_id;
+          userD.team_name = req.body.team_name;
          await userOperations.updateUser(userD._id,userD);
 
          if(getrole.roleId == 5 || getrole.roleId == 6){
