@@ -1335,12 +1335,21 @@ const getLeadReminder = (req, res) => {
             if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
             
             // return res.status(200).send(decoded.id.id);
+            
             setdata = decoded.id.id;
         });
         if(setdata){
              let id = req.params.id
+             var checkUserData = userOperations.getUserById(setdata);
+
+                    if(checkUserData.role == "65277273c5d66b4d6ccb0fe7"){
+                      var getUserId = setdata;
+                    }else{
+                      var getUserId = 'NA';
+                    }
+                    
              if(id){
-                 const promise = leadReminderOperations.findLeadReminderLeadId(id)
+                 const promise = leadReminderOperations.findLeadReminderLeadId(id,getUserId)
               promise
               .then((data)=>{
                 // console.log(data);

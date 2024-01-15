@@ -16,9 +16,16 @@ const leadReminderServices = {
         const promise = await leadReminderModel.findOne({leadId})
         return promise 
     },
-    async findLeadReminderLeadId(leadId){
-        const promise = await leadReminderModel.find({leadId}).sort({createdAt:-1})
-        return promise 
+    async findLeadReminderLeadId(leadId,userId){
+        console.log(userId);
+        if(userId == 'NA'){
+            const promise = await leadReminderModel.find({leadId}).sort({createdAt:-1})
+            return promise 
+        }else{
+            const promise = await leadReminderModel.find({"leadId": leadId, "userId": userId}).sort({createdAt:-1})
+            return promise 
+        }
+        
     },
     async getLeadReminderById(id){
         const promise = await leadReminderModel.findById(id)
