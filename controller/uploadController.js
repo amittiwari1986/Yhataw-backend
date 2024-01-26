@@ -108,13 +108,38 @@ const insertLead = async (req, res) => {
                                  }
                             });
                             dynamic.push(objec);
-                            if(data.email != ''){
-                                // parser.pause();
                                 var lead_name = data.lead_name;
-                                var email = data.email;
+                                var source = data.lead_source;
                                 var lead_phone = data.lead_phone;
-                                var source = data.source;
                                 var date = data.date;
+                                if(data.lead_email != '' && data.lead_email != undefined){
+                                    var email = data.lead_email;
+                                    var emailStatus = 1;
+                                }else{
+                                    var email = "";
+                                    var emailStatus = 0;
+                                }
+                                if(data.lead_name != '' && data.lead_name != undefined){
+                                    var lead_name = data.lead_name;
+                                    var nameStatus = 1;
+                                }else{
+                                    var lead_name = "";
+                                    var nameStatus = 0;
+                                }
+                                if(data.lead_phone != '' && data.lead_phone != undefined){
+                                    var lead_phone = data.lead_phone;
+                                    var phoneStatus = 1;
+                                }else{
+                                    var email = "";
+                                    var phoneStatus = 0;
+                                }
+                            if(nameStatus == 1 && phoneStatus == 1 && emailStatus == 1){
+                                // parser.pause();
+                                // var lead_name = data.lead_name;
+                                // var email = data.lead_email;
+                                // var lead_phone = data.lead_phone;
+                                // var source = data.lead_source;
+                                // var date = data.date;
                                 // var dynamic = [];
                                 // var dataAssign = data;
                                 // delete dataAssign.lead_name;
@@ -238,6 +263,8 @@ const insertLead = async (req, res) => {
                             return res.status(400).send({ auth: false, message: 'csv parse process failed', success: 0});
                         });
                 });
+            }else{
+                return res.status(200).send({ auth: false, message: "no process is pending to execute", success: 1});
             }
         });
      })
