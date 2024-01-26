@@ -165,7 +165,7 @@ const userSerives = {
         return promise
     },
     async getMultipleUser(query){
-        const promise = query ? await UserModel.find({ "_id": { "$in": query } }).sort({_id:-1}).limit(5): await UserModel.find({ "_id": { "$in": query } })
+        const promise = query ? await UserModel.find({ "_id": { "$in": query } }).sort({_id:-1}).limit(100): await UserModel.find({ "_id": { "$in": query } })
         return promise
     },
 }

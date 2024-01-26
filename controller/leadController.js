@@ -34,6 +34,12 @@ const LeadReminder = require("../dto/leadreminderto");
 const leadReminderOperations = require("../services/leadReminderService");
 const LeadMapping = require("../dto/leadmappingto");
 const leadMappingOperations = require("../services/leadMappingService");
+const projectDetailOperations = require("../services/projectDetailsService");
+const ProjectDetail = require("../dto/projectdetailsto");
+const LeadLog = require("../dto/leadlogto");
+const leadLogOperations = require("../services/leadLogService");
+const LeadUserStage = require("../dto/leaduserstageto");
+const leadUserStageOperations = require("../services/leadUserStageService");
 const jwt = require("jsonwebtoken");
 const db  = require('../db/connect');
 
@@ -419,6 +425,7 @@ const addLeadForm = async (req, res) => {
     var stage = "new";
     var source = "FACEBOOK";
     var type = "individual";
+    var projectDetails = await projectDetailOperations.findOneProjectId(req.body.projectId);
     statusData = 1;
     const lead = new Lead(
       req.body.form_name,
@@ -431,8 +438,8 @@ const addLeadForm = async (req, res) => {
       req.body.leadPhone,
       JSON.stringify(req.body.dynamicFields),
       statusData,
-      "NA",
-      "NA",
+      projectDetails.AssignTo,
+      projectDetails.AssignToUser,
       source,
       uid,
       stage,
@@ -524,6 +531,7 @@ const updateLeadStage = async (req, res) => {
   if(setdata){
     let data;
     let id = req.body.id;
+    var dataArrayPushLog = [];
       try {
         let lead = await leadOperations.getLeadById(id);
 
@@ -531,9 +539,24 @@ const updateLeadStage = async (req, res) => {
           return res.status(400).json({ success: 0, message: "Lead Details not found" });
         }
 
+
         lead.stage = req.body.stage;
+        var oneRow3 = {
+                          "leadId": lead._id.toString(),
+                          "userId": setdata,
+                          "old_value": "change stage",
+                          "new_value": req.body.stage
+                      }
+                      dataArrayPushLog.push(oneRow3);
 
         await leadOperations.updateLead(lead._id,lead);
+        leadLogOperations.addManyLeadLog(dataArrayPushLog);
+
+         let leadUserStage = await leadUserStageOperations.findLeadUserStageByleadIdUserId(lead._id.toString(),setdata);
+         // console.log(leadUserStage);
+         leadUserStage.stage = req.body.stage;
+         await leadUserStageOperations.updateLeadUserStage(leadUserStage._id,leadUserStage);
+
         return res.status(200).json({ success: 1, message: "Lead stage Updated Successfully" });
       } catch (error) {
         return res.status(400).json({ success: 0, message: "Details not found" });
@@ -667,7 +690,7 @@ const getLeadForm = (req, res) => {
                     dataArray['_id'] = req._id; 
                     if(req.projectId != 'NA'){
                       // console.log(req.projectId);
-                      var projectData = await projectOperations.getProjectById(req.projectId);
+                      var projectData = projectOperations.getProjectById(req.projectId);
                       // console.log(projectData);
                       if(projectData){
                           dataArray['projectId'] = req.projectId;
@@ -683,7 +706,7 @@ const getLeadForm = (req, res) => {
                     }
 
                     if(req.developerId != 'NA'){
-                      var developerData = await developerOperations.getDeveloperById(req.developerId);
+                      var developerData = developerOperations.getDeveloperById(req.developerId);
                       if(developerData){
                         dataArray['developerId'] = req.developerId;
                         dataArray['developer_name'] = developerData.developer_name;
@@ -698,7 +721,7 @@ const getLeadForm = (req, res) => {
                     }
                     
                      if(req.projecttypeId != 'NA'){
-                      var projectTypeData = await propertyTypeOperations.getPropertyTypeById(req.projecttypeId);
+                      var projectTypeData = propertyTypeOperations.getPropertyTypeById(req.projecttypeId);
                       if(projectTypeData){
                         dataArray['projecttypeId'] = req.projecttypeId;
                         dataArray['projecttype_name'] = projectTypeData.name;
@@ -717,7 +740,7 @@ const getLeadForm = (req, res) => {
                       var teamId = teamId.replace(/["']/g, "");
                       teamId = teamId.split(',');
                       console.log(teamId);
-                      var teamData = await teamOperations.getMultipleTeam(teamId);
+                      var teamData = teamOperations.getMultipleTeam(teamId);
                       if(teamData){
                         dataArray['AssignTo'] = teamData;
                       }else{
@@ -728,19 +751,45 @@ const getLeadForm = (req, res) => {
                       dataArray['AssignTo'] = '';
                     }
 
-                    if(req.AssignToUser != 'NA'){
-                      var userId = req.AssignToUser;
-                      var userId = userId.replace(/["']/g, "");
-                      userId = userId.split(',');
+                     if(req.AssignToUser != 'NA'){
+                      if(req.stage == "Pipeline"){
+                        var projectDetailsData = await projectDetailOperations.findOneProjectId(req.projectId);
+                        var userId = projectDetailsData.AssignToUser;
+                        var userId = userId1.replace(/["']/g, "");
+                        userId = userId1.split(',');
+                      }else{
+                        var userId = req.AssignToUser;
+                        var userId = userId.replace(/["']/g, "");
+                        userId = userId.split(',');
+                      }
                       var userData = await userOperations.getMultipleUser(userId);
+                      var qurData = {"user": userId, "leadId": req._id.toString()}
+                      var leadUserStageData = await leadUserStageOperations.getMultipleUser(qurData);
+                      var stageArray = [];
+                      leadUserStageData.forEach(element => {
+                        var userDataSet = userOperations.getUserById(element.user_id);
+                        var oneRow = {
+                                          "lead_id": element.lead_id,
+                                          "user_id": element.user_id,
+                                          "type": element.type,
+                                          "user_name": userDataSet.name,
+                                          "stage": element.stage
+                                      }
+                        // console.log(oneRow4);
+                        stageArray.push(oneRow); 
+
+                      });
+                        dataArray['AssignToUserStage'] = stageArray;
                       if(userData){
                         dataArray['AssignToUser'] = userData;
                       }else{
                         dataArray['AssignToUser'] = '';
+                        dataArray['AssignToUserStage'] = '';
                       }
                       
                     }else{
                       dataArray['AssignToUser'] = '';
+                      dataArray['AssignToUserStage'] = '';
                     }
 
                     dataArray['form_name'] = req.form_name;
@@ -753,6 +802,7 @@ const getLeadForm = (req, res) => {
                     dataArray['source'] = req.source;
                     dataArray['stage'] = req.stage;
                     dataArray['uid'] = req.uid;
+                    dataArray['lead_type'] = req.lead_type;
                     if(req.dynamicFields){
                       dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
                     }
@@ -799,6 +849,9 @@ const getLeadForm = (req, res) => {
              }else{
                let start_date = req.query.start_date
                 let end_date = req.query.end_date
+                let page = req.query.page
+                let limit = req.query.limit
+                var skip = limit * page;
 
                 var dt = new Date();
                 year  = dt.getFullYear();
@@ -812,13 +865,13 @@ const getLeadForm = (req, res) => {
                 // if(end_date == ''){
                 //     end_date = day + '/' + month + '/' + year;
                 // }
-                 query = {"start_date": start_date, "end_date": end_date};
+                 query = {"start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page)};
                  console.log(query);
 
               const promise = leadOperations.getAllLead(query)
               promise
               .then((data)=>{
-                  // console.log(data)
+                  // console.log(data[0].data)
                   // const {others} = data
                   // if(data.length > 0){
                   //  res.status(200).json({
@@ -827,9 +880,9 @@ const getLeadForm = (req, res) => {
                   //   }) 
 
                 let arr = [];
-                 var arrrr = Promise.all(data.map(async (element) => {
+                 var arrrr = Promise.all(data[0].data.map(async (element) => {
                     var req = element;
-                    // console.log(req);
+                    console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     if(req.projectId != 'NA'){
@@ -897,19 +950,47 @@ const getLeadForm = (req, res) => {
 
                     if(req.AssignToUser != 'NA'){
                       // var userId =JSON.parse(req.AssignToUser);
-                       var userId = req.AssignToUser;
-                      var userId = userId.replace(/["']/g, "");
-                      userId = userId.split(',');
+                      if(req.stage == "Pipeline"){
+                        var projectDetailsData = await projectDetailOperations.findOneProjectId(req.projectId);
+                        var userId = projectDetailsData.AssignToUser;
+                        var userId = userId.replace(/["']/g, "");
+                        userId = userId.split(',');
+                      }else{
+                        var userId = req.AssignToUser;
+                        var userId = userId.replace(/["']/g, "");
+                        userId = userId.split(',');
+                      }
+                      
                       // console.log(userId);
                       var userData = await userOperations.getMultipleUser(userId);
+                      var qurData = {"user": userId, "leadId": req._id.toString()}
+                      var leadUserStageData = await leadUserStageOperations.getMultipleUser(qurData);
+                      var stageArray = [];
+                      leadUserStageData.forEach((ele) => {
+                        var userDataSet = userOperations.getUserById(ele.user_id);
+                        var oneRow = {
+                                          "lead_id": ele.lead_id,
+                                          "user_id": ele.user_id,
+                                          "type": ele.type,
+                                          "user_name": userDataSet.name,
+                                          "stage": ele.stage
+                                      }
+                        // console.log(oneRow4);
+                        stageArray.push(oneRow); 
+                        // console.log(stageArray);
+
+                      });
+                        dataArray['AssignToUserStage'] = stageArray;
                       if(userData){
                         dataArray['AssignToUser'] = userData;
                       }else{
                         dataArray['AssignToUser'] = '';
+                        dataArray['AssignToUserStage'] = '';
                       }
                       
                     }else{
                       dataArray['AssignToUser'] = '';
+                      dataArray['AssignToUserStage'] = '';
                     }
 
                     dataArray['form_name'] = req.form_name;
@@ -922,6 +1003,8 @@ const getLeadForm = (req, res) => {
                     dataArray['source'] = req.source;
                     dataArray['stage'] = req.stage;
                     dataArray['uid'] = req.uid;
+                    dataArray['updatedAt'] = req.updatedAt;
+                    dataArray['lead_type'] = req.lead_type;
                     if(req.dynamicFields){
                       dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
                     }
@@ -939,6 +1022,11 @@ const getLeadForm = (req, res) => {
                     //   dataArray['dynamicFields'] = '';
                     // }
                     arr.push(dataArray);
+                    arr.sort(function compare(a, b) {
+                      var dateA = new Date(a.updatedAt);
+                      var dateB = new Date(b.updatedAt);
+                      return dateB - dateA;
+                    });
                     return arr;
                    
                     }
@@ -948,11 +1036,13 @@ const getLeadForm = (req, res) => {
                     if(responseText.length > 0){
                          res.status(200).json({
                           data: responseText[0],
+                          metadata: data[0].metadata,
                           success: 1
                           }) 
                       }else{
                           res.status(200).json({
                           data: [],
+                          metadata: [],
                           message: "No Data found",
                           success: 0
                         }) 
@@ -993,18 +1083,21 @@ const getMyLeadForm = (req, res) => {
              let id = setdata;
              let start_date = req.query.start_date
             let end_date = req.query.end_date
-             query = {"user_id":id, "start_date": start_date, "end_date": end_date};
+            let page = req.query.page
+            let limit = req.query.limit
+            var skip = limit * page;
+             query = {"user_id":id, "start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page)};
                  const promise = leadOperations.getAllMyLead(query)
               promise
               .then((data)=>{
                 // console.log(data);
                 let arr = [];
-                 var arrrr = Promise.all(data.map(async (element) => {
+                 var arrrr = Promise.all(data[0].data.map(async (element) => {
                     var req = element;
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     if(req.projectId != 'NA'){
-                      console.log(req);
+                      // console.log(req);
                       var projectData = await projectOperations.getProjectById(req.projectId);
                       // console.log(projectData);
                       if(projectData){
@@ -1064,7 +1157,16 @@ const getMyLeadForm = (req, res) => {
                     //   dataArray['AssignTo'] = '';
                     //   dataArray['AssignTo_name'] = '';
                     // }
+                    // var leadUserStageData = await leadUserStageOperations.findLeadUserStageId(req._id.toString());
+                    // dataArray['AssignToUserStage'] = leadUserStageData;
 
+                    
+                    var leadUserStageData = await leadUserStageOperations.findLeadUserStageByleadIdUserId(req._id.toString(), setdata);
+                    if(leadUserStageData){
+                      var stage = leadUserStageData.stage;
+                    }else{
+                      var stage = req.stage;
+                    }
                     dataArray['form_name'] = req.form_name;
                     dataArray['formId'] = req.formId;
                     dataArray['leadName'] = req.leadName;
@@ -1074,8 +1176,10 @@ const getMyLeadForm = (req, res) => {
                     dataArray['AssignTo'] = req.AssignTo;
                     dataArray['AssignToUser'] = req.AssignToUser;
                     dataArray['source'] = req.source;
-                    dataArray['stage'] = req.stage;
+                    dataArray['stage'] = stage;
                     dataArray['uid'] = req.uid;
+                    dataArray['lead_type'] = req.lead_type;
+                    dataArray['updatedAt'] = req.updatedAt;
                     if(req.dynamicFields){
                       dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
                     }
@@ -1094,6 +1198,11 @@ const getMyLeadForm = (req, res) => {
                     // }
                     
                     arr.push(dataArray);
+                    arr.sort(function compare(a, b) {
+                      var dateA = new Date(a.updatedAt);
+                      var dateB = new Date(b.updatedAt);
+                      return dateB - dateA;
+                    });
                     return arr;
                    
                     }
@@ -1103,6 +1212,7 @@ const getMyLeadForm = (req, res) => {
                     if(responseText.length > 0){
                          res.status(200).json({
                           data: responseText[0],
+                          metadata: data[0].metadata,
                           success: 1
                           }) 
                       }else{
@@ -1225,12 +1335,21 @@ const getLeadReminder = (req, res) => {
             if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
             
             // return res.status(200).send(decoded.id.id);
+            
             setdata = decoded.id.id;
         });
         if(setdata){
              let id = req.params.id
+             var checkUserData = userOperations.getUserById(setdata);
+
+                    if(checkUserData.role == "65277273c5d66b4d6ccb0fe7"){
+                      var getUserId = setdata;
+                    }else{
+                      var getUserId = 'NA';
+                    }
+                    
              if(id){
-                 const promise = leadReminderOperations.findLeadReminderLeadId(id)
+                 const promise = leadReminderOperations.findLeadReminderLeadId(id,getUserId)
               promise
               .then((data)=>{
                 // console.log(data);
@@ -1244,7 +1363,7 @@ const getLeadReminder = (req, res) => {
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     if(req.leadId != 'NA'){
-                      var leadData = await leadOperations.getLeadById(req.leadId);
+                      var leadData = leadOperations.getLeadById(req.leadId);
                       if(leadData){
                           dataArray['leadId'] = req.leadId;
                           dataArray['lead_name'] = leadData.uid;
@@ -1259,7 +1378,7 @@ const getLeadReminder = (req, res) => {
                     }
 
                     if(req.userId != 'NA'){
-                      var userData = await userOperations.getUserById(req.userId);
+                      var userData = userOperations.getUserById(req.userId);
                       if(userData){
                         dataArray['userId'] = req.userId;
                         dataArray['user_name'] = userData.name;

@@ -52,10 +52,14 @@ const userOfficeSerives = {
         return promise
     },
     async getMultipleTeamWiseDropDown(query){
+        // console.log(query);
+        // /{
+        //        "$match": {"team_id": {"$in" : query}}
+        //      },
         const promise = await UserOfficeModel.aggregate(
             [
              {
-               "$match": {"team_id": {"$in" : query}}
+               "$match": {"team_id": query}
              },
             { "$project": { "userId": { "$toObjectId": "$userId" },
             }},

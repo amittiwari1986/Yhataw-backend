@@ -32,6 +32,8 @@ const User = require("../dto/userdto");
 const userOfficeOperations = require("../services/userOfficeService");
 const leadOperations = require("../services/leadService");
 const Lead = require("../dto/leadto");
+const projectDetailOperations = require("../services/projectDetailsService");
+const ProjectDetail = require("../dto/projectdetailsto");
 
 const propertyListOperations = require("../services/propertyListService");
 const PropertyList = require("../dto/propertylistto");
@@ -785,6 +787,11 @@ const addDeveloper = async (req, res) => {
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
   });
+  var checkdata = await developerOperations.getDeveloperByName(req.body.developer_name);
+  if(checkdata > 0){
+   return res.status(400).send({ auth: false, message: 'This developer name all ready exist.', success: 0});
+  }
+ 
   if(setdata){
     const developer = new Developer(
       req.body.developer_name
@@ -883,6 +890,10 @@ const addProject = async (req, res) => {
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
   });
+    var checkdata = await projectOperations.getProjectByName(req.body.project_name);
+  if(checkdata > 0){
+   return res.status(400).send({ auth: false, message: 'This project name all ready exist.', success: 0});
+  }
   if(setdata){
     const project = new Project(
       req.body.developerId,
@@ -1253,6 +1264,104 @@ const getTeamDropDown = (req, res) => {
         }
 };
 
+const getTeamDropDownProject = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+              let projectId = req.params.id;
+               const query = req.query.new;
+              const promise = teamOperations.getAllTeam(query)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  let arr = [];
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+                    var query = '';
+                    var dataArray = {};
+                    dataArray['_id'] = req._id; 
+                    dataArray['team_name'] = req.team_name;
+                    dataArray['status'] = req.status;
+                    dataArray['is_remove'] = req.is_remove;
+                    if(projectId){
+                      var leadData = await projectDetailOperations.findOneProjectId(projectId);
+                      if(leadData){
+                        var ss = leadData.AssignTo;
+                      }
+                      
+                      if(ss){
+                        ss = ss.split(',');
+                      }else{
+                        var ss = [];
+                      }
+                    }else{
+                      var ss = [];
+                    }
+                    var dsf = req._id;
+                    if(ss.length > 0){
+                      var matches = ss.filter(s => s.includes(dsf));
+                    }else{
+                      var matches = [];
+                    }
+                    
+                    
+                    if(matches.length > 0){
+                      dataArray['is_available'] = 1;
+                    }else{
+                      dataArray['is_available'] = 0;
+                    }
+                    if(req.projectId != 'NA'){
+                      var projectData = await userOfficeOperations.getAllTeamDropDown(req._id.toString());
+                      if(projectData){
+                          dataArray['team_members'] = projectData;
+                      }else{
+                        dataArray['team_members'] = '';
+                      }
+                     
+                    }else{
+                      dataArray['team_members'] = '';
+                    }
+                    
+                    
+                    arr.push(dataArray);
+                    return arr;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
+
 const getMultipleTeamWiseDropDown = (req, res) => {
   let token=req.headers.token;
         let setdata = "";
@@ -1274,6 +1383,7 @@ const getMultipleTeamWiseDropDown = (req, res) => {
               .then((data)=>{
                   let arr = [];
                   let arr1 = [];
+                  let dataArray1 = {};
                  var arrrr = Promise.all(data.map(async (element) => {
                     var req = element;
                     var query = '';
@@ -1284,7 +1394,7 @@ const getMultipleTeamWiseDropDown = (req, res) => {
                     dataArray['status'] = req.status;
                     dataArray['is_remove'] = req.is_remove;
                     if(req.projectId != 'NA'){
-                      var projectData = await userOfficeOperations.getMultipleTeamWiseDropDown(query1);
+                      var projectData = await userOfficeOperations.getMultipleTeamWiseDropDown(req._id.toString());
                       if(leadId){
                         var leadData = await leadOperations.getLeadById(leadId);
                         // console.log(leadData.AssignToUser);
@@ -1296,6 +1406,122 @@ const getMultipleTeamWiseDropDown = (req, res) => {
                         // console.log(projectData);
                       if(projectData){
                         let dataArray1 = {};
+                        let arr1 = [];
+                        projectData.forEach(ele => {
+                          let dataArray1 = {};
+                          // console.log(ele);
+                          var matchId = ele.userId;
+                          if(ss.length > 0){
+                            var matches = ss.filter(s => s.includes(matchId));
+                          }else{
+                            var matches = [];
+                          }
+                          // console.log(matches);
+                          dataArray1['_id'] = ele._id;
+                          dataArray1['userId'] = ele.userId;
+                          if(matches.length > 0){
+                            dataArray1['is_available'] = 1;
+                          }else{
+                            dataArray1['is_available'] = 0;
+                          }
+                          dataArray1['users'] = ele.users;
+                          arr1.push(dataArray1);
+                        });
+                        // console.log(dataArray1);
+                          dataArray['team_members'] = arr1;
+                      }else{
+                        dataArray['team_members'] = '';
+                      }
+                     
+                    }else{
+                      dataArray['team_members'] = '';
+                    }
+                    
+                    
+                    arr.push(dataArray);
+                    return arr;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
+
+const getMultipleTeamWiseDropDownProject = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             
+               const query = req.body.team_id;
+               const projectId = req.body.project_id;
+               const query1 = query;
+              const promise = teamOperations.getMultipleTeam(query)
+              promise
+              .then((data)=>{
+                  let arr = [];
+                  let arr1 = [];
+                  let dataArray1 = {};
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+                    var query = '';
+                    // console.log(req);
+                    var dataArray = {};
+                    dataArray['_id'] = req._id; 
+                    dataArray['team_name'] = req.team_name;
+                    dataArray['status'] = req.status;
+                    dataArray['is_remove'] = req.is_remove;
+                    if(req.projectId != 'NA'){
+                      var projectData = await userOfficeOperations.getMultipleTeamWiseDropDown(req._id.toString());
+                      if(projectData){
+                        var leadData = await projectDetailOperations.findOneProjectId(projectId);
+                        // console.log(leadData.AssignToUser);
+                        if(leadData){
+                          var ss = leadData.AssignToUser;
+                        }
+                        
+                        if(ss){
+                          ss = ss.split(',');
+                        }else{
+                          var ss = [];
+                        }
+                        
+                        }else{
+                          var ss = [];
+                        }
+                        // console.log(projectData);
+                      if(projectData){
+                        let dataArray1 = {};
+                        let arr1 = [];
                         projectData.forEach(ele => {
                           let dataArray1 = {};
                           // console.log(ele);
@@ -1373,7 +1599,7 @@ const updateTeam= async (req, res) => {
   if(setdata){
     let data;
     let id = req.body.id;
-      // try {
+      try {
         let teamDoc = await teamOperations.getTeamById(id);
         // console.log(req.body.info);
         // console.log(JSON.stringify(req.body.info));
@@ -1394,9 +1620,9 @@ const updateTeam= async (req, res) => {
         
         await teamOperations.updateTeam(teamDoc._id,teamDoc);
         return res.status(200).json({ success: 1, message: "Team Updated Successfully" });
-      // } catch (error) {
-      //   return res.status(400).json({ success: 0, message: "Details not found" });
-      // }
+      } catch (error) {
+        return res.status(400).json({ success: 0, message: "Details not found" });
+      }
     }else{
             return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
@@ -1695,6 +1921,7 @@ const addPropertyList = async (req, res) => {
         });
       })
       .catch((err) => {
+        res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
         // res.status(500).json(err.message);
         // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
         // var keys = Object.keys(err.keyPattern);
@@ -1724,7 +1951,7 @@ const updatePropertyList= async (req, res) => {
   if(setdata){
     let data;
     let id = req.body._id;
-      // try {
+      try {
         let propertyListDoc = await propertyListOperations.getPropertyListById(id);
         // console.log(req.body.id);
         // console.log(JSON.stringify(req.body.info));
@@ -1763,13 +1990,126 @@ const updatePropertyList= async (req, res) => {
         
         await propertyListOperations.updatePropertyList(propertyListDoc._id,propertyListDoc);
         return res.status(200).json({ success: 1, message: "Property List Updated Successfully" });
-      // } catch (error) {
-      //   return res.status(400).json({ success: 0, message: "Details not found" });
-      // }
+      } catch (error) {
+        return res.status(400).json({ success: 0, message: "Details not found" });
+      }
     }else{
             return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 
 };
+const updateProject = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
 
-module.exports = { getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+    var checkdata = await projectOperations.getProjectByName(req.body.project_name);
+  if(checkdata > 0){
+   return res.status(400).send({ auth: false, message: 'This project name all ready exist.', success: 0});
+  }
+  if(setdata){
+    let data;
+    let id = req.body._id;
+      try {
+        let project = await projectOperations.getProjectById(id);
+        if (!project) {
+          return res.status(400).json({ success: 0, message: "Project name not found" });
+        }
+        if(req.body.project_name != '' || req.body.project_name != undefined){
+          project.project_name = req.body.project_name;
+        }
+        if(req.body.developerId != '' || req.body.developerId != undefined){
+          project.developerId = req.body.developerId;
+        }
+        
+        await projectOperations.updateProject(project._id,project);
+        return res.status(200).json({ success: 1, message: "Project name Updated Successfully" });
+      } catch (error) {
+        res.status(404);
+        res.json({ success: 0, message: `an error occured: ${error}` });
+      }
+    }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
+const updateDeveloper = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  var checkdata = await developerOperations.getDeveloperByName(req.body.developer_name);
+  if(checkdata > 0){
+   return res.status(400).send({ auth: false, message: 'This developer name all ready exist.', success: 0});
+  }
+ 
+  if(setdata){
+    let data;
+    let id = req.body._id;
+      try {
+        let propertyListDoc = await developerOperations.getDeveloperById(id);
+        if (!propertyListDoc) {
+          return res.status(400).json({ success: 0, message: "Developer name not found" });
+        }
+        if(req.body.developer_name != '' || req.body.developer_name != undefined){
+          propertyListDoc.developer_name = req.body.developer_name;
+        }
+        
+        await developerOperations.updateDeveloper(propertyListDoc._id,propertyListDoc);
+        return res.status(200).json({ success: 1, message: "Developer name Updated Successfully" });
+      } catch (error) {
+        res.status(404);
+        res.json({ success: 0, message: `an error occured: ${error}` });
+      }
+      }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
+
+const updateDepartment = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    
+    let data;
+    let id = req.body._id;
+      try {
+        let propertyListDoc = await departmentOperations.getdepartmentById(id);
+        if (!propertyListDoc) {
+          return res.status(400).json({ success: 0, message: "Department name not found" });
+        }
+        if(req.body.department_name != '' || req.body.department_name != undefined){
+          propertyListDoc.department_name = req.body.department_name;
+        }
+        
+        await departmentOperations.updateDepartment(propertyListDoc._id,propertyListDoc);
+        return res.status(200).json({ success: 1, message: "Department name Updated Successfully" });
+      } catch (error) {
+        res.status(404);
+        res.json({ success: 0, message: `an error occured: ${error}` });
+      }
+    }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
+
+module.exports = { updateDepartment,updateDeveloper,updateProject,getTeamDropDownProject,getMultipleTeamWiseDropDownProject,getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }

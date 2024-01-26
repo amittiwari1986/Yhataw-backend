@@ -32,6 +32,8 @@ const jwt = require("jsonwebtoken");
 const {ObjectID} = require('mongodb');
 const uploadLeadOperations = require("../services/uploadLeadService");
 const UploadLead = require("../dto/uploadleadto");
+const projectMappingOperations = require("../services/projectMappingService");
+const ProjectMapping = require("../dto/projectmappingto");
 
 const {
   PHONE_NOT_FOUND_ERR,
@@ -83,7 +85,29 @@ const addProjectDetail = async (req, res) => {
       '',
       '',
       '',
+      '',
+      '',
+      '',
+      JSON.stringify(req.body.AssignTo),
+      JSON.stringify(req.body.AssignToUser),
+      '',
+      '',
     );
+    // await leadOperations.updateLead(lead._id,lead);
+    //     await leadMappingOperations.deleteLeadId(id);
+      var obj = req.body.AssignToUser;
+      var obj = obj.replace(/["']/g, "");
+      obj = obj.split(',');
+      obj.forEach(element => {
+
+            var projectMapping = new ProjectMapping(
+              req.body.id,
+              element,
+              "user",
+            );
+
+              projectMappingOperations.addProjectMapping(projectMapping);
+        }); 
 
 
     const promise = projectDetailOperations.addProjectDetail(projectDetail); 
@@ -192,6 +216,34 @@ const updateProjectDetail = async (req, res) => {
         }
         if(req.body.furnish_type != '' || req.body.furnish_type != undefined){
         	pDetails.furnish_type = req.body.furnish_type;
+        }
+        if(req.body.AssignTo != '' || req.body.AssignTo != undefined){
+          pDetails.AssignTo = JSON.stringify(req.body.AssignTo);
+        }
+        if(req.body.car_parking != '' || req.body.car_parking != undefined){
+          pDetails.car_parking = req.body.car_parking;
+        }
+        if(req.body.bedroom != '' || req.body.bedroom != undefined){
+          pDetails.bedroom = req.body.bedroom;
+        }
+        if(req.body.AssignToUser != '' || req.body.AssignToUser != undefined){
+          pDetails.AssignToUser = JSON.stringify(req.body.AssignToUser);
+
+          // await projectMappingOperations.deleteProjectId(id);
+          // var obj = req.body.AssignToUser;
+          // var obj = obj.replace(/["']/g, "");
+          // obj = obj.split(',');
+          // obj.forEach(element => {
+
+          //       var projectMapping = new ProjectMapping(
+          //         req.body.id,
+          //         element,
+          //         "user",
+          //       );
+
+          //         projectMappingOperations.addProjectMapping(projectMapping);
+          //   }); 
+
         }
 
         await projectDetailOperations.updateProjectDetail(pDetails._id,pDetails);
@@ -395,6 +447,10 @@ const getProjectDetail = (req, res) => {
                     dataArray['study'] = req.study;
                     dataArray['pooja'] = req.pooja;
                     dataArray['furnish_type'] = req.furnish_type;
+                    dataArray['AssignTo'] = req.AssignTo;
+                    dataArray['AssignToUser'] = req.AssignToUser;
+                    dataArray['car_parking'] = req.car_parking;
+                    dataArray['bedroom'] = req.bedroom;
                     
                     arr.push(dataArray);
                     return arr;
@@ -517,6 +573,10 @@ const getProjectDetail = (req, res) => {
                     dataArray['study'] = req.study;
                     dataArray['pooja'] = req.pooja;
                     dataArray['furnish_type'] = req.furnish_type;
+                    dataArray['AssignTo'] = req.AssignTo;
+                    dataArray['AssignToUser'] = req.AssignToUser;
+                    dataArray['car_parking'] = req.car_parking;
+                    dataArray['bedroom'] = req.bedroom;
                     
                     arr.push(dataArray);
                     return arr;
@@ -889,11 +949,11 @@ const addPropertyStatus = async (req, res) => {
         });
       })
       .catch((err) => {
-        if(err.keyPattern){
-          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
-        }else{
+        // if(err.keyPattern){
+        //   res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+        // }else{
           res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
-        }
+        // }
       });
     }else{
           return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});

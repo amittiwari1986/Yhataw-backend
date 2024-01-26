@@ -42,4 +42,11 @@ Routes.post("/getMultipleTeamWiseDropDown",mastercontroller.getMultipleTeamWiseD
 Routes.get("/getPropertyList/:id",mastercontroller.getPropertyList)
 Routes.post("/addPropertyList",mastercontroller.addPropertyList)
 Routes.put("/updatePropertyList",mastercontroller.updatePropertyList)
+Routes.post("/getMultipleTeamWiseDropDownProject",mastercontroller.getMultipleTeamWiseDropDownProject)
+Routes.get("/getTeamDropDownProject",mastercontroller.getTeamDropDownProject)
+Routes.get("/getTeamDropDownProject/:id",mastercontroller.getTeamDropDownProject)
+Routes.put("/updateProject",mastercontroller.updateProject)
+Routes.put("/updateDeveloper",mastercontroller.updateDeveloper)
+Routes.put("/updateDepartment",mastercontroller.updateDepartment)
 module.exports = Routes
+

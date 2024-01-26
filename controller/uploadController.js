@@ -7,6 +7,8 @@ const uploadfile = multer({ dest: 'uploads/' })
 const csvtojson = require('csvtojson');
 const csv = require('@fast-csv/parse');
 
+const User = require("../dto/userdto");
+const userOperations = require("../services/userService");
 const LeadRejected = require("../dto/leadrejectedto");
 const leadRejectedOperations = require("../services/leadRejectedService");
 const Lead = require("../dto/leadto");
@@ -15,6 +17,14 @@ const uploadLeadOperations = require("../services/uploadLeadService");
 const UploadLead = require("../dto/uploadleadto");
 const From = require("../dto/formto");
 const formOperations = require("../services/formService");
+const projectDetailOperations = require("../services/projectDetailsService");
+const ProjectDetail = require("../dto/projectdetailsto");
+const LeadMapping = require("../dto/leadmappingto");
+const leadMappingOperations = require("../services/leadMappingService");
+const LeadLog = require("../dto/leadlogto");
+const leadLogOperations = require("../services/leadLogService");
+const LeadUserStage = require("../dto/leaduserstageto");
+const leadUserStageOperations = require("../services/leadUserStageService");
 
 aws.config.update({
 	secretAccessKey: 'pSD+OEcgsCzItA1bVzIuDICxg/bM+U1hps19638Q',
@@ -53,16 +63,6 @@ return res.status(401).send({ auth: false, message: 'Failed to authenticate toke
 };
 
 const insertLead = async (req, res) => {
-    // const filename = require("https://team-document.s3.ap-south-1.amazonaws.com/IIRXfgqgj-helooooooooooooooooo.csv");
-    // var arrayToInsert = [];
-    // csvtojson().fromFile(filename).then(sourse => {
-    //     for (var i = 0; i < sourse.length; i++){
-    //         // var oneRow = {
-    //         //     first: sourse[i]
-    //         // }
-    //         console.log(sourse.length);
-    //     }
-    // })
     var query = "";
     const promise = uploadLeadOperations.getAllUploadLead(query)
       promise
@@ -72,9 +72,12 @@ const insertLead = async (req, res) => {
           dataStart.forEach(async function(element) { 
           if(element.status == '1'){
             const myArray = element.file_path.split("/");
+            var getMapData = JSON.parse(element.mapping_info);
+            
             // console.log(myArray[3]);
             // exit;
             var formDetails = await formOperations.getFormById(element.formId);
+            var projectDetails = await projectDetailOperations.findOneProjectId(formDetails.projectId);
                 const params = {
                     Bucket: 'team-document',
                     Key: myArray[3],
@@ -86,11 +89,66 @@ const insertLead = async (req, res) => {
                     var dataArray = [];
                     var dataArrayError = [];
                         const parser = csv.parseStream(csvFile, { headers: true }).on("data", function (data) {
-                            // parser.pause();  // can pause reading using this at a particular row
-                            if(data.email != ''){
+                            // console.log(data);
+                            var objec = {};
+                            var Things = Object.keys(data);
+                            var dynamic = [];
+                            getMapData.forEach(function(eleData) { 
+                                 for (var i = 0; i < Things.length; i++) {
+                                     Things[i]
+                                     var notdat = Object.keys(eleData)[0];
+                                    if(Things[i] == Object.values(eleData)[0]){
+                                        // console.log(Object.keys(eleData)[0] != "lead_name");
+                                        if((notdat == "lead_name") || (notdat == "lead_email") || (notdat == "lead_phone") || (notdat == "lead_source")){
+                                            
+                                        }else{
+                                            objec[Object.keys(eleData)[0]] = data[Things[i]];
+                                        }
+                                    }
+                                 }
+                            });
+                            dynamic.push(objec);
+                                var lead_name = data.lead_name;
+                                var source = data.lead_source;
+                                var lead_phone = data.lead_phone;
+                                var date = data.date;
+                                if(data.lead_email != '' && data.lead_email != undefined){
+                                    var email = data.lead_email;
+                                    var emailStatus = 1;
+                                }else{
+                                    var email = "";
+                                    var emailStatus = 0;
+                                }
+                                if(data.lead_name != '' && data.lead_name != undefined){
+                                    var lead_name = data.lead_name;
+                                    var nameStatus = 1;
+                                }else{
+                                    var lead_name = "";
+                                    var nameStatus = 0;
+                                }
+                                if(data.lead_phone != '' && data.lead_phone != undefined){
+                                    var lead_phone = data.lead_phone;
+                                    var phoneStatus = 1;
+                                }else{
+                                    var email = "";
+                                    var phoneStatus = 0;
+                                }
+                            if(nameStatus == 1 && phoneStatus == 1 && emailStatus == 1){
                                 // parser.pause();
-                            
-                            // console.log('One line from .csv >> ', data);
+                                // var lead_name = data.lead_name;
+                                // var email = data.lead_email;
+                                // var lead_phone = data.lead_phone;
+                                // var source = data.lead_source;
+                                // var date = data.date;
+                                // var dynamic = [];
+                                // var dataAssign = data;
+                                // delete dataAssign.lead_name;
+                                // delete dataAssign.email;
+                                // delete dataAssign.lead_phone;
+                                // delete dataAssign.source;
+                                // dynamic.push(dataAssign);
+                                dynamic = JSON.stringify(dynamic);
+                            //console.log('One line from .csv >> ', data);
                             var random = Math.floor(1000 + Math.random() * 9000);
                                         var uid = "LD" + random;
                                         var stage = "new";
@@ -103,17 +161,17 @@ const insertLead = async (req, res) => {
                                           "developerId": formDetails.developerId,
                                           "projectId": formDetails.projectId,
                                           "projecttypeId": formDetails.projecttypeId,
-                                          "leadName": data.Name,
-                                          "leadEmail": data.email,
-                                          "leadPhone": data.work_phone_number,
-                                          "dynamicFields": "",
+                                          "leadName": lead_name,
+                                          "leadEmail": email,
+                                          "leadPhone": lead_phone,
+                                          "dynamicFields": dynamic,
                                           "status": statusData,
-                                          "AssignTo": "NA",
-                                          "AssignToUser": "NA",
-                                          "source": data.Source,
+                                          "AssignTo": projectDetails.AssignTo,
+                                          "AssignToUser": projectDetails.AssignToUser,
+                                          "source": source,
                                           "uid": uid,
                                           "stage": stage,
-                                          "date": data.Date,
+                                          "date": date,
                                           "lead_type": "upload_file",
                                           "upload_file_name": element.formId,
                                           "uploadLeadId": element._id.toString()
@@ -129,17 +187,17 @@ const insertLead = async (req, res) => {
                                           "developerId": formDetails.developerId,
                                           "projectId": formDetails.projectId,
                                           "projecttypeId": formDetails.projecttypeId,
-                                          "leadName": data.Name,
-                                          "leadEmail": data.email,
-                                          "leadPhone": data.work_phone_number,
+                                          "leadName": lead_name,
+                                          "leadEmail": email,
+                                          "leadPhone": lead_phone,
                                           "dynamicFields": "",
                                           "status": "1",
-                                          "AssignTo": "NA",
-                                          "AssignToUser": "NA",
-                                          "source": data.Source,
+                                          "AssignTo": projectDetails.AssignTo,
+                                          "AssignToUser": projectDetails.AssignToUser,
+                                          "source": source,
                                           "uid": "",
                                           "stage": "",
-                                          "date": data.Date,
+                                          "date": date,
                                           "type": "upload_file",
                                           "upload_file_name": element.formId,
                                           "uploadLeadId": element._id.toString()
@@ -147,12 +205,51 @@ const insertLead = async (req, res) => {
                                  dataArrayError.push(oneRow1);
 
                              }
-                            // parser.resume(); // to continue reading
+                                
                         }).on("end", async function () {
-                            // console.log(dataArrayError);
-                            const sdf = await leadOperations.addManyLead(dataArray);
+                            // console.log(dataArray);
+                            const addLead = await leadOperations.addManyLead(dataArray);
                             const rejected = await leadRejectedOperations.addManyLead(dataArrayError);
 
+                            let getLead = await leadOperations.getLeadByUploadLeadId(element._id.toString());
+                                var obj = projectDetails.AssignToUser;
+                                var obj = obj.replace(/["']/g, "");
+                                obj = obj.split(',');
+                                var dataArrayPush = [];
+                                var dataArrayPushLog = [];
+                                var dataArrayPushStage = [];
+                            getLead.forEach(ele => {
+                                 var oneRow3 = {
+                                          "leadId": ele._id.toString(),
+                                          "userId": "6540ee334deef597cddbd055",
+                                          "old_value": "create new",
+                                          "new_value": "create new"
+                                      }
+                                      dataArrayPushLog.push(oneRow3);
+                                obj.forEach(element => {
+                                    // var userData = await userOperations.getUserById(element);
+                                    // console.log(userData);
+                                     var oneRow2 = {
+                                          "lead_id": ele._id.toString(),
+                                          "user_id": element,
+                                          "type": "user"
+                                      }
+                                      dataArrayPush.push(oneRow2);
+                                      var oneRow4 = {
+                                          "lead_id": ele._id.toString(),
+                                          "user_id": element,
+                                          "type": "user",
+                                          "user_name": "",
+                                          "stage": "new",
+                                          "status": "1"
+                                      }
+                                      // console.log(oneRow4);
+                                      dataArrayPushStage.push(oneRow4); 
+                                  }); 
+                            });
+                             leadMappingOperations.addManyLeadMapping(dataArrayPush);
+                            leadUserStageOperations.addManyLeadUserStage(dataArrayPushStage);
+                            leadLogOperations.addManyLeadLog(dataArrayPushLog);
                             let lead = await uploadLeadOperations.getUploadLeadById(element._id.toString());
                             lead.fail_count = dataArrayError.length;
                             lead.success_count = dataArray.length;
@@ -166,6 +263,8 @@ const insertLead = async (req, res) => {
                             return res.status(400).send({ auth: false, message: 'csv parse process failed', success: 0});
                         });
                 });
+            }else{
+                return res.status(200).send({ auth: false, message: "no process is pending to execute", success: 1});
             }
         });
      })

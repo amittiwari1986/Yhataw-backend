@@ -36,6 +36,10 @@
      time_zone:{type:Schema.Types.String,required:false},
      role_id:{type:Schema.Types.String,required:[false, 'Please add role']},
      date:{type:Schema.Types.String,required:false},
+     phoneCountryCode:{type:Schema.Types.String,required:[false, 'Please add country code']},
+     whatsappCountryCode:{type:Schema.Types.String,required:[false, 'Please add country code']},
+     team_id:{type:Schema.Types.String,required:[false, 'Please add team']},
+     team_name:{type:Schema.Types.String,required:[false, 'Please add team name']},
  },{timestamps:true}); 
  
  const UserModel = connection.model('users',UserSchema);

@@ -10,6 +10,7 @@ const { S3Client } = require('@aws-sdk/client-s3');
 const bodyParser = require("body-parser");
 const shortId = require('shortid');
 const {verifyTokenAndAuthoreization,verifyTokenAndAdmin,verifyToken} = require("../utils/verifyToken")
+const mime = require("mime");
 
 
 
@@ -45,7 +46,9 @@ var upload = multer({
 	      cb(null, { fieldName: file.fieldname});
 	    },
 	    key: function (req, file, cb) {
-	      cb(null, shortId.generate() + '-' + file.originalname);
+        var path = require('path');
+        var getExtention = path.extname(file.originalname);
+	      cb(null, shortId.generate() + '-' + Date.now().toString() + getExtention);
 	    },
     })
 });

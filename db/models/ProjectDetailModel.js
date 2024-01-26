@@ -24,6 +24,10 @@ const connection  = require('../connect');
      study:{type:Schema.Types.String,required:[false, 'Please add study']},
      furnish_type:{type:Schema.Types.String,required:[false, 'Please add furnish_type']},
      pooja:{type:Schema.Types.String,required:[false, 'Please add pooja']},
+     AssignTo:{type:Schema.Types.String,required:false},
+     AssignToUser:{type:Schema.Types.String,required:false},
+     car_parking:{type:Schema.Types.String,required:false},
+     bedroom:{type:Schema.Types.String,required:false},
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
  

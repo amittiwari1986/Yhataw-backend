@@ -211,6 +211,8 @@ const userController = {
                     dataArray['in_complete'] = req.in_complete;
                     dataArray['time_zone'] = req.time_zone;
                     dataArray['createdAt'] = req.createdAt;
+                    dataArray['phoneCountryCode'] = req.phoneCountryCode;
+                    dataArray['whatsappCountryCode'] = req.whatsappCountryCode;
                     
                     arr.push(dataArray);
                     return arr;

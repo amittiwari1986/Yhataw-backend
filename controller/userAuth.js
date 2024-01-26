@@ -111,6 +111,9 @@ const register = async (req, res) => {
       inComplete,
       role_id,
       date,
+      req.body.phoneCountryCode,
+      req.body.whatsappCountryCode,
+      ''
     );
 
 
@@ -170,10 +173,19 @@ const addUserOffice = async (req, res) => {
 
       // if(getrole.length>0){
         let id = req.body.userId;
+        if(req.body.team_id){
+          teamId = req.body.team_id;
+          team_name = req.body.team_name;
+        }else{
+          teamId = 'NA';
+          team_name = '';
+        }
         let user = await userOperations.getUserById(id);
         // console.log(user);
         user.userRole = getrole.roleId;
         user.role_id = req.body.role_id;
+        user.team_id = teamId;
+        user.team_name = team_name;
        await userOperations.updateUser(user._id,user);
       // }
 
@@ -801,6 +813,9 @@ const updateUserPersonal = async (req, res) => {
         user.doj = req.body.doj;
         user.employee_id = req.body.employee_id;
         user.profile_image = req.body.profile_image;
+        user.phoneCountryCode =req.body.phoneCountryCode;
+        user.whatsappCountryCode =req.body.whatsappCountryCode;
+        user.whatsapp =req.body.whatsapp;
 
         await userOperations.updateUser(user._id,user);
         return res.status(200).json({ success: 1, message: "User Personal Details Updated Successfully" });
@@ -943,6 +958,8 @@ const updateUserOffice = async (req, res) => {
           // console.log(user);
           userD.userRole = getrole.roleId;
           userD.role_id = req.body.role_id;
+          userD.team_id = req.body.team_id;
+          userD.team_name = req.body.team_name;
          await userOperations.updateUser(userD._id,userD);
 
          if(getrole.roleId == 5 || getrole.roleId == 6){
@@ -1204,18 +1221,51 @@ const saveChangePassword = async (req, res) => {
   // }
 };
 
+const saveChangePasswordByAdmin = async (req, res) => {
+   let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    let id = req.body.id;
+    const user = await userOperations.getUserById(id);
+    if (!user) {
+            return res.status(400).json({ success: 0, message: "User Id not found" });
+          };
+   
+      try {
+        user.password = bcrypt.doEncrypt(req.body.password);
+        await userOperations.updateUser(user._id,user);
+        res.status(200);
+        res.json({ success: 1, message: `Password change Successfully` });
+      } catch (error) {
+        res.status(404);
+        res.json({ success: 0, message: `an error occured: ${error}` });
+      }
+    }else{
+          return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      }
+  
+};
+
 const checkPunchIn = async (req, res) => {
   let token=req.headers.token;
   let setdata = "";
-  // if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
 
-  //   jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
-  //     if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
       
-  //     // return res.status(200).send(decoded.id.id);
-  //     setdata = decoded.id.id;
-  // });
-  if(!setdata){
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
     const { id, authorization } = req.params;
     // var datetime = new Date();
     var dt = new Date();
@@ -2280,21 +2330,21 @@ const getRole= async (req, res) => {
             //   req.body.net_pay,
             // );
              const userSalary = new UserSalary(
-              "65276fc923416aea55af35be",
-              20000.00,
-              20000.00,
-              10000.00,
+              "6540ee334deef597cddbd055",
+              6667.00,
+              5000.00,
+              734.00,
+              3334.00,
+              4000.00,
               0.00,
-              1000.00,
               0.00,
-              1200.00,
-              200.00,
               0.00,
-              2000.00, 
-              50000.00,
-              3400.00,
-              46600.00,
-              10,
+              0.00,
+              0.00, 
+              19735.00,
+              0.00,
+              19735.00,
+              11,
               2023,
             );
             const promise = userSalaryOperations.addUserSalary(userSalary);
@@ -2584,4 +2634,4 @@ const testDT = async (req, res) => {
 
 
 
-module.exports = { dashboard,checkPunchIn,testDT,updateUserLoan,createSalary,getSalary,getRole,addRole,updateRole,getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
+module.exports = { saveChangePasswordByAdmin,dashboard,checkPunchIn,testDT,updateUserLoan,createSalary,getSalary,getRole,addRole,updateRole,getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
