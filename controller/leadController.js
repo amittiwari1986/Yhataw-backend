@@ -642,7 +642,7 @@ const updateLeadAssignToUser = async (req, res) => {
         var obj = req.body.AssignToUser;
         var obj = obj.replace(/["']/g, "");
         obj = obj.split(',');
-        obj.forEach(element => {
+        obj.forEach(async (element) => {
 
               var leadMapping = new LeadMapping(
                 req.body.id,
@@ -651,6 +651,22 @@ const updateLeadAssignToUser = async (req, res) => {
               );
 
                 leadMappingOperations.addLeadMapping(leadMapping);
+                let leadUserStage = await leadUserStageOperations.findLeadUserStageByleadIdUserId(req.body.id,element);
+                // console.log(leadUserStage);
+                if(!leadUserStage){
+                  var dataArrayPushStage = [];
+                  var oneRow4 = {
+                                          "lead_id": req.body.id,
+                                          "user_id": element,
+                                          "type": "user",
+                                          "user_name": "",
+                                          "stage": "new",
+                                          "status": "1"
+                                      }
+                  dataArrayPushStage.push(oneRow4); 
+                  leadUserStageOperations.addManyLeadUserStage(dataArrayPushStage);
+                }
+         
           }); 
         return res.status(200).json({ success: 1, message: "Lead Assignment To Users Successfully" });
       } catch (error) {
@@ -685,7 +701,7 @@ const getLeadForm = (req, res) => {
                 let arr = [];
                  var arrrr = Promise.all(data.map(async (element) => {
                     var req = element;
-                    console.log(req);
+                    // console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     if(req.projectId != 'NA'){
@@ -1087,10 +1103,11 @@ const getMyLeadForm = (req, res) => {
             let limit = req.query.limit
             var skip = limit * page;
              query = {"user_id":id, "start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page)};
+                 console.log(query);
                  const promise = leadOperations.getAllMyLead(query)
               promise
               .then((data)=>{
-                // console.log(data);
+                 console.log(data);
                 let arr = [];
                  var arrrr = Promise.all(data[0].data.map(async (element) => {
                     var req = element;
