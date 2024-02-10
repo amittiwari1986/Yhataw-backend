@@ -6,5 +6,6 @@ const {verifyTokenAndAuthoreization,verifyTokenAndAdmin,verifyToken} = require("
 Routes.get("/getSalesReport",verifyToken,reportController.getSalesReport)
 Routes.get("/getSourceReport",verifyToken,reportController.getSourceReport)
 Routes.get("/getVisitReport",verifyToken,reportController.getVisitReport)
+Routes.get("/getProjectReport",verifyToken,reportController.getProjectReport)
 
 module.exports = Routes

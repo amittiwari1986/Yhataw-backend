@@ -311,7 +311,7 @@ const getVisitReport = (req, res) => {
                   let arr = [];
                  var arrrr = Promise.all(data.map(async (element) => {
                     var req = element;
-                    console.log(req);
+                    // console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req.user_id; 
                     dataArray['user_name'] = req.name;
@@ -370,5 +370,127 @@ const getVisitReport = (req, res) => {
         }
 };
 
+const getProjectReport = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             let id = req.params.id
+            
+               const query = req.query.new 
+              const promise = projectOperations.getAllProject(query)
+              promise
+              .then((data)=>{
+                  // console.log(data)
+                  // const {others} = data
+                  // if(data.length > 0){
+                  //  res.status(200).json({
+                  //   data: data,
+                  //   success: 1
+                  //   }) 
 
-module.exports = { getSalesReport,getSourceReport,getVisitReport }
+                  let arr = [];
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+                    // console.log(req);
+                    var dataArray = {};
+                    dataArray['_id'] = req._id; 
+                    dataArray['project_name'] = req.project_name;
+
+                    var projectDetails = await projectDetailOperations.findOneProjectId(req._id);
+                    dataArray['project_details'] = projectDetails;
+
+                    var newData = await leadOperations.getLeadCountProjectWise("new",req._id);
+                    dataArray['new_count'] = newData;
+
+                    var not_answered_count = await leadOperations.getLeadCountProjectWise("Not Answered",req._id);
+                    dataArray['not_answered_count'] = not_answered_count;
+
+                    var not_intrested_count = await leadOperations.getLeadCountProjectWise("Not Intrested",req._id);
+                    dataArray['not_intrested_count'] = not_intrested_count;
+
+                    var call_back_count = await leadOperations.getLeadCountProjectWise("Call Back",req._id);
+                    dataArray['call_back_count'] = call_back_count;
+
+                    // var visit_planned_count = await leadOperations.getLeadCountStageWise("Visit Planned");
+                    // dataArray['visit_planned_count'] = visit_planned_count;
+
+                    var visit_done_count = await leadOperations.getLeadCountProjectWise("Visit Done",req._id);
+                    dataArray['visit_done_count'] = visit_done_count;
+
+                    var pipeline_count = await leadOperations.getLeadCountProjectWise("Pipeline",req._id);
+                    dataArray['pipeline_count'] = pipeline_count;
+
+                    var future_count = await leadOperations.getLeadCountProjectWise("Future",req._id);
+                    dataArray['future_count'] = future_count;
+
+                    var customer_count = await leadOperations.getLeadCountProjectWise("Customer",req._id);
+                    dataArray['customer_count'] = customer_count;
+
+                    // var Scheduled = await leadOperations.getLeadCountStageWise("Visit Scheduled");
+                    // dataArray['visit_scheduled_count'] = Scheduled;
+
+                    var booked_count = await leadOperations.getLeadCountProjectWise("Booked",req._id);
+                    dataArray['booked_count'] = booked_count;
+
+                    // var fresh_visit_count = await leadOperations.getLeadCountStageWise("Fresh Visit");
+                    // dataArray['fresh_visit_count'] = fresh_visit_count;
+
+                    // var walk_in_count = await leadOperations.getLeadCountStageWise("Walk-In");
+                    // dataArray['walk_in_count'] = walk_in_count;
+
+					var Released = await leadOperations.getLeadCountProjectWise("Released Pipeline",req._id);
+                    dataArray['released_pipeline'] = Released;
+
+
+                    
+                    // dataArray['status'] = req.status;
+                    
+                    arr.push(dataArray);
+                    return arr;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText[0]);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+
+                // }else{
+                //     res.status(200).json({
+                //     data: [],
+                //     message: "No Data found",
+                //     success: 0
+                //     }) 
+                // }
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
+
+
+module.exports = { getSalesReport,getSourceReport,getVisitReport,getProjectReport }

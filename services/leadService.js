@@ -40,6 +40,10 @@ const leadServices = {
         const promise = await leadModel.find({"stage":stage,"source":source}).count();
         return promise
     },
+    async getLeadCountProjectWise(stage,projectId){
+        const promise = await leadModel.find({"stage":stage,"projectId":projectId}).count();
+        return promise
+    },
     async getAllLead(query){
         // const promise = query ? await leadModel.find().sort({_id:-1}).limit(5): await leadModel.find()
         if(query.start_date != ''){
