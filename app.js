@@ -14,6 +14,7 @@ app.use("/",require("./routes/auth"))
 app.use("/",require("./routes/masterroute"))
 app.use("/",require("./routes/projectroute"))
 app.use("/",require("./routes/leadroute"))
+app.use("/",require("./routes/reportroute"))
 const server = app.listen(process.env.PORT,()=>{
     console.log("Backend Up",server.address().port)
 })

@@ -32,6 +32,14 @@ const leadServices = {
         const promise = await leadModel.find({uploadLeadId})
         return promise
     },
+    async getLeadCountStageWise(stage){
+        const promise = await leadModel.find({"stage":stage}).count();
+        return promise
+    },
+    async getLeadCountSourceWise(stage,source){
+        const promise = await leadModel.find({"stage":stage,"source":source}).count();
+        return promise
+    },
     async getAllLead(query){
         // const promise = query ? await leadModel.find().sort({_id:-1}).limit(5): await leadModel.find()
         if(query.start_date != ''){
@@ -104,6 +112,7 @@ const leadServices = {
     },
     async getAllMyLead(query){
         // const promise = query ? await leadModel.find().sort({_id:-1}).limit(5): await leadModel.find()
+        console.log(query);
         if(query.start_date != ''){
 
             const promise = await leadModel.aggregate(
@@ -183,7 +192,7 @@ const leadServices = {
                 { $sort : { updatedAt : -1} },
                 { $facet : { metadata: [ { $count: "total" }, { $addFields: { page: query.page } } ],
                             data: [ { $skip: query.skip }, { $limit: query.limit } ]
-    } }])
+        } }])
 
         return promise
 

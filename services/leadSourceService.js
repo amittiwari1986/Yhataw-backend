@@ -25,7 +25,7 @@ const leadSourceSerives = {
         return promise
     },
     async getAllLeadSource(query){
-        const promise = query ? await leadSourceModel.find().sort({_id:-1}).limit(5): await leadSourceModel.find()
+        const promise = query ? await leadSourceModel.find().sort({_id:-1}).limit(100): await leadSourceModel.find()
         return promise
     },
 }
