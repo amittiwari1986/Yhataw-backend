@@ -58,9 +58,14 @@ const getSalesReport = (req, res) => {
             setdata = decoded.id.id;
         });
         if(setdata){
-             let id = req.params.id
-            
-               const query = req.query.new 
+               let team_id = req.query.team_id
+             let start_date = req.query.start_date
+            let end_date = req.query.end_date
+            let page = req.query.page
+            let limit = req.query.limit
+            var skip = limit * page;
+             query = {"team_id":team_id, "start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page)};
+                 // console.log(query);
               const promise = userOperations.getAllUserData(query)
               promise
               .then((data)=>{
@@ -73,9 +78,22 @@ const getSalesReport = (req, res) => {
                   //   }) 
 
                   let arr = [];
-                 var arrrr = Promise.all(data.map(async (element) => {
+                  let total_arr = [];
+                  var arr2 = {};
+                    arr2['total_count'] = 100;
+                    arr2['total_new_count'] = 100;
+                    arr2['total_answered_count'] = 100;
+                    arr2['total_intrested_count'] = 100;
+                    arr2['total_call_back_count'] = 100;
+                    arr2['total_visit_done_count'] = 100;
+                    arr2['total_pipeline_count'] = 100;
+                    arr2['total_future_count'] = 100;
+                    arr2['total_customer_count'] = 100;
+                    arr2['total_booked_count'] = 100;
+                  total_arr.push(arr2);
+                 var arrrr = Promise.all(data[0].data.map(async (element) => {
                     var req = element;
-                    console.log(req);
+                    // console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req.user_id; 
                     dataArray['user_name'] = req.name;
@@ -135,6 +153,8 @@ const getSalesReport = (req, res) => {
                     if(responseText.length > 0){
                          res.status(200).json({
                           data: responseText[0],
+                          dataTotalCount: total_arr,
+                          metadata: data[0].metadata,
                           success: 1
                           }) 
                       }else{
@@ -176,10 +196,15 @@ const getSourceReport = (req, res) => {
             setdata = decoded.id.id;
         });
         if(setdata){
-             let id = req.params.id
-            
-               const query = req.query.new 
-              const promise = leadSourceOperations.getAllLeadSource(query)
+               let source = req.query.source
+             let start_date = req.query.start_date
+            let end_date = req.query.end_date
+            let page = req.query.page
+            let limit = req.query.limit
+            var skip = limit * page;
+             query = {"source":source, "start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page)};
+                 // console.log(query);
+              const promise = leadSourceOperations.getAllLeadSources(query)
               promise
               .then((data)=>{
                   console.log(data)
@@ -191,7 +216,20 @@ const getSourceReport = (req, res) => {
                   //   }) 
 
                   let arr = [];
-                 var arrrr = Promise.all(data.map(async (element) => {
+                     let total_arr = [];
+                  var arr2 = {};
+                    arr2['total_count'] = 100;
+                    arr2['total_new_count'] = 100;
+                    arr2['total_answered_count'] = 100;
+                    arr2['total_intrested_count'] = 100;
+                    arr2['total_call_back_count'] = 100;
+                    arr2['total_visit_done_count'] = 100;
+                    arr2['total_pipeline_count'] = 100;
+                    arr2['total_future_count'] = 100;
+                    arr2['total_customer_count'] = 100;
+                    arr2['total_booked_count'] = 100;
+                  total_arr.push(arr2);
+                 var arrrr = Promise.all(data[0].data.map(async (element) => {
                     var req = element;
                     console.log(req);
                     var dataArray = {};
@@ -253,6 +291,8 @@ const getSourceReport = (req, res) => {
                     if(responseText.length > 0){
                          res.status(200).json({
                           data: responseText[0],
+                          dataTotalCount: total_arr,
+                          metadata: data[0].metadata,
                           success: 1
                           }) 
                       }else{
@@ -294,9 +334,14 @@ const getVisitReport = (req, res) => {
             setdata = decoded.id.id;
         });
         if(setdata){
-             let id = req.params.id
-            
-               const query = req.query.new 
+             let team_id = req.query.team_id
+             let start_date = req.query.start_date
+            let end_date = req.query.end_date
+            let page = req.query.page
+            let limit = req.query.limit
+            var skip = limit * page;
+             query = {"team_id":team_id, "start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page)};
+                 console.log(query);
               const promise = userOperations.getAllUserData(query)
               promise
               .then((data)=>{
@@ -307,9 +352,17 @@ const getVisitReport = (req, res) => {
                   //   data: data,
                   //   success: 1
                   //   }) 
-
-                  let arr = [];
-                 var arrrr = Promise.all(data.map(async (element) => {
+                let arr = [];
+                let total_arr = [];
+                var arr2 = {};
+                    arr2['total_count'] = 100;
+                    arr2['total_visit_planned_count'] = 100;
+                    arr2['total_visit_done_count'] = 100;
+                    arr2['total_pipeline_count'] = 100;
+                    arr2['total_visit_scheduled_count'] = 100;
+                    arr2['total_fresh_visit_count'] = 100;
+                  total_arr.push(arr2);
+                 var arrrr = Promise.all(data[0].data.map(async (element) => {
                     var req = element;
                     // console.log(req);
                     var dataArray = {};
@@ -330,9 +383,13 @@ const getVisitReport = (req, res) => {
 
                     var fresh_visit_count = await leadOperations.getLeadCountStageWise("Fresh Visit");
                     dataArray['fresh_visit_count'] = fresh_visit_count;
-                    
                     arr.push(dataArray);
                     return arr;
+                    // dataArray['total_visit_planned_count'] = 100;
+                    // dataArray['total_visit_done_count'] = 100;
+                    // dataArray['total_pipeline_count'] = 100;
+                    // dataArray['total_visit_scheduled_count'] = 100;
+                    // dataArray['total_fresh_visit_count'] = 100;
                    
                     }
                   )
@@ -341,6 +398,8 @@ const getVisitReport = (req, res) => {
                     if(responseText.length > 0){
                          res.status(200).json({
                           data: responseText[0],
+                          dataTotalCount: total_arr,
+                          metadata: data[0].metadata,
                           success: 1
                           }) 
                       }else{

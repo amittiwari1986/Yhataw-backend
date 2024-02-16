@@ -86,6 +86,7 @@ const userSerives = {
     async getAllUserData(query){
         // const promise = await UserModel.find({ _id: { $ne: id } }).populate({path: 'user_leaves',populate: { path: 'user_offices' } })
         // let ids = mongoose.Types.ObjectId(id);
+         console.log(query);
         const promise = await UserModel.aggregate(
             [
             { "$project": { "user_id": { "$toString": "$_id" },
@@ -116,11 +117,13 @@ const userSerives = {
                     foreignField: "userId", 
                     as: "userOffices"}
                 },
+                
+                { $sort : { updatedAt : -1} },
+                     { $facet : { metadata: [ { $count: "total" }, { $addFields: { page: query.page } } ],
+                            data: [ { $skip: query.skip }, { $limit: query.limit } ]
+    } }])
 
-                { $sort : { updatedAt : -1} }])
-
-        
-        return promise
+        return promise 
     }, 
     async getAllActiveUsers(query){
         // const promise = await UserModel.find({ _id: { $ne: id } }).populate({path: 'user_leaves',populate: { path: 'user_offices' } })

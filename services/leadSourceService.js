@@ -28,6 +28,23 @@ const leadSourceSerives = {
         const promise = query ? await leadSourceModel.find().sort({_id:-1}).limit(100): await leadSourceModel.find()
         return promise
     },
+    async getAllLeadSources(query){
+
+             const promise = await leadSourceModel.aggregate(
+            [
+            { "$project": { "_id": { "$toString": "$_id" },
+                "source_name": { "$toString": "$source_name" },
+                "status": { "$toString": "$status" },
+                "date": { "$toString": "$date" },
+                "updatedAt": { "$toString": "$updatedAt" },
+            }},
+                { $sort : { updatedAt : -1} },
+                     { $facet : { metadata: [ { $count: "total" }, { $addFields: { page: query.page } } ],
+                            data: [ { $skip: query.skip }, { $limit: query.limit } ]
+    } }])
+
+        return promise
+    },
 }
 
 module.exports = leadSourceSerives;
