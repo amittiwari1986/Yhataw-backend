@@ -242,7 +242,7 @@ const leadServices = {
                 },
                 {"$unwind":"$mapping"},
                 {"$match":{"mapping.user_id": query.user_id}},
-                { $sort : { updatedAt : -1} },])
+                { $sort : { updatedAt : -1} },{ $group: { _id: null, total_records: { $sum: 1 } } },])
 
         return promise
 
@@ -257,20 +257,8 @@ const leadServices = {
                  "leadId": { "$toString": "$_id" },
                 "form_name": { "$toString": "$form_name" },
                 "formId": { "$toString": "$formId" },
-                "developerId": { "$toString": "$developerId" },
-                "projectId": { "$toString": "$projectId" },
-                "projecttypeId": { "$toString": "$projecttypeId" },
-                "leadName": { "$toString": "$leadName" },
-                "leadEmail": { "$toString": "$leadEmail" },
-                "status": { "$toString": "$status" },
-                "leadPhone": { "$toString": "$leadPhone" },
-                "AssignTo": { "$toString": "$AssignTo" },
-                "AssignToUser": { "$toString": "$AssignToUser" },
-                "source": { "$toString": "$source" },
                 "uid": { "$toString": "$uid" },
                 "stage": { "$toString": "$stage" },
-                "dynamicFields": { "$toString": "$dynamicFields" },
-                "lead_type": { "$toString": "$lead_type" },
                 "create_date": { "$toString": "$date" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
@@ -282,7 +270,7 @@ const leadServices = {
                 },
                 {"$unwind":"$mapping"},
                 {"$match":{"mapping.user_id": query.user_id}},
-                { $sort : { updatedAt : -1} },])
+                { $sort : { updatedAt : -1} },{ $group: { _id: null, total_records: { $sum: 1 } } },])
 
         return promise
 

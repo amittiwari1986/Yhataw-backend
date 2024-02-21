@@ -36,6 +36,64 @@ const LeadMappingSerives = {
         const promise = query ? await LeadMappingModel.find().sort({_id:-1}).limit(5): await LeadMappingModel.find()
         return promise
     },
+      async getAllLead(query){
+
+        if(query.start_date != ''){
+
+            const promise = await LeadMappingModel.aggregate(
+            [
+             {
+                "$match": {"date": {"$gte": query.start_date, "$lte": query.end_date}}
+             },
+            { "$project": { "_id": { "$toString": "$_id" },
+                "lead_id": { "$toObjectId": "$lead_id" },
+                "user_id": { "$toString": "$user_id" },
+                "type": { "$toString": "$type" },
+                "updatedAt": { "$toString": "$updatedAt" },
+            }},
+            {$lookup: 
+                    {from: "lead", 
+                    localField: "id", 
+                    foreignField: "lead_id",
+                    as: "leads"}
+                },
+                {"$unwind":"$mapping"},
+                {"$match":{"leads.team_id": query.lead_id}},
+                { $sort : { updatedAt : -1} },
+                  { $facet : { metadata: [ { $count: "total" }, { $addFields: { page: query.page } } ],
+                            data: [ { $skip: query.skip }, { $limit: query.limit } ]
+        } }])
+
+        return promise
+
+        }else{
+
+             const promise = await LeadMappingModel.aggregate(
+            [
+             
+            { "$project": { "_id": { "$toString": "$_id" },
+                "lead_id": { "$toObjectId": "$lead_id" },
+                "user_id": { "$toString": "$user_id" },
+                "type": { "$toString": "$type" },
+                "updatedAt": { "$toString": "$updatedAt" },
+            }},
+            {$lookup: 
+                    {from: "leads", 
+                    localField: "_id", 
+                    foreignField: "lead_id",
+                    as: "leads"}
+                },
+                {"$unwind":"$leads"},
+                {"$match":{"leads.team_id": query.lead_id}},
+                { $sort : { updatedAt : -1} },
+                  { $facet : { metadata: [ { $count: "total" }, { $addFields: { page: query.page } } ],
+                            data: [ { $skip: query.skip }, { $limit: query.limit } ]
+        } }])
+        return promise
+
+        }
+         
+    },
 }
 
 module.exports = LeadMappingSerives;
