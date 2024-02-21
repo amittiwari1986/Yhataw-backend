@@ -29,7 +29,19 @@ const projectSerives = {
         return promise
     },
     async getAllProject(query){
-        const promise = query ? await projectModel.find().sort({_id:-1}).limit(5): await projectModel.find()
+        //const promise = query ? await projectModel.find().sort({_id:-1}).limit(5): await projectModel.find()
+
+          const promise = await projectModel.aggregate(
+            [
+            { "$project": { "_id": { "$toString": "$_id" },
+                 "projectId": { "$toString": "$_id" },
+                "project_name": { "$toString": "$project_name" },
+                "updatedAt": { "$toString": "$updatedAt" },
+            }},
+                { $sort : { updatedAt : -1} },
+                { $facet : { metadata: [ { $count: "total" }, { $addFields: { page: query.page } } ],
+                            data: [ { $skip: query.skip }, { $limit: query.limit } ]
+        } }])
         return promise
     },
 }

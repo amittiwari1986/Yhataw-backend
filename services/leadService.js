@@ -203,6 +203,92 @@ const leadServices = {
         }
          
     },
+    async getLeadCountStageWiseAndUserWise(stage,query){
+        // const promise = query ? await leadModel.find().sort({_id:-1}).limit(5): await leadModel.find()
+        console.log(query);
+        if(query.start_date != ''){
+
+            const promise = await leadModel.aggregate(
+            [
+             {
+                "$match": {"stage": stage,"date": {"$gte": query.start_date, "$lte": query.end_date}}
+             },
+            { "$project": { "_id": { "$toString": "$_id" },
+                "leadId": { "$toString": "$_id" },
+                "form_name": { "$toString": "$form_name" },
+                "formId": { "$toString": "$formId" },
+                "developerId": { "$toString": "$developerId" },
+                "projectId": { "$toString": "$projectId" },
+                "projecttypeId": { "$toString": "$projecttypeId" },
+                "leadName": { "$toString": "$leadName" },
+                "leadEmail": { "$toString": "$leadEmail" },
+                "status": { "$toString": "$status" },
+                "leadPhone": { "$toString": "$leadPhone" },
+                "AssignTo": { "$toString": "$AssignTo" },
+                "AssignToUser": { "$toString": "$AssignToUser" },
+                "source": { "$toString": "$source" },
+                "uid": { "$toString": "$uid" },
+                "stage": { "$toString": "$stage" },
+                "dynamicFields": { "$toString": "$dynamicFields" },
+                "lead_type": { "$toString": "$lead_type" },
+                "create_date": { "$toString": "$date" },
+                "updatedAt": { "$toString": "$updatedAt" },
+            }},
+            {$lookup: 
+                    {from: "lead_mapping", 
+                    localField: "leadId", 
+                    foreignField: "lead_id",
+                    as: "mapping"}
+                },
+                {"$unwind":"$mapping"},
+                {"$match":{"mapping.user_id": query.user_id}},
+                { $sort : { updatedAt : -1} },])
+
+        return promise
+
+        }else{
+
+             const promise = await leadModel.aggregate(
+            [
+            {
+                "$match": {"stage": stage}
+             },
+            { "$project": { "_id": { "$toString": "$_id" },
+                 "leadId": { "$toString": "$_id" },
+                "form_name": { "$toString": "$form_name" },
+                "formId": { "$toString": "$formId" },
+                "developerId": { "$toString": "$developerId" },
+                "projectId": { "$toString": "$projectId" },
+                "projecttypeId": { "$toString": "$projecttypeId" },
+                "leadName": { "$toString": "$leadName" },
+                "leadEmail": { "$toString": "$leadEmail" },
+                "status": { "$toString": "$status" },
+                "leadPhone": { "$toString": "$leadPhone" },
+                "AssignTo": { "$toString": "$AssignTo" },
+                "AssignToUser": { "$toString": "$AssignToUser" },
+                "source": { "$toString": "$source" },
+                "uid": { "$toString": "$uid" },
+                "stage": { "$toString": "$stage" },
+                "dynamicFields": { "$toString": "$dynamicFields" },
+                "lead_type": { "$toString": "$lead_type" },
+                "create_date": { "$toString": "$date" },
+                "updatedAt": { "$toString": "$updatedAt" },
+            }},
+            {$lookup: 
+                    {from: "lead_mappings", 
+                    localField: "leadId", 
+                    foreignField: "lead_id",
+                    as: "mapping"}
+                },
+                {"$unwind":"$mapping"},
+                {"$match":{"mapping.user_id": query.user_id}},
+                { $sort : { updatedAt : -1} },])
+
+        return promise
+
+        }
+         
+    },
 }
 
 module.exports = leadServices;

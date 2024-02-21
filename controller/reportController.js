@@ -441,9 +441,14 @@ const getProjectReport = (req, res) => {
             setdata = decoded.id.id;
         });
         if(setdata){
-             let id = req.params.id
-            
-               const query = req.query.new 
+             let project_id = req.query.project_id
+             let start_date = req.query.start_date
+            let end_date = req.query.end_date
+            let page = req.query.page
+            let limit = req.query.limit
+            var skip = limit * page;
+             query = {"project_id":project_id, "start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page)};
+                 console.log(query);
               const promise = projectOperations.getAllProject(query)
               promise
               .then((data)=>{
@@ -456,7 +461,20 @@ const getProjectReport = (req, res) => {
                   //   }) 
 
                   let arr = [];
-                 var arrrr = Promise.all(data.map(async (element) => {
+                  let total_arr = [];
+                var arr2 = {};
+                    arr2['total_count'] = 100;
+                    arr2['total_new_count'] = 100;
+                    arr2['total_answered_count'] = 100;
+                    arr2['total_intrested_count'] = 100;
+                    arr2['total_call_back_count'] = 100;
+                    arr2['total_visit_done_count'] = 100;
+                    arr2['total_pipeline_count'] = 100;
+                    arr2['total_future_count'] = 100;
+                    arr2['total_customer_count'] = 100;
+                    arr2['total_booked_count'] = 100;
+                  total_arr.push(arr2);
+                 var arrrr = Promise.all(data[0].data.map(async (element) => {
                     var req = element;
                     // console.log(req);
                     var dataArray = {};
@@ -522,6 +540,135 @@ const getProjectReport = (req, res) => {
                     if(responseText.length > 0){
                          res.status(200).json({
                           data: responseText[0],
+                          dataTotalCount: total_arr,
+                          metadata: data[0].metadata,
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+
+                // }else{
+                //     res.status(200).json({
+                //     data: [],
+                //     message: "No Data found",
+                //     success: 0
+                //     }) 
+                // }
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
+
+const getClosureReport = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             let team_id = req.query.team_id
+             let start_date = req.query.start_date
+            let end_date = req.query.end_date
+            let page = req.query.page
+            let limit = req.query.limit
+            var skip = limit * page;
+             query = {"team_id":team_id, "start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page)};
+                 console.log(query);
+              const promise = userOperations.getAllUserData(query)
+              promise
+              .then((data)=>{
+                  // console.log(data)
+                  // const {others} = data
+                  // if(data.length > 0){
+                  //  res.status(200).json({
+                  //   data: data,
+                  //   success: 1
+                  //   }) 
+                let arr = [];
+                let total_arr = [];
+                var arr2 = {};
+                    arr2['total_count'] = 0;
+                    arr2['Jan'] = 0;
+                    arr2['Feb'] = 0;
+                    arr2['Mar'] = 0;
+                    arr2['Apr'] = 0;
+                    arr2['May'] = 0;
+                    arr2['Jun'] = 0;
+                    arr2['Jul'] = 0;
+                    arr2['Aug'] = 0;
+                    arr2['Sept'] = 0;
+                    arr2['Oct'] = 0;
+                    arr2['Nov'] = 0;
+                    arr2['Dec'] = 0;
+                  total_arr.push(arr2);
+                 var arrrr = Promise.all(data[0].data.map(async (element) => {
+                    var req = element;
+                    // console.log(req);
+                    var dataArray = {};
+                    dataArray['_id'] = req.user_id; 
+                    dataArray['user_name'] = req.name;
+
+                    // var visit_planned_count = await leadOperations.getLeadCountStageWise("Visit Planned");
+                    // dataArray['visit_planned_count'] = visit_planned_count;
+
+                    // var visit_done_count = await leadOperations.getLeadCountSourceWise("Visit Done");
+                    // dataArray['visit_done_count'] = visit_done_count;
+
+                    // var pipeline_count = await leadOperations.getLeadCountSourceWise("Pipeline");
+                    // dataArray['pipeline_count'] = pipeline_count;
+
+                    // var Scheduled = await leadOperations.getLeadCountStageWise("Visit Scheduled");
+                    // dataArray['visit_scheduled_count'] = Scheduled;
+
+                    // var fresh_visit_count = await leadOperations.getLeadCountStageWise("Fresh Visit");
+                    // dataArray['fresh_visit_count'] = fresh_visit_count;
+
+                    dataArray['Jan'] = 0;
+                    dataArray['Feb'] = 0;
+                    dataArray['Mar'] = 0;
+                    dataArray['Apr'] = 0;
+                    dataArray['May'] = 0;
+                    dataArray['Jun'] = 0;
+                    dataArray['Jul'] = 0;
+                    dataArray['Aug'] = 0;
+                    dataArray['Sept'] = 0;
+                    dataArray['Oct'] = 0;
+                    dataArray['Nov'] = 0;
+                    dataArray['Dec'] = 0;
+                    arr.push(dataArray);
+                    return arr;
+                    // dataArray['total_visit_planned_count'] = 100;
+                    // dataArray['total_visit_done_count'] = 100;
+                    // dataArray['total_pipeline_count'] = 100;
+                    // dataArray['total_visit_scheduled_count'] = 100;
+                    // dataArray['total_fresh_visit_count'] = 100;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText[0]);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0],
+                          dataTotalCount: total_arr,
+                          metadata: data[0].metadata,
                           success: 1
                           }) 
                       }else{
@@ -552,4 +699,4 @@ const getProjectReport = (req, res) => {
 };
 
 
-module.exports = { getSalesReport,getSourceReport,getVisitReport,getProjectReport }
+module.exports = { getSalesReport,getSourceReport,getVisitReport,getProjectReport,getClosureReport }

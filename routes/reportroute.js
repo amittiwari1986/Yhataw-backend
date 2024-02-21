@@ -7,5 +7,6 @@ Routes.get("/getSalesReport",verifyToken,reportController.getSalesReport)
 Routes.get("/getSourceReport",verifyToken,reportController.getSourceReport)
 Routes.get("/getVisitReport",verifyToken,reportController.getVisitReport)
 Routes.get("/getProjectReport",verifyToken,reportController.getProjectReport)
+Routes.get("/getClosureReport",verifyToken,reportController.getClosureReport)
 
 module.exports = Routes
