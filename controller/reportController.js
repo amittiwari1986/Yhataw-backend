@@ -58,7 +58,10 @@ const getSalesReport = (req, res) => {
             setdata = decoded.id.id;
         });
         if(setdata){
-               var team_id = req.query.team_id
+          var team_id = req.query.team_id
+          if(req.query.team_id == undefined){
+            var team_id = '';
+          }
              var start_date = req.query.start_date
             var end_date = req.query.end_date
             var page = req.query.page
