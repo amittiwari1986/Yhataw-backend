@@ -184,7 +184,7 @@ const getSalesReport = (req, res) => {
                     total_arr.push(arr2);
                     if(responseText.length > 0){
                          res.status(200).json({
-                          data: responseText[0],
+                          data: responseText[0].value,
                           dataTotalCount: total_arr,
                           metadata: data[0].metadata,
                           success: 1
@@ -458,7 +458,7 @@ const getVisitReport = (req, res) => {
                     total_arr.push(arr2);
                     if(responseText.length > 0){
                          res.status(200).json({
-                          data: responseText[0],
+                          data: responseText[0].value,
                           dataTotalCount: total_arr,
                           metadata: data[0].metadata,
                           success: 1
