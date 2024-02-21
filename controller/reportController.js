@@ -110,6 +110,8 @@ const getSalesReport = (req, res) => {
                     dataArray['future_count'] = 0;
                     dataArray['customer_count'] = 0;
                     dataArray['booked_count'] = 0;
+                    dataArray['released_pipeline'] = 0;
+                    
 
                     // if(newData.length > 0){
                       newData.forEach(function(item) {
@@ -158,6 +160,11 @@ const getSalesReport = (req, res) => {
                           total_booked_count = Number(total_booked_count) + Number(item.total_records);
                           total_count = Number(total_count) + Number(item.total_records);
                         }
+                        if(item._id == "Released Pipeline"){
+                          dataArray['released_pipeline'] = item.total_records;
+                          total_released_pipeline = Number(total_released_pipeline) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(Released);
+                        }
                         
                       });
                     // }
@@ -181,6 +188,7 @@ const getSalesReport = (req, res) => {
                     arr2['total_future_count'] = total_future_count;
                     arr2['total_customer_count'] = total_customer_count;
                     arr2['total_booked_count'] = total_booked_count;
+                    arr2['total_released_pipeline'] = total_released_pipeline;
                     total_arr.push(arr2);
                     if(responseText.length > 0){
                          res.status(200).json({
