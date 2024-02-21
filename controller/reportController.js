@@ -58,15 +58,15 @@ const getSalesReport = (req, res) => {
             setdata = decoded.id.id;
         });
         if(setdata){
-               let team_id = req.query.team_id
-             let start_date = req.query.start_date
-            let end_date = req.query.end_date
-            let page = req.query.page
-            let limit = req.query.limit
+               var team_id = req.query.team_id
+             var start_date = req.query.start_date
+            var end_date = req.query.end_date
+            var page = req.query.page
+            var limit = req.query.limit
             var skip = limit * page;
              query = {"team_id":team_id, "start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page)};
-                 // console.log(query);
-              const promise = userOperations.getAllUserData(query)
+                 console.log(query);
+              const promise = userOperations.getAllUserData(query,team_id)
               promise
               .then((data)=>{
                   // console.log(data)
