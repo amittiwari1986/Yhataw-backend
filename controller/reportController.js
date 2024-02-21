@@ -80,110 +80,89 @@ const getSalesReport = (req, res) => {
                   let arr = [];
                   let total_arr = [];
                   var arr2 = {};
-                    arr2['total_count'] = 100;
-                    arr2['total_new_count'] = 100;
-                    arr2['total_answered_count'] = 100;
-                    arr2['total_intrested_count'] = 100;
-                    arr2['total_call_back_count'] = 100;
-                    arr2['total_visit_done_count'] = 100;
-                    arr2['total_pipeline_count'] = 100;
-                    arr2['total_future_count'] = 100;
-                    arr2['total_customer_count'] = 100;
-                    arr2['total_booked_count'] = 100;
-                  total_arr.push(arr2);
-                 var arrrr = Promise.all(data[0].data.map(async (element) => {
+                    var total_count = 0;
+                    var total_new_count = 0;
+                    var total_answered_count = 0;
+                    var total_intrested_count = 0;
+                    var total_call_back_count = 0;
+                    var total_visit_done_count = 0;
+                    var total_pipeline_count = 0;
+                    var total_future_count = 0;
+                    var total_customer_count = 0;
+                    var total_booked_count = 0;
+                  // total_arr.push(arr2);
+                 var arrrr = Promise.allSettled(data[0].data.map(async (element) => {
                     var req = element;
                     // console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req.user_id; 
                     dataArray['user_name'] = req.name;
-                    newQuery = {"user_id":req.user_id, "start_date": start_date, "end_date": end_date};
-                    var newData = await leadOperations.getLeadCountStageWiseAndUserWise("new",newQuery);
-                    if(newData[0]){
-                      dataArray['new_count'] = newData[0].total_records;
-                    }else{
-                      dataArray['new_count'] = 0;
+                    // newQuery = {"user_id":req.user_id, "start_date": start_date, "end_date": end_date};
+                    newQuery = req.user_id;
+                    var newData = await leadUserStageOperations.findLeadUserStageByleadIdUserIdCount(newQuery);
+
+                    dataArray['new_count'] = 0;
+                    dataArray['answered_count'] = 0;
+                    dataArray['intrested_count'] = 0;
+                    dataArray['call_back_count'] = 0;
+                    dataArray['visit_done_count'] = 0;
+                    dataArray['pipeline_count'] = 0;
+                    dataArray['future_count'] = 0;
+                    dataArray['customer_count'] = 0;
+                    dataArray['booked_count'] = 0;
+
+                    if(newData.length > 0){
+                      newData.forEach(function(item) {
+                        if(item._id == "new"){
+                          dataArray["new_count"] = item.total_records;
+                          total_new_count = Number(total_new_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                        }
+                        if(item._id == "Pipeline"){
+                          dataArray["pipeline_count"] = item.total_records;
+                          total_pipeline_count = Number(total_pipeline_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                        }
+                        if(item._id == "Not Answered"){
+                          dataArray["answered_count"] = item.total_records;
+                          total_answered_count = Number(total_answered_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                        }
+                        if(item._id == "Not Interested"){
+                          dataArray["intrested_count"] = item.total_records;
+                          total_intrested_count = Number(total_intrested_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                        }
+                        if(item._id == "Call Back"){
+                          dataArray["call_back_count"] = item.total_records;
+                          call_back_count = Number(call_back_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                        }
+                        if(item._id == "Visit Done"){
+                          dataArray["visit_done_count"] = item.total_records;
+                          total_visit_done_count = Number(total_visit_done_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                        }
+                        if(item._id == "Future"){
+                          dataArray["future_count"] = item.total_records;
+                          total_future_count = Number(total_future_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                        }
+                        if(item._id == "Customer"){
+                          dataArray["customer_count"] = item.total_records;
+                          total_customer_count = Number(total_customer_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                        }
+                        if(item._id == "Booked"){
+                          dataArray["customer_count"] = item.total_records;
+                          total_booked_count = Number(total_booked_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                        }
+                        
+                      });
                     }
 
-                   var not_answered_count = await leadOperations.getLeadCountStageWiseAndUserWise("Not Answered",newQuery);
-                     if(not_answered_count[0]){
-                        dataArray['not_answered_count'] = not_answered_count[0].total_records;
-                      }else{
-                        dataArray['not_answered_count'] = 0;
-                      }
 
-                    var not_intrested_count = await leadOperations.getLeadCountStageWiseAndUserWise("Not Intrested",newQuery);
-                    if(not_intrested_count[0]){
-                        dataArray['not_intrested_count'] = not_intrested_count[0].total_records;
-                      }else{
-                        dataArray['not_intrested_count'] = 0;
-                      }
-
-                    var call_back_count = await leadOperations.getLeadCountStageWiseAndUserWise("Call Back",newQuery);
-                    if(call_back_count[0]){
-                        call_back_count['call_back_count'] = call_back_count[0].total_records;
-                      }else{
-                        dataArray['call_back_count'] = 0;
-                      }
-
-                    // var visit_planned_count = await leadOperations.getLeadCountStageWise("Visit Planned");
-                    // dataArray['visit_planned_count'] = visit_planned_count;
-
-                    var visit_done_count = await leadOperations.getLeadCountStageWiseAndUserWise("Visit Done",newQuery);
-                    if(visit_done_count[0]){
-                        visit_done_count['visit_done_count'] = visit_done_count[0].total_records;
-                      }else{
-                        dataArray['visit_done_count'] = 0;
-                      }
-
-                    var pipeline_count = await leadOperations.getLeadCountStageWiseAndUserWise("Pipeline",newQuery);
-                    if(pipeline_count[0]){
-                        pipeline_count['pipeline_count'] = pipeline_count[0].total_records;
-                      }else{
-                        dataArray['pipeline_count'] = 0;
-                      }
-
-                    var future_count = await leadOperations.getLeadCountStageWiseAndUserWise("Future",newQuery);
-                    if(future_count[0]){
-                        future_count['future_count'] = future_count[0].total_records;
-                      }else{
-                        dataArray['future_count'] = 0;
-                      }
-
-                    var customer_count = await leadOperations.getLeadCountStageWiseAndUserWise("Customer",newQuery);
-                    if(customer_count[0]){
-                        customer_count['customer_count'] = customer_count[0].total_records;
-                      }else{
-                        dataArray['customer_count'] = 0;
-                      }
-
-                    // var Scheduled = await leadOperations.getLeadCountStageWise("Visit Scheduled");
-                    // dataArray['visit_scheduled_count'] = Scheduled;
-
-                    var booked_count = await leadOperations.getLeadCountStageWiseAndUserWise("Booked",newQuery);
-                    if(booked_count[0]){
-                        booked_count['booked_count'] = booked_count[0].total_records;
-                      }else{
-                        dataArray['booked_count'] = 0;
-                      }
-
-                    // var fresh_visit_count = await leadOperations.getLeadCountStageWise("Fresh Visit");
-                    // dataArray['fresh_visit_count'] = fresh_visit_count;
-
-                    // var walk_in_count = await leadOperations.getLeadCountStageWise("Walk-In");
-                    // dataArray['walk_in_count'] = walk_in_count;
-
-                    var ReleasedData = await leadOperations.getLeadCountStageWiseAndUserWise("Released Pipeline",newQuery);
-                    if(ReleasedData[0]){
-                        ReleasedData['released_pipeline'] = ReleasedData[0].total_records;
-                      }else{
-                        ReleasedData['released_pipeline'] = 0;
-                      }
-
-
-                    
-                    // dataArray['status'] = req.status;
-                    
                     arr.push(dataArray);
                     return arr;
                    
@@ -191,6 +170,18 @@ const getSalesReport = (req, res) => {
                   )
                 ).then((responseText) => {
                   // console.log(responseText[0]);
+                  var arr2 = {};
+                    arr2['total_count'] = total_count;
+                    arr2['total_new_count'] = total_new_count;
+                    arr2['total_answered_count'] = total_answered_count;
+                    arr2['total_intrested_count'] = total_intrested_count;
+                    arr2['total_call_back_count'] = total_call_back_count;
+                    arr2['total_visit_done_count'] = total_visit_done_count;
+                    arr2['total_pipeline_count'] = total_pipeline_count;
+                    arr2['total_future_count'] = total_future_count;
+                    arr2['total_customer_count'] = total_customer_count;
+                    arr2['total_booked_count'] = total_booked_count;
+                    total_arr.push(arr2);
                     if(responseText.length > 0){
                          res.status(200).json({
                           data: responseText[0],
@@ -396,13 +387,12 @@ const getVisitReport = (req, res) => {
                 let arr = [];
                 let total_arr = [];
                 var arr2 = {};
-                    arr2['total_count'] = 100;
-                    arr2['total_visit_planned_count'] = 100;
-                    arr2['total_visit_done_count'] = 100;
-                    arr2['total_pipeline_count'] = 100;
-                    arr2['total_visit_scheduled_count'] = 100;
-                    arr2['total_fresh_visit_count'] = 100;
-                  total_arr.push(arr2);
+                    var total_count = 0;
+                    var total_visit_planned_count = 0;
+                    var total_visit_done_count = 0;
+                    var total_pipeline_count = 0;
+                    var total_visit_scheduled_count = 0;
+                    var total_fresh_visit_count = 0;
                  var arrrr = Promise.all(data[0].data.map(async (element) => {
                     var req = element;
                     // console.log(req);
@@ -410,32 +400,62 @@ const getVisitReport = (req, res) => {
                     dataArray['_id'] = req.user_id; 
                     dataArray['user_name'] = req.name;
 
-                    var visit_planned_count = await leadOperations.getLeadCountStageWise("Visit Planned");
-                    dataArray['visit_planned_count'] = visit_planned_count;
+                    newQuery = req.user_id;
+                    var newData = await leadUserStageOperations.findLeadUserStageByleadIdUserIdCount(newQuery);
 
-                    var visit_done_count = await leadOperations.getLeadCountSourceWise("Visit Done");
-                    dataArray['visit_done_count'] = visit_done_count;
+                     dataArray['new_count'] = 0;
+                    dataArray['visit_planned_count'] = 0;
+                    dataArray['visit_done_count'] = 0;
+                    dataArray['pipeline_count'] = 0;
+                    dataArray['visit_scheduled_count'] = 0;
+                    dataArray['fresh_visit_count'] = 0;
+                    dataArray['booked_count'] = 0;
 
-                    var pipeline_count = await leadOperations.getLeadCountSourceWise("Pipeline");
-                    dataArray['pipeline_count'] = pipeline_count;
+                    if(newData.length > 0){
+                      newData.forEach(function(item) {
+                        if(item._id == "Fresh Visit"){
+                          dataArray["fresh_visit_count"] = item.total_records;
+                          total_fresh_visit_count = Number(total_fresh_visit_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                        }
+                        if(item._id == "Visit Scheduled"){
+                          dataArray["visit_scheduled_count"] = item.total_records;
+                          total_visit_scheduled_count = Number(total_visit_scheduled_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                        }
+                        if(item._id == "Pipeline"){
+                          dataArray["pipeline_count"] = item.total_records;
+                          total_pipeline_count = Number(total_pipeline_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                        }
+                        if(item._id == "Visit Done"){
+                          dataArray["visit_done_count"] = item.total_records;
+                          total_visit_done_count = Number(total_visit_done_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                        }
+                        if(item._id == "Visit Planned"){
+                          dataArray["visit_planned_count"] = item.total_records;
+                          total_visit_planned_count = Number(total_visit_planned_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                        }
+                        
+                      });
+                    }
 
-                    var Scheduled = await leadOperations.getLeadCountStageWise("Visit Scheduled");
-                    dataArray['visit_scheduled_count'] = Scheduled;
-
-                    var fresh_visit_count = await leadOperations.getLeadCountStageWise("Fresh Visit");
-                    dataArray['fresh_visit_count'] = fresh_visit_count;
                     arr.push(dataArray);
                     return arr;
-                    // dataArray['total_visit_planned_count'] = 100;
-                    // dataArray['total_visit_done_count'] = 100;
-                    // dataArray['total_pipeline_count'] = 100;
-                    // dataArray['total_visit_scheduled_count'] = 100;
-                    // dataArray['total_fresh_visit_count'] = 100;
-                   
                     }
                   )
                 ).then((responseText) => {
                   // console.log(responseText[0]);
+                  var arr2 = {};
+                    arr2['total_count'] = total_count;
+                    arr2['total_visit_planned_count'] = total_visit_planned_count;
+                    arr2['total_visit_done_count'] = total_visit_done_count;
+                    arr2['total_pipeline_count'] = total_pipeline_count;
+                    arr2['total_visit_scheduled_count'] = total_visit_scheduled_count;
+                    arr2['total_fresh_visit_count'] = total_fresh_visit_count;
+                    total_arr.push(arr2);
                     if(responseText.length > 0){
                          res.status(200).json({
                           data: responseText[0],

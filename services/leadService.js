@@ -205,7 +205,7 @@ const leadServices = {
     },
     async getLeadCountStageWiseAndUserWise(stage,query){
         // const promise = query ? await leadModel.find().sort({_id:-1}).limit(5): await leadModel.find()
-        console.log(query);
+        // console.log(query);
         if(query.start_date != ''){
 
             const promise = await leadModel.aggregate(
@@ -277,6 +277,7 @@ const leadServices = {
         }
          
     },
+    
 }
 
 module.exports = leadServices;

@@ -44,6 +44,22 @@ const LeadUserStageSerives = {
         const promise = query ? await LeadUserStageModel.find({ "lead_id": query.leadId,"user_id": { "$in": query.user } }).sort({_id:-1}).limit(100): await LeadUserStageModel.find({ "lead_id": query.leadId,"user_id": { "$in": query.user } })
         return promise
     },
+    async findLeadUserStageByleadIdUserIdCount(userId){
+        // const promise = await LeadUserStageModel.find({"user_id": userId, "stage": stage}).count();
+        const promise = await LeadUserStageModel.aggregate(
+            [
+             {
+                "$match": {"user_id": userId}
+             },
+            { "$project": { "_id": { "$toString": "$_id" },
+                "leadId": { "$toString": "$_id" },
+                "user_id": { "$toString": "$user_id" },
+                "stage": { "$toString": "$stage" },
+                "updatedAt": { "$toString": "$updatedAt" },
+            }},
+                { $sort : { updatedAt : -1} },{ $group: { _id: "$stage", total_records: { $sum: 1 } } },])
+        return promise 
+    },
 }
 
 module.exports = LeadUserStageSerives;
