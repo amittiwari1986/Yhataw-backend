@@ -102,8 +102,8 @@ const getSalesReport = (req, res) => {
                     var newData = await leadUserStageOperations.findLeadUserStageByleadIdUserIdCount(newQuery);
 
                     dataArray['new_count'] = 0;
-                    dataArray['answered_count'] = 0;
-                    dataArray['intrested_count'] = 0;
+                    dataArray['not_answered_count'] = 0;
+                    dataArray['not_intrested_count'] = 0;
                     dataArray['call_back_count'] = 0;
                     dataArray['visit_done_count'] = 0;
                     dataArray['pipeline_count'] = 0;
@@ -111,7 +111,7 @@ const getSalesReport = (req, res) => {
                     dataArray['customer_count'] = 0;
                     dataArray['booked_count'] = 0;
 
-                    if(newData.length > 0){
+                    // if(newData.length > 0){
                       newData.forEach(function(item) {
                         if(item._id == "new"){
                           dataArray["new_count"] = item.total_records;
@@ -124,12 +124,12 @@ const getSalesReport = (req, res) => {
                           total_count = Number(total_count) + Number(item.total_records);
                         }
                         if(item._id == "Not Answered"){
-                          dataArray["answered_count"] = item.total_records;
+                          dataArray["not_answered_count"] = item.total_records;
                           total_answered_count = Number(total_answered_count) + Number(item.total_records);
                           total_count = Number(total_count) + Number(item.total_records);
                         }
                         if(item._id == "Not Interested"){
-                          dataArray["intrested_count"] = item.total_records;
+                          dataArray["not_intrested_count"] = item.total_records;
                           total_intrested_count = Number(total_intrested_count) + Number(item.total_records);
                           total_count = Number(total_count) + Number(item.total_records);
                         }
@@ -160,7 +160,7 @@ const getSalesReport = (req, res) => {
                         }
                         
                       });
-                    }
+                    // }
 
 
                     arr.push(dataArray);
