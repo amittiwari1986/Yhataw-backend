@@ -90,6 +90,7 @@ const getSalesReport = (req, res) => {
                     var total_future_count = 0;
                     var total_customer_count = 0;
                     var total_booked_count = 0;
+                    var total_released_pipeline = 0;
                   // total_arr.push(arr2);
                  var arrrr = Promise.allSettled(data[0].data.map(async (element) => {
                     var req = element;
