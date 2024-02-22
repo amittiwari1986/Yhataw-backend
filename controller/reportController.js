@@ -544,7 +544,7 @@ const getProjectReport = (req, res) => {
             setdata = decoded.id.id;
         });
         if(setdata){
-             let project_id = req.query.project_id
+             let project_id = req.query.projectId
              let start_date = req.query.start_date
             let end_date = req.query.end_date
             let page = req.query.page
