@@ -489,7 +489,7 @@ const getVisitReport = (req, res) => {
                     }
                   )
                 ).then((responseText) => {
-                  // console.log(responseText[0]);
+                  console.log(responseText[0]);
                   var arr2 = {};
                     arr2['total_count'] = total_count;
                     arr2['total_visit_planned_count'] = total_visit_planned_count;
@@ -500,7 +500,7 @@ const getVisitReport = (req, res) => {
                     total_arr.push(arr2);
                     if(responseText.length > 0){
                          res.status(200).json({
-                          data: responseText[0].value,
+                          data: responseText[0],
                           dataTotalCount: total_arr,
                           metadata: data[0].metadata,
                           success: 1
