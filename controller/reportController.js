@@ -416,7 +416,7 @@ const getVisitReport = (req, res) => {
             var skip = limit * page;
              query = {"team_id":team_id, "start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page)};
                  console.log(query);
-              const promise = userOperations.getAllUserData(query)
+              const promise = userOperations.getAllUserData(query,team_id)
               promise
               .then((data)=>{
                   // console.log(data)
