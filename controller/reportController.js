@@ -552,7 +552,7 @@ const getProjectReport = (req, res) => {
             var skip = limit * page;
              query = {"project_id":project_id, "start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page)};
                  console.log(query);
-              const promise = projectOperations.getAllProject(query)
+              const promise = projectOperations.getAllProject(query,project_id)
               promise
               .then((data)=>{
                   // console.log(data)
