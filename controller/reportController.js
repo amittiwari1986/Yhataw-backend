@@ -81,6 +81,7 @@ const getSalesReport = (req, res) => {
                   let total_arr = [];
                   var arr2 = {};
                     var total_count = 0;
+                    
                     var total_new_count = 0;
                     var total_answered_count = 0;
                     var total_intrested_count = 0;
@@ -101,8 +102,9 @@ const getSalesReport = (req, res) => {
                     // newQuery = {"user_id":req.user_id, "start_date": start_date, "end_date": end_date};
                     newQuery = req.user_id;
                     var newData = await leadUserStageOperations.findLeadUserStageByleadIdUserIdCount(newQuery);
-
+                    var allDataExpectNew = 0;
                     dataArray['new_count'] = 0;
+                    dataArray['call_done'] = 0;
                     dataArray['not_answered_count'] = 0;
                     dataArray['not_intrested_count'] = 0;
                     dataArray['call_back_count'] = 0;
@@ -125,49 +127,59 @@ const getSalesReport = (req, res) => {
                           dataArray["pipeline_count"] = item.total_records;
                           total_pipeline_count = Number(total_pipeline_count) + Number(item.total_records);
                           total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
                         }
                         if(item._id == "Not Answered"){
                           dataArray["not_answered_count"] = item.total_records;
                           total_answered_count = Number(total_answered_count) + Number(item.total_records);
                           total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
                         }
                         if(item._id == "Not Interested"){
                           dataArray["not_intrested_count"] = item.total_records;
                           total_intrested_count = Number(total_intrested_count) + Number(item.total_records);
                           total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
                         }
                         if(item._id == "Call Back"){
                           dataArray["call_back_count"] = item.total_records;
                           call_back_count = Number(call_back_count) + Number(item.total_records);
                           total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
                         }
                         if(item._id == "Visit Done"){
                           dataArray["visit_done_count"] = item.total_records;
                           total_visit_done_count = Number(total_visit_done_count) + Number(item.total_records);
                           total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
                         }
                         if(item._id == "Future"){
                           dataArray["future_count"] = item.total_records;
                           total_future_count = Number(total_future_count) + Number(item.total_records);
                           total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
                         }
                         if(item._id == "Customer"){
                           dataArray["customer_count"] = item.total_records;
                           total_customer_count = Number(total_customer_count) + Number(item.total_records);
                           total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
                         }
                         if(item._id == "Booked"){
                           dataArray["customer_count"] = item.total_records;
                           total_booked_count = Number(total_booked_count) + Number(item.total_records);
                           total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
                         }
                         if(item._id == "Released Pipeline"){
                           dataArray['released_pipeline'] = item.total_records;
                           total_released_pipeline = Number(total_released_pipeline) + Number(item.total_records);
-                          total_count = Number(total_count) + Number(Released);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
                         }
-                        
+                        dataArray['call_done'] = allDataExpectNew;
                       });
+                      
                     // }
 
 
