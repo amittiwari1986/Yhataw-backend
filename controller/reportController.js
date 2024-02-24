@@ -288,6 +288,7 @@ const getSourceReport = (req, res) => {
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     dataArray['source_name'] = req.source_name;
+                    var allDataExpectNew = 0;
                     var newData = await leadOperations.getLeadCountSourceWise("new",req.source_name);
                     dataArray['new_count'] = newData;
                      total_new_count = Number(total_new_count) + Number(newData);
@@ -297,16 +298,22 @@ const getSourceReport = (req, res) => {
                     dataArray['not_answered_count'] = not_answered_count;
                     total_answered_count = Number(total_answered_count) + Number(not_answered_count);
                       total_count = Number(total_count) + Number(not_answered_count);
+                      allDataExpectNew = Number(allDataExpectNew) + Number(not_answered_count);
+
 
                     var not_intrested_count = await leadOperations.getLeadCountSourceWise("Not Intrested",req.source_name);
                     dataArray['not_intrested_count'] = not_intrested_count;
                     total_intrested_count = Number(total_intrested_count) + Number(not_intrested_count);
                       total_count = Number(total_count) + Number(not_intrested_count);
+                      allDataExpectNew = Number(allDataExpectNew) + Number(not_intrested_count);
+
 
                     var call_back_count = await leadOperations.getLeadCountSourceWise("Call Back",req.source_name);
                     dataArray['call_back_count'] = call_back_count;
                     total_call_back_count = Number(total_call_back_count) + Number(call_back_count);
                       total_count = Number(total_count) + Number(call_back_count);
+                      allDataExpectNew = Number(allDataExpectNew) + Number(call_back_count);
+
 
                     // var visit_planned_count = await leadOperations.getLeadCountStageWise("Visit Planned");
                     // dataArray['visit_planned_count'] = visit_planned_count;
@@ -315,21 +322,29 @@ const getSourceReport = (req, res) => {
                     dataArray['visit_done_count'] = visit_done_count;
                     total_visit_done_count = Number(total_visit_done_count) + Number(visit_done_count);
                       total_count = Number(total_count) + Number(visit_done_count);
+                      allDataExpectNew = Number(allDataExpectNew) + Number(visit_done_count);
+
 
                     var pipeline_count = await leadOperations.getLeadCountSourceWise("Pipeline",req.source_name);
                     dataArray['pipeline_count'] = pipeline_count;
                     total_pipeline_count = Number(total_pipeline_count) + Number(pipeline_count);
                       total_count = Number(total_count) + Number(pipeline_count);
+                      allDataExpectNew = Number(allDataExpectNew) + Number(pipeline_count);
+
 
                     var future_count = await leadOperations.getLeadCountSourceWise("Future",req.source_name);
                     dataArray['future_count'] = future_count;
                     total_future_count = Number(total_future_count) + Number(future_count);
                       total_count = Number(total_count) + Number(future_count);
+                      allDataExpectNew = Number(allDataExpectNew) + Number(future_count);
+
 
                     var customer_count = await leadOperations.getLeadCountSourceWise("Customer",req.source_name);
                     dataArray['customer_count'] = customer_count;
                     total_customer_count = Number(total_customer_count) + Number(customer_count);
                       total_count = Number(total_count) + Number(customer_count);
+                      allDataExpectNew = Number(allDataExpectNew) + Number(customer_count);
+
 
                     // var Scheduled = await leadOperations.getLeadCountStageWise("Visit Scheduled");
                     // dataArray['visit_scheduled_count'] = Scheduled;
@@ -338,6 +353,7 @@ const getSourceReport = (req, res) => {
                     dataArray['booked_count'] = booked_count;
                      total_booked_count = Number(total_booked_count) + Number(booked_count);
                       total_count = Number(total_count) + Number(booked_count);
+                      allDataExpectNew = Number(allDataExpectNew) + Number(booked_count);
 
                     // var fresh_visit_count = await leadOperations.getLeadCountStageWise("Fresh Visit");
                     // dataArray['fresh_visit_count'] = fresh_visit_count;
@@ -349,6 +365,8 @@ const getSourceReport = (req, res) => {
                     dataArray['released_pipeline'] = Released;
                      total_released_pipeline = Number(total_released_pipeline) + Number(Released);
                       total_count = Number(total_count) + Number(Released);
+                       allDataExpectNew = Number(allDataExpectNew) + Number(Released);
+                        dataArray['call_done'] = allDataExpectNew;
 
 
                     
