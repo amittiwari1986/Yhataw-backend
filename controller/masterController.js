@@ -954,7 +954,7 @@ const getProject = (req, res) => {
               });
              }else{
                const query = req.query.new 
-              const promise = projectOperations.getAllProject(query)
+              const promise = projectOperations.getAllProjectSimple(query)
               promise
               .then((data)=>{
                   console.log(data)

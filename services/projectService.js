@@ -63,6 +63,35 @@ const projectSerives = {
         }
           
     },
+    async getAllProjectSimple(query,projectId){
+        //const promise = query ? await projectModel.find().sort({_id:-1}).limit(5): await projectModel.find()
+        console.log(projectId);
+        if(projectId == 'all'){
+            const promise = await projectModel.aggregate(
+            [
+            { "$project": { "_id": { "$toString": "$_id" },
+                 "projectId": { "$toString": "$_id" },
+                "project_name": { "$toString": "$project_name" },
+                "updatedAt": { "$toString": "$updatedAt" },
+            }},
+                ])
+            return promise
+        }else{
+            const promise = await projectModel.aggregate(
+            [
+            { "$project": { "_id": { "$toString": "$_id" },
+                 "projectId": { "$toString": "$_id" },
+                "project_name": { "$toString": "$project_name" },
+                "updatedAt": { "$toString": "$updatedAt" },
+            }},
+            {
+                "$match": {"projectId": projectId}
+             },
+             ])
+            return promise
+        }
+          
+    },
 }
 
 module.exports = projectSerives;
