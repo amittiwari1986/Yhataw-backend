@@ -65,7 +65,7 @@ const getSalesReport = (req, res) => {
             var limit = req.query.limit
             var skip = limit * page;
              query = {"team_id":team_id, "start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page)};
-                 console.log(query);
+                 // console.log(query);
               const promise = userOperations.getAllUserData(query,team_id)
               promise
               .then((data)=>{
@@ -93,7 +93,7 @@ const getSalesReport = (req, res) => {
                     var total_booked_count = 0;
                     var total_released_pipeline = 0;
                   // total_arr.push(arr2);
-                 var arrrr = Promise.allSettled(data[0].data.map(async (element) => {
+                 var arrrr = Promise.all(data[0].data.map(async (element) => {
                     var req = element;
                     // console.log(req);
                     var dataArray = {};
@@ -117,6 +117,7 @@ const getSalesReport = (req, res) => {
                     
 
                     // if(newData.length > 0){
+                    // console.log(newData);
                       newData.forEach(function(item) {
                         if(item._id == "new"){
                           dataArray["new_count"] = item.total_records;
@@ -143,7 +144,7 @@ const getSalesReport = (req, res) => {
                         }
                         if(item._id == "Call Back"){
                           dataArray["call_back_count"] = item.total_records;
-                          call_back_count = Number(call_back_count) + Number(item.total_records);
+                          call_back_count = 0 + Number(item.total_records);
                           total_count = Number(total_count) + Number(item.total_records);
                           allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
                         }
@@ -184,12 +185,13 @@ const getSalesReport = (req, res) => {
 
 
                     arr.push(dataArray);
+                    console.log(arr);
                     return arr;
                    
                     }
                   )
                 ).then((responseText) => {
-                  // console.log(responseText[0]);
+                  // console.log(responseText);
                   var arr2 = {};
                     arr2['total_count'] = total_count;
                     arr2['total_new_count'] = total_new_count;
@@ -205,7 +207,7 @@ const getSalesReport = (req, res) => {
                     total_arr.push(arr2);
                     if(responseText.length > 0){
                          res.status(200).json({
-                          data: responseText[0].value,
+                          data: responseText[0],
                           dataTotalCount: total_arr,
                           metadata: data[0].metadata,
                           success: 1
