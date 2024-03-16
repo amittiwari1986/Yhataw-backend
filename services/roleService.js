@@ -25,7 +25,25 @@ const roleServices = {
         return promise
     },
     async getAllRole(query){
-        const promise = query ? await roleModel.find().sort({_id:-1}).limit(5): await roleModel.find()
+        // const promise = query ? await roleModel.find().sort({_id:-1}).limit(5): await roleModel.find()
+        const promise = await roleModel.aggregate(
+            [
+            { "$project": { "_id": { "$toString": "$_id" },
+                "role_name": { "$toString": "$role_name" },
+                "description": { "$toString": "$description" },
+                "info": { "$toString": "$info" },
+                "slug": { "$toString": "$slug" },
+                "updatedAt": { "$toString": "$updatedAt" },
+            }},
+                {$lookup: 
+                    {from: "users", 
+                    localField: "_id", 
+                    foreignField: "role_id", 
+                    as: "users"}
+                },
+
+                { $sort : { updatedAt : -1} }])
+
         return promise
     },
 }

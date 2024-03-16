@@ -305,6 +305,65 @@ const userController = {
         }
     },
 
+    fetchAllDeactivatedUser(req,res){
+        let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+          console.log(setdata);
+        if(setdata){
+            // const query = req.query.new
+            let start_date = req.query.start_date
+            let end_date = req.query.end_date
+
+            var dt = new Date();
+            year  = dt.getFullYear();
+            month = (dt.getMonth() + 1).toString().padStart(2, "0");
+            day   = dt.getDate().toString().padStart(2, "0");
+            var query = {};
+
+            if(start_date == ''){
+                start_date = day + '/' + month + '/' + year;
+            }
+            if(end_date == ''){
+                end_date = day + '/' + month + '/' + year;
+            }
+             query = {"start_date": start_date, "end_date": end_date};
+             console.log(query);
+            
+
+            const promise = UserService.getAllDeactivatedUsers(query);
+            promise.then((data)=>{
+                if(data.length > 0){
+                   res.status(200).json({
+                    data: data,
+                    success: 1
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: [],
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+                
+                console.log(data)
+            }).catch((err)=>{
+                // console.log(err.message)
+                res.status(500).json({message: "Internal Server Error", success: 0});
+            })
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+    },
+
+
     // Get User Bank By userid
     getUserBankByIds(req,res){
         let token=req.headers.token;

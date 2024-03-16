@@ -572,12 +572,12 @@ const loginUser = async (req, res) => {
   let data;
   let uname = req.body.username;
   let isnum = uname.includes("@");
-  console.log(isnum);
+  // console.log(isnum);
 
   if(isnum == false){
 
     let phone = req.body.username;
-    let user = await userOperations.loginWithMobile(phone);
+    var user = await userOperations.loginWithMobile(phone);
 
     if (!user) {
       data = {
@@ -591,28 +591,28 @@ const loginUser = async (req, res) => {
     }
     // const otp = otpGenerator.generate(6, { digits: true, upperCaseAlphabets: false, specialChars: false, alphabets: false });
     // // save otp to user collection
-    const otp = Math.floor(100000 + Math.random() * 900000);
-    user.phoneOtp = otp;
+    // const otp = Math.floor(100000 + Math.random() * 900000);
+    // user.phoneOtp = otp;
 
-    data = {
-          userId: user._id,
-          data: [],
-          settings: {
-            success: 1,
-            message: `OTP sended to your registered phone number. otp is ${otp}`,
-          },
-        };
+    // data = {
+    //       userId: user._id,
+    //       data: [],
+    //       settings: {
+    //         success: 1,
+    //         message: `OTP sended to your registered phone number. otp is ${otp}`,
+    //       },
+    //     };
     
-    res.status(200).json({ message: data });
-    // // user.isAccountVerified = true;
-    await userOperations.updateUser(user._id,user);
+    // res.status(200).json({ message: data });
+    // // // user.isAccountVerified = true;
+    // await userOperations.updateUser(user._id,user);
 
   } else {
 
     let email = req.body.username;
     
-    let user = await userOperations.login(email);
-    let role = "";
+    var user = await userOperations.login(email);
+    
     // let tokens = await userTokens.checkToken(user._id);
     if (user) {
       let password = req.body.password;
@@ -627,6 +627,8 @@ const loginUser = async (req, res) => {
         return res.status(200).json({ message: data });
       }
     }
+  }
+  let role = "";
     if (user) {
       let password = req.body.password;
       let pass = bcrypt.compare(password, user.password);
@@ -692,7 +694,7 @@ const loginUser = async (req, res) => {
       };
     }
     return res.status(200).json({ message: data });
-  }
+  //}
   
 };
 //User Login With Mobile JWT and Encrypt Password
@@ -1735,7 +1737,7 @@ const addAttendanceDummy = async (req, res) => {
     var day1 = '';
     var datetime = '00:00';
     try {
-    const users = await userOperations.getAllUserData();
+    const users = await userOperations.getAllActiveUsers();
      
       users.forEach(async function(element) {
         // console.log(element.user_id);
