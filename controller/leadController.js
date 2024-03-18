@@ -40,6 +40,8 @@ const LeadLog = require("../dto/leadlogto");
 const leadLogOperations = require("../services/leadLogService");
 const LeadUserStage = require("../dto/leaduserstageto");
 const leadUserStageOperations = require("../services/leadUserStageService");
+const LeadRemark = require("../dto/leadremarkto");
+const leadRemarkOperations = require("../services/leadRemarkService");
 const jwt = require("jsonwebtoken");
 const db  = require('../db/connect');
 
@@ -1535,6 +1537,288 @@ const getLeadReminder = (req, res) => {
         }
 };
 
+const addLeadRemark = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id; 
+  });
+  if(setdata){
+    statusData = 1;
+    const leadremark = new LeadRemark(
+      req.body.leadId,
+      setdata,
+      req.body.title,
+      req.body.notes,
+      req.body.date,
+      req.body.time,
+      statusData,
+    );
+    const promise = leadRemarkOperations.addLeadRemark(leadremark);
+    promise
+      .then((data) => {
+        res.status(201).json({
+          message: "Save Successfully",
+          success: 1,
+          data: data,
+        });
+      })
+      .catch((err) => {
+        // res.status(500).json(err.message);
+        // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        // var keys = Object.keys(err.keyPattern);
+        // var duplicate = keys[0];
+        if(err.keyPattern){
+          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+        }else{
+          res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        }
+      });
+    }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
 
 
-module.exports = { getMyLeadForm,getForm,addForm,updateForm,getLeadForm,addLeadForm,updateLeadForm,updateLeadAssignToUser,updateLeadAssignTo,updateLeadStage,addLeadReminder,updateLeadReminder,getLeadReminder }
+const updateLeadRemark = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    let data;
+    let id = req.body.id;
+    // console.log(id);
+      try {
+        let leadremark = await leadRemarkOperations.getLeadRemarkById(id);
+        // console.log(leadremark);
+
+        if (!leadremark) {
+          return res.status(200).json({ success: 0, message: "Lead Remark Details not found" });
+        }
+
+        // leadreminder.leadId = req.body.leadId;
+        // leadreminder.userId = req.body.userId;
+        // leadreminder.title = req.body.title;
+        // leadreminder.notes = req.body.notes;
+        // leadreminder.date = req.body.date;
+        // leadreminder.time = req.body.time;
+        leadremark.status = req.body.status;
+
+        await leadRemarkOperations.updateLeadRemark(leadremark._id,leadremark);
+        return res.status(200).json({ success: 1, message: "Lead Remark Updated Successfully" });
+      } catch (error) {
+        return res.status(400).json({ success: 0, message: "Details not found" });
+      }
+    }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+
+};
+
+const getLeadRemark = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             let id = req.params.id
+             var checkUserData = userOperations.getUserById(setdata);
+
+                    if(checkUserData.role == "65277273c5d66b4d6ccb0fe7"){
+                      var getUserId = setdata;
+                    }else{
+                      var getUserId = 'NA';
+                    }
+                    
+             if(id){
+                 const promise = leadRemarkOperations.findLeadRemarkLeadId(id,getUserId)
+              promise
+              .then((data)=>{
+                // console.log(data);
+                // let convertData = [];
+                // convertData.push(data);
+                // data = convertData;
+                let arr = [];
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+                    console.log(req);
+                    var dataArray = {};
+                    dataArray['_id'] = req._id; 
+                    if(req.leadId != 'NA'){
+                      var leadData = leadOperations.getLeadById(req.leadId);
+                      if(leadData){
+                          dataArray['leadId'] = req.leadId;
+                          dataArray['lead_name'] = leadData.uid;
+                      }else{
+                        dataArray['leadId'] = '';
+                        dataArray['lead_name'] = '';
+                      }
+                     
+                    }else{
+                      dataArray['leadId'] = '';
+                      dataArray['lead_name'] = '';
+                    }
+
+                    if(req.userId != 'NA'){
+                      var userData = userOperations.getUserById(req.userId);
+                      if(userData){
+                        dataArray['userId'] = req.userId;
+                        dataArray['user_name'] = userData.name;
+                      }else{
+                        dataArray['userId'] = '';
+                        dataArray['user_name'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['userId'] = '';
+                      dataArray['user_name'] = '';
+                    }
+                    
+                    dataArray['title'] = req.title;
+                    dataArray['notes'] = req.notes;
+                    dataArray['date'] = req.date;
+                    dataArray['time'] = req.time;
+                    dataArray['status'] = req.status;
+                    
+                    arr.push(dataArray);
+                    return arr;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+                     
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+             }else{
+               const query = req.query.new 
+              const promise = leadRemarkOperations.getAllLeadRemark(query)
+              promise
+              .then((data)=>{
+                  // console.log(data)
+                  // const {others} = data
+                  // if(data.length > 0){
+                  //  res.status(200).json({
+                  //   data: data,
+                  //   success: 1
+                  //   }) 
+
+                let arr = [];
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+                    // console.log(req);
+                    var dataArray = {};
+                    dataArray['_id'] = req._id; 
+                    if(req.leadId != 'NA'){
+                      var leadData = await leadOperations.getLeadById(req.leadId);
+                      if(leadData){
+                          dataArray['leadId'] = req.leadId;
+                          dataArray['lead_name'] = leadData.uid;
+                      }else{
+                        dataArray['leadId'] = '';
+                        dataArray['lead_name'] = '';
+                      }
+                     
+                    }else{
+                      dataArray['leadId'] = '';
+                      dataArray['lead_name'] = '';
+                    }
+
+                    if(req.userId != 'NA'){
+                      var userData = await userOperations.getUserById(req.userId);
+                      if(userData){
+                        dataArray['userId'] = req.userId;
+                        dataArray['user_name'] = userData.name;
+                      }else{
+                        dataArray['userId'] = '';
+                        dataArray['user_name'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['userId'] = '';
+                      dataArray['user_name'] = '';
+                    }
+                    
+                    dataArray['title'] = req.title;
+                    dataArray['notes'] = req.notes;
+                    dataArray['date'] = req.date;
+                    dataArray['time'] = req.time;
+                    dataArray['status'] = req.status;
+
+                    arr.push(dataArray);
+                    return arr;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+
+                // }else{
+                //     res.status(200).json({
+                //     data: [],
+                //     message: "No Data found",
+                //     success: 0
+                //     }) 
+                // }
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            }
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
+
+
+
+module.exports = { addLeadRemark,updateLeadRemark,getLeadRemark,getMyLeadForm,getForm,addForm,updateForm,getLeadForm,addLeadForm,updateLeadForm,updateLeadAssignToUser,updateLeadAssignTo,updateLeadStage,addLeadReminder,updateLeadReminder,getLeadReminder }

@@ -20,6 +20,10 @@ Routes.put("/updateLeadReminder",leadController.updateLeadReminder)
 Routes.get("/getLeadReminder/:id",verifyToken,leadController.getLeadReminder)
 Routes.get("/getLeadReminder",verifyToken,leadController.getLeadReminder)
 Routes.get("/getMyLeadList",verifyToken,leadController.getMyLeadForm)
+Routes.post("/addLeadRemark",leadController.addLeadRemark)
+Routes.put("/updateLeadRemark",leadController.updateLeadRemark)
+Routes.get("/getLeadRemark/:id",verifyToken,leadController.getLeadRemark)
+Routes.get("/getLeadRemark",verifyToken,leadController.getLeadRemark)
 
 
 module.exports = Routes
