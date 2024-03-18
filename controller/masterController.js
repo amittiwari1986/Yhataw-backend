@@ -1803,12 +1803,12 @@ const getReportingManagerByRoleWise = async (req, res) => {
             let id = req.params.id
             const dataset = []
             var userRoleData = await roleOperations.getRoleById(req.body.role_id);
-            if(userRoleData.roleId == 2 || userRoleData.roleId == 3){
+            if(userRoleData.roleId == 2 || userRoleData.roleId == 3 || userRoleData.roleId == 4){
               var userRole = 1;
             }
-            if(userRoleData.roleId == 4){
-              var userRole = 2;
-            }
+            // if(userRoleData.roleId == 4){
+            //   var userRole = 2;
+            // }
             if(userRoleData.roleId == 5){
               var userRole = 4;
             }
