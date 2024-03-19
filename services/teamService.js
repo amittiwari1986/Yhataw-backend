@@ -17,8 +17,7 @@ const teamSerives = {
         return promise
     },
     async getAllTeam(query){
-        const status = "1";
-        const promise = query ? await teamModel.find({"status":status}).sort({_id:-1}).limit(5): await teamModel.find({"status":status})
+        const promise = query ? await teamModel.find().sort({_id:-1}).limit(5): await teamModel.find()
         return promise
     },
     async getMultipleTeam(query){

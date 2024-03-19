@@ -34,7 +34,7 @@ const userSerives = {
         const promise = await UserModel.aggregate(
             [
              {
-                "$match": {"date": {"$gte": query.start_date, "$lte": query.end_date}}
+                "$match": {"date": {"$gte": query.start_date, "$lte": query.end_date},"status": "1"}
              },
             { "$project": { "user_id": { "$toString": "$_id" },
                 "name": { "$toString": "$name" },
