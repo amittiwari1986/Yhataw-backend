@@ -24,7 +24,7 @@ Routes.post("/addLeadRemark",leadController.addLeadRemark)
 Routes.put("/updateLeadRemark",leadController.updateLeadRemark)
 Routes.get("/getLeadRemark/:id",verifyToken,leadController.getLeadRemark)
 Routes.get("/getLeadRemark",verifyToken,leadController.getLeadRemark)
-Routes.post("/leadTrasfer",leadController.leadTrasfer)
+Routes.post("/leadTransfer",leadController.leadTrasfer)
 
 
 module.exports = Routes
