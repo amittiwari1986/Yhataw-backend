@@ -1819,6 +1819,27 @@ const getLeadRemark = (req, res) => {
         }
 };
 
+const leadTrasfer = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    let data;
+    let id = req.body.id;
+      return res.status(200).json({ success: 1, message: "Lead Remark Updated Successfully" });
+    }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+
+};
 
 
-module.exports = { addLeadRemark,updateLeadRemark,getLeadRemark,getMyLeadForm,getForm,addForm,updateForm,getLeadForm,addLeadForm,updateLeadForm,updateLeadAssignToUser,updateLeadAssignTo,updateLeadStage,addLeadReminder,updateLeadReminder,getLeadReminder }
+
+module.exports = { leadTrasfer,addLeadRemark,updateLeadRemark,getLeadRemark,getMyLeadForm,getForm,addForm,updateForm,getLeadForm,addLeadForm,updateLeadForm,updateLeadAssignToUser,updateLeadAssignTo,updateLeadStage,addLeadReminder,updateLeadReminder,getLeadReminder }
