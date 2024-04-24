@@ -25,6 +25,7 @@ Routes.put("/updateLeadRemark",leadController.updateLeadRemark)
 Routes.get("/getLeadRemark/:id",verifyToken,leadController.getLeadRemark)
 Routes.get("/getLeadRemark",verifyToken,leadController.getLeadRemark)
 Routes.get("/getLeadListForReassign",verifyToken,leadController.getLeadFormNotIntrested)
+Routes.post("/leadTransfer",leadController.leadTrasfer)
 
 
 module.exports = Routes
