@@ -1819,6 +1819,411 @@ const getLeadRemark = (req, res) => {
         }
 };
 
+const getLeadFormNotIntrested = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             let id = req.params.id
+             if(id){
+                 const promise = leadOperations.getLeadById(id)
+              promise
+              .then((data)=>{
+                let convertData = [];
+                convertData.push(data);
+                data = convertData;
+                let arr = [];
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+                    // console.log(req);
+                    var dataArray = {};
+                    dataArray['_id'] = req._id; 
+                    if(req.projectId != 'NA'){
+                      // console.log(req.projectId);
+                      var projectData = projectOperations.getProjectById(req.projectId);
+                      // console.log(projectData);
+                      if(projectData){
+                          dataArray['projectId'] = req.projectId;
+                          dataArray['project_name'] = projectData.project_name;
+                      }else{
+                        dataArray['projectId'] = '';
+                        dataArray['project_name'] = '';
+                      }
+                     
+                    }else{
+                      dataArray['projectId'] = '';
+                      dataArray['project_name'] = '';
+                    }
+
+                    if(req.developerId != 'NA'){
+                      var developerData = developerOperations.getDeveloperById(req.developerId);
+                      if(developerData){
+                        dataArray['developerId'] = req.developerId;
+                        dataArray['developer_name'] = developerData.developer_name;
+                      }else{
+                        dataArray['developerId'] = '';
+                        dataArray['developer_name'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['developerId'] = '';
+                      dataArray['developer_name'] = '';
+                    }
+                    
+                     if(req.projecttypeId != 'NA'){
+                      var projectTypeData = propertyTypeOperations.getPropertyTypeById(req.projecttypeId);
+                      if(projectTypeData){
+                        dataArray['projecttypeId'] = req.projecttypeId;
+                        dataArray['projecttype_name'] = projectTypeData.name;
+                      }else{
+                        dataArray['projecttypeId'] = '';
+                        dataArray['projecttype_name'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['projecttypeId'] = '';
+                      dataArray['projecttype_name'] = '';
+                    }
+
+                    if(req.AssignTo != 'NA'){
+                      var teamId = req.AssignTo;
+                      var teamId = teamId.replace(/["']/g, "");
+                      teamId = teamId.split(',');
+                      console.log(teamId);
+                      var teamData = teamOperations.getMultipleTeam(teamId);
+                      if(teamData){
+                        dataArray['AssignTo'] = teamData;
+                      }else{
+                        dataArray['AssignTo'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['AssignTo'] = '';
+                    }
+
+                     if(req.AssignToUser != 'NA'){
+                      if(req.stage == "Pipeline"){
+                        var projectDetailsData = await projectDetailOperations.findOneProjectId(req.projectId);
+                        var userId = projectDetailsData.AssignToUser;
+                        var userId = userId1.replace(/["']/g, "");
+                        userId = userId1.split(',');
+                      }else{
+                        var userId = req.AssignToUser;
+                        var userId = userId.replace(/["']/g, "");
+                        userId = userId.split(',');
+                      }
+                      var userData = await userOperations.getMultipleUser(userId);
+                      var qurData = {"user": userId, "leadId": req._id.toString()}
+                      var leadUserStageData = await leadUserStageOperations.getMultipleUser(qurData);
+                      var stageArray = [];
+                      leadUserStageData.forEach(element => {
+                        var userDataSet = userOperations.getUserById(element.user_id);
+                        var oneRow = {
+                                          "lead_id": element.lead_id,
+                                          "user_id": element.user_id,
+                                          "type": element.type,
+                                          "user_name": userDataSet.name,
+                                          "stage": element.stage
+                                      }
+                        // console.log(oneRow4);
+                        stageArray.push(oneRow); 
+
+                      });
+                        dataArray['AssignToUserStage'] = stageArray;
+                      if(userData){
+                        dataArray['AssignToUser'] = userData;
+                      }else{
+                        dataArray['AssignToUser'] = '';
+                        dataArray['AssignToUserStage'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['AssignToUser'] = '';
+                      dataArray['AssignToUserStage'] = '';
+                    }
+
+                    dataArray['form_name'] = req.form_name;
+                    dataArray['formId'] = req.formId;
+                    dataArray['leadName'] = req.leadName;
+                    dataArray['leadEmail'] = req.leadEmail;
+                    dataArray['leadPhone'] = req.leadPhone;
+                    dataArray['status'] = req.status;
+                    // dataArray['AssignToUser'] = req.AssignToUser;
+                    dataArray['source'] = req.source;
+                    dataArray['stage'] = req.stage;
+                    dataArray['uid'] = req.uid;
+                    dataArray['lead_type'] = req.lead_type;
+                    if(req.dynamicFields){
+                      dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
+                    }
 
 
-module.exports = { addLeadRemark,updateLeadRemark,getLeadRemark,getMyLeadForm,getForm,addForm,updateForm,getLeadForm,addLeadForm,updateLeadForm,updateLeadAssignToUser,updateLeadAssignTo,updateLeadStage,addLeadReminder,updateLeadReminder,getLeadReminder }
+                    // if(req.formId != 'NA'){
+                    //   var formData = await formOperations.findFormId(req.formId);
+                    //   if(formData){
+                    //     dataArray['dynamicFields'] = JSON.parse(formData.dynamicFields);
+                    //   }else{
+                    //     dataArray['dynamicFields'] = '';
+                    //   }
+                      
+                    // }else{
+                    //   dataArray['dynamicFields'] = '';
+                    // }
+                    
+                    arr.push(dataArray);
+                    return arr;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0][0],
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+                     
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+             }else{
+               let start_date = req.query.start_date
+                let end_date = req.query.end_date
+                let page = req.query.page
+                let limit = req.query.limit
+                var skip = limit * page;
+
+                var dt = new Date();
+                year  = dt.getFullYear();
+                month = (dt.getMonth() + 1).toString().padStart(2, "0");
+                day   = dt.getDate().toString().padStart(2, "0");
+                var query = {};
+
+                // if(start_date == ''){
+                //     start_date = day + '/' + month + '/2022';
+                // }
+                // if(end_date == ''){
+                //     end_date = day + '/' + month + '/' + year;
+                // }
+                 query = {"start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page)};
+                 console.log(query);
+
+              const promise = leadOperations.getAllLead(query)
+              promise
+              .then((data)=>{
+                  // console.log(data[0].data)
+                  // const {others} = data
+                  // if(data.length > 0){
+                  //  res.status(200).json({
+                  //   data: data,
+                  //   success: 1
+                  //   }) 
+
+                let arr = [];
+                 var arrrr = Promise.all(data[0].data.map(async (element) => {
+                    var req = element;
+                    console.log(req);
+                    var dataArray = {};
+                    dataArray['_id'] = req._id; 
+                    if(req.projectId != 'NA'){
+                      // console.log(req.projectId);
+                      var projectData = await projectOperations.getProjectById(req.projectId);
+                      // console.log(projectData);
+                      if(projectData){
+                          dataArray['projectId'] = req.projectId;
+                          dataArray['project_name'] = projectData.project_name;
+                      }else{
+                        dataArray['projectId'] = '';
+                        dataArray['project_name'] = '';
+                      }
+                     
+                    }else{
+                      dataArray['projectId'] = '';
+                      dataArray['project_name'] = '';
+                    }
+
+                    if(req.developerId != 'NA'){
+                      var developerData = await developerOperations.getDeveloperById(req.developerId);
+                      if(developerData){
+                        dataArray['developerId'] = req.developerId;
+                        dataArray['developer_name'] = developerData.developer_name;
+                      }else{
+                        dataArray['developerId'] = '';
+                        dataArray['developer_name'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['developerId'] = '';
+                      dataArray['developer_name'] = '';
+                    }
+                    
+                     if(req.projecttypeId != 'NA'){
+                      var projectTypeData = await propertyTypeOperations.getPropertyTypeById(req.projecttypeId);
+                      if(projectTypeData){
+                        dataArray['projecttypeId'] = req.projecttypeId;
+                        dataArray['projecttype_name'] = projectTypeData.name;
+                      }else{
+                        dataArray['projecttypeId'] = '';
+                        dataArray['projecttype_name'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['projecttypeId'] = '';
+                      dataArray['projecttype_name'] = '';
+                    }
+
+                    if(req.AssignTo != 'NA'){
+                      var teamId = req.AssignTo;
+                      var teamId = teamId.replace(/["']/g, "");
+                      teamId = teamId.split(',');
+                      // console.log(teamId);
+                      var teamData = await teamOperations.getMultipleTeam(teamId);
+                      if(teamData){
+                        dataArray['AssignTo'] = teamData;
+                      }else{
+                        dataArray['AssignTo'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['AssignTo'] = '';
+                    }
+
+                    if(req.AssignToUser != 'NA'){
+                      // var userId =JSON.parse(req.AssignToUser);
+                      if(req.stage == "Pipeline"){
+                        var projectDetailsData = await projectDetailOperations.findOneProjectId(req.projectId);
+                        var userId = projectDetailsData.AssignToUser;
+                        var userId = userId.replace(/["']/g, "");
+                        userId = userId.split(',');
+                      }else{
+                        var userId = req.AssignToUser;
+                        var userId = userId.replace(/["']/g, "");
+                        userId = userId.split(',');
+                      }
+                      
+                      // console.log(userId);
+                      var userData = await userOperations.getMultipleUser(userId);
+                      var qurData = {"user": userId, "leadId": req._id.toString()}
+                      var leadUserStageData = await leadUserStageOperations.getMultipleUser(qurData);
+                      var stageArray = [];
+                      leadUserStageData.forEach((ele) => {
+                        var userDataSet = userOperations.getUserById(ele.user_id);
+                        var oneRow = {
+                                          "lead_id": ele.lead_id,
+                                          "user_id": ele.user_id,
+                                          "type": ele.type,
+                                          "user_name": userDataSet.name,
+                                          "stage": ele.stage
+                                      }
+                        // console.log(oneRow4);
+                        stageArray.push(oneRow); 
+                        // console.log(stageArray);
+
+                      });
+                        dataArray['AssignToUserStage'] = stageArray;
+                      if(userData){
+                        dataArray['AssignToUser'] = userData;
+                      }else{
+                        dataArray['AssignToUser'] = '';
+                        dataArray['AssignToUserStage'] = '';
+                      }
+                      
+                    }else{
+                      dataArray['AssignToUser'] = '';
+                      dataArray['AssignToUserStage'] = '';
+                    }
+
+                    dataArray['form_name'] = req.form_name;
+                    dataArray['formId'] = req.formId;
+                    dataArray['leadName'] = req.leadName;
+                    dataArray['leadEmail'] = req.leadEmail;
+                    dataArray['leadPhone'] = req.leadPhone;
+                    dataArray['status'] = req.status;
+                    // dataArray['AssignToUser'] = req.AssignToUser;
+                    dataArray['source'] = req.source;
+                    dataArray['stage'] = req.stage;
+                    dataArray['uid'] = req.uid;
+                    dataArray['updatedAt'] = req.updatedAt;
+                    dataArray['lead_type'] = req.lead_type;
+                    if(req.dynamicFields){
+                      dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
+                    }
+                    
+
+                    // if(req.formId != 'NA'){
+                    //   var formData = await formOperations.findFormId(req.formId);
+                    //   if(formData){
+                    //     dataArray['dynamicFields'] = JSON.parse(formData[0].dynamicFields);
+                    //   }else{
+                    //     dataArray['dynamicFields'] = '';
+                    //   }
+                      
+                    // }else{
+                    //   dataArray['dynamicFields'] = '';
+                    // }
+                    arr.push(dataArray);
+                    arr.sort(function compare(a, b) {
+                      var dateA = new Date(a.updatedAt);
+                      var dateB = new Date(b.updatedAt);
+                      return dateB - dateA;
+                    });
+                    return arr;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: responseText[0],
+                          metadata: data[0].metadata,
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          metadata: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+
+                // }else{
+                //     res.status(200).json({
+                //     data: [],
+                //     message: "No Data found",
+                //     success: 0
+                //     }) 
+                // }
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            }
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
+
+
+
+module.exports = { getLeadFormNotIntrested,addLeadRemark,updateLeadRemark,getLeadRemark,getMyLeadForm,getForm,addForm,updateForm,getLeadForm,addLeadForm,updateLeadForm,updateLeadAssignToUser,updateLeadAssignTo,updateLeadStage,addLeadReminder,updateLeadReminder,getLeadReminder }

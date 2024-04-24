@@ -263,8 +263,6 @@ const insertLead = async (req, res) => {
                             return res.status(400).send({ auth: false, message: 'csv parse process failed', success: 0});
                         });
                 });
-            }else{
-                return res.status(200).send({ auth: false, message: "no process is pending to execute", success: 1});
             }
         });
      })

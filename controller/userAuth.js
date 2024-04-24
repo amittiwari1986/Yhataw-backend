@@ -31,6 +31,8 @@ const token = require("../utils/token");
 const otpGenerator = require('otp-generator');
 const sendEmail = require("../utils/sendEmail");
 const jwt = require("jsonwebtoken");
+const LeadUserStage = require("../dto/leaduserstageto");
+const leadUserStageOperations = require("../services/leadUserStageService");
 
 const {
   PHONE_NOT_FOUND_ERR,
@@ -2612,26 +2614,168 @@ const testDT = async (req, res) => {
   let minutes = dt.getMinutes() + 30;
   let seconds = dt.getSeconds();
 
-  let arr = [];
-  var dataArray = {};
-  dataArray['attendence_total_emp'] = 40;
-  dataArray['attendence_present_today'] = 33;
-  dataArray['attendence_absent_today'] = 7;
-  dataArray['attendence_leave_today'] = 2;
-  dataArray['attendence_late_today'] = 1;
-  dataArray['leads_total_leads'] = 199;
-  dataArray['leads_pipeline'] = 100;
-  dataArray['leads_in-progress'] = 88;
-  dataArray['leads_not-interested'] = 8;
-  dataArray['leads_success'] = 10;
-  dataArray['projects_total'] = 20;
-  dataArray['projects_commercial'] = 10;
-  dataArray['projects_residencial'] = 10;
-  arr.push(dataArray);
-  res.status(200).json({
-      success: 1,
-      data: arr,
-    });
+var start_date = ""; 
+var end_date = "" ;
+var team_id = 'all';
+var page = 0;
+var limit = 25;
+var skip = limit * page;
+  
+  query = {"team_id":team_id, "start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": page};
+    const promise = userOperations.getAllUserData(query,team_id)
+              promise
+              .then((data)=>{
+
+                  let arr = [];
+                  let total_arr = [];
+                  var arr2 = {};
+                    var total_count = 0;
+                    
+                    var total_new_count = 0;
+                    var total_answered_count = 0;
+                    var total_intrested_count = 0;
+                    var total_call_back_count = 0;
+                    var total_visit_done_count = 0;
+                    var total_pipeline_count = 0;
+                    var total_future_count = 0;
+                    var total_customer_count = 0;
+                    var total_booked_count = 0;
+                    var total_released_pipeline = 0;
+                  // total_arr.push(arr2);
+                 var arrrr = Promise.all(data[0].data.map(async (element) => {
+                    var req = element;
+                    // console.log(req);
+                    var dataArray = {};
+                    dataArray['_id'] = req.user_id; 
+                    dataArray['user_name'] = req.name;
+                    // newQuery = {"user_id":req.user_id, "start_date": start_date, "end_date": end_date};
+                    newQuery = req.user_id;
+                    var newData = await leadUserStageOperations.findLeadUserStageByleadIdUserIdCount(newQuery);
+                    var allDataExpectNew = 0;
+                    dataArray['new_count'] = 0;
+                    dataArray['call_done'] = 0;
+                    dataArray['not_answered_count'] = 0;
+                    dataArray['not_intrested_count'] = 0;
+                    dataArray['call_back_count'] = 0;
+                    dataArray['visit_done_count'] = 0;
+                    dataArray['pipeline_count'] = 0;
+                    dataArray['future_count'] = 0;
+                    dataArray['customer_count'] = 0;
+                    dataArray['booked_count'] = 0;
+                    dataArray['released_pipeline'] = 0;
+                    
+
+                    // if(newData.length > 0){
+                    // console.log(newData);
+                      newData.forEach(function(item) {
+                        if(item._id == "new"){
+                          dataArray["new_count"] = item.total_records;
+                          total_new_count = Number(total_new_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                        }
+                        if(item._id == "Pipeline"){
+                          dataArray["pipeline_count"] = item.total_records;
+                          total_pipeline_count = Number(total_pipeline_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Not Answered"){
+                          dataArray["not_answered_count"] = item.total_records;
+                          total_answered_count = Number(total_answered_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Not Interested"){
+                          dataArray["not_intrested_count"] = item.total_records;
+                          total_intrested_count = Number(total_intrested_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Call Back"){
+                          dataArray["call_back_count"] = item.total_records;
+                          call_back_count = 0 + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Visit Done"){
+                          dataArray["visit_done_count"] = item.total_records;
+                          total_visit_done_count = Number(total_visit_done_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Future"){
+                          dataArray["future_count"] = item.total_records;
+                          total_future_count = Number(total_future_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Customer"){
+                          dataArray["customer_count"] = item.total_records;
+                          total_customer_count = Number(total_customer_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Booked"){
+                          dataArray["customer_count"] = item.total_records;
+                          total_booked_count = Number(total_booked_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Released Pipeline"){
+                          dataArray['released_pipeline'] = item.total_records;
+                          total_released_pipeline = Number(total_released_pipeline) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        dataArray['call_done'] = allDataExpectNew;
+                      });
+                      
+                    // }
+
+
+                    arr.push(dataArray);
+                    console.log(arr);
+                    return arr;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText);
+                  var arr2 = {};
+                    arr2['lead_total_count'] = total_count;
+                    arr2['lead_total_new_count'] = total_new_count;
+                    arr2['lead_total_answered_count'] = total_answered_count;
+                    arr2['lead_total_intrested_count'] = total_intrested_count;
+                    arr2['lead_total_call_back_count'] = total_call_back_count;
+                    arr2['lead_total_visit_done_count'] = total_visit_done_count;
+                    arr2['lead_total_pipeline_count'] = total_pipeline_count;
+                    arr2['lead_total_future_count'] = total_future_count;
+                    arr2['lead_total_customer_count'] = total_customer_count;
+                    arr2['lead_total_booked_count'] = total_booked_count;
+                    arr2['lead_total_released_pipeline'] = total_released_pipeline;
+                    arr2['projects_total'] = 20;
+                    arr2['projects_commercial'] = 10;
+                    arr2['projects_residencial'] = 10;
+                    arr2['attendence_total_emp'] = 40;
+                    arr2['attendence_present_today'] = 33;
+                    arr2['attendence_absent_today'] = 7;
+                    arr2['attendence_leave_today'] = 2;
+                    arr2['attendence_late_today'] = 1;
+                    total_arr.push(arr2);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: total_arr,
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+                });
   };
 
 
