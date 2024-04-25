@@ -25,6 +25,9 @@ Routes.put("/updatePropetyStatus",projectdetailController.updatePropertyStatus)
 Routes.post("/addUploadLead",projectdetailController.addUploadLeadDetail)
 Routes.put("/updateUploadLead",projectdetailController.updateUploadLead)
 Routes.get("/getUploadLead",projectdetailController.getUploadLead)
+Routes.post("/addUploadMultipleLead",projectdetailController.addUploadMultipleLeadDetail)
+Routes.put("/updateUploadMultipleLead",projectdetailController.updateUploadMultipleLead)
+Routes.get("/getUploadMultipleLead",projectdetailController.getUploadMultipleLead)
 
 
 module.exports = Routes

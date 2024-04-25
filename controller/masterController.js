@@ -894,10 +894,12 @@ const addProject = async (req, res) => {
   if(checkdata > 0){
    return res.status(400).send({ auth: false, message: 'This project name all ready exist.', success: 0});
   }
+  var randomNo = Math.floor(Math.random()*90000) + 10000;
   if(setdata){
     const project = new Project(
       req.body.developerId,
-      req.body.project_name
+      req.body.project_name,
+      'PY_'.randomNo
     );
     const promise = projectOperations.addProject(project);
     promise
@@ -954,7 +956,7 @@ const getProject = (req, res) => {
               });
              }else{
                const query = req.query.new 
-              const promise = projectOperations.getAllProjectSimple(query)
+              const promise = projectOperations.getAllProjectSimple(query, 'all')
               promise
               .then((data)=>{
                   console.log(data)

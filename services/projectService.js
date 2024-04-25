@@ -72,6 +72,7 @@ const projectSerives = {
             { "$project": { "_id": { "$toString": "$_id" },
                  "projectId": { "$toString": "$_id" },
                 "project_name": { "$toString": "$project_name" },
+                "project_uid": { "$toString": "$project_uid" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
                 ])
@@ -82,6 +83,7 @@ const projectSerives = {
             { "$project": { "_id": { "$toString": "$_id" },
                  "projectId": { "$toString": "$_id" },
                 "project_name": { "$toString": "$project_name" },
+                "project_uid": { "$toString": "$project_uid" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
             {

@@ -76,6 +76,7 @@ Routes.get("/getOrganizationByIds",userController.getOrganizationByIds)
 Routes.get("/getAllSalesHead",userController.getAllSalesHead)
 Routes.get("/getAllManagerByTeamWise/:id",userController.getAllManagerByTeamWise)
 Routes.get("/insertLead",uploadController.insertLead)
+Routes.get("/insertMultipleLead",uploadController.insertMultipleLead)
 
 // Routes.post("/upload-image",uploadController.uploadImage)
 

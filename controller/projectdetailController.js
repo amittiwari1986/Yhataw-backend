@@ -34,7 +34,8 @@ const uploadLeadOperations = require("../services/uploadLeadService");
 const UploadLead = require("../dto/uploadleadto");
 const projectMappingOperations = require("../services/projectMappingService");
 const ProjectMapping = require("../dto/projectmappingto");
-
+const uploadMultipleLeadOperations = require("../services/uploadMultipleLeadService");
+const UploadMultipleLead = require("../dto/uploadmultipleleadto");
 const {
   PHONE_NOT_FOUND_ERR,
 
@@ -370,9 +371,11 @@ const getProjectDetail = (req, res) => {
                       var projectData = await projectOperations.getProjectById(req.projectId);
                       dataArray['projectId'] = req.projectId;
                       dataArray['project_name'] = projectData.project_name;
+                      dataArray['project_uid'] = projectData.project_uid;
                     }else{
                       dataArray['projectId'] = '';
                       dataArray['project_name'] = '';
+                      dataArray['project_uid'] = '';
                     }
                     if(req.developerId != 'NA'){
                       var developerData = await developerOperations.getDeveloperById(req.developerId);
@@ -494,9 +497,11 @@ const getProjectDetail = (req, res) => {
                       var projectData = await projectOperations.getProjectById(req.projectId);
                       dataArray['projectId'] = req.projectId;
                       dataArray['project_name'] = projectData.project_name;
+                      dataArray['project_uid'] = projectData.project_uid;
                     }else{
                       dataArray['projectId'] = '';
                       dataArray['project_name'] = '';
+                      dataArray['project_uid'] = '';
                     }
                     if(req.developerId != 'NA'){
                       var developerData = await developerOperations.getDeveloperById(req.developerId);
@@ -1307,6 +1312,152 @@ const getUploadLead = (req, res) => {
             return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
         }
 };
+const addUploadMultipleLeadDetail = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
 
 
-module.exports = { getUploadLead,addUploadLeadDetail,updateUploadLead,addProjectDetail,updateProjectDetail,getProjectDetail,getPropertyType,getPropertyUnitType,getPropertyStatus,getPropertyFor,addPropertyType,addPropertyUnitType,addPropertyStatus,addPropertyFor,updatePropertyType,updatePropertyUnitType,updatePropertyStatus,updatePropertyFor };
+    let status = 1;
+    const uploadMultipleLead = new UploadMultipleLead(
+      req.body.upload_file_name,
+      '',
+      '',
+      status,
+      '',
+      '',
+      ''
+    );
+
+
+    const promise = uploadMultipleLeadOperations.addUploadMultipleLead(uploadMultipleLead); 
+    promise
+      .then((data) => {
+       return res.status(201).json({
+          message: "create upload Lead details Successfully",
+          success: 1,
+          data: data,
+        });
+      })
+      .catch((err) => {
+      return  res.status(400).json({message: err.message, success: 0, error_msg: err.message});
+     
+        });
+    }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
+
+const updateUploadMultipleLead = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    let data;
+    let id = req.body.uploadMultipleLeadId;
+      try {
+        let pDetails = await uploadMultipleLeadOperations.getUploadMultipleLeadById(id);
+
+        if (!pDetails) {
+          return res.status(400).json({ success: 0, message: "record not found" });
+        }
+
+
+        if(req.body.file_path != '' || req.body.file_path != undefined){
+          pDetails.file_path = req.body.file_path;
+        }
+        if(req.body.mapping_info != '' || req.body.mapping_info != undefined){
+          pDetails.mapping_info = JSON.stringify(req.body.mapping_info);
+        }
+        if(req.body.status != '' || req.body.status != undefined){
+          pDetails.status = req.body.status;
+        }
+        
+
+        await uploadMultipleLeadOperations.updateUploadMultipleLead(pDetails._id,pDetails);
+        return res.status(200).json({ success: 1, message: "upload lead Details Updated Successfully" });
+      } catch (error) {
+        return res.status(400).json({ success: 0, message: "Details not found" });
+      }
+    }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+
+};
+
+const getUploadMultipleLead = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             let propertyTypeId = req.params.id
+             // console.log(req.params.id);
+             if(propertyTypeId){
+                 const promise = uploadMultipleLeadOperations.findUploadMultipleLeadId(propertyTypeId)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  const {others} = data
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                  })
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+             }else{
+               const query = req.query.new 
+              const promise = uploadMultipleLeadOperations.getAllUploadMultipleLead(query)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  const {others} = data
+                  if(data.length > 0){
+                   res.status(200).json({
+                    data: data,
+                    success: 1
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: [],
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            }
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
+
+
+module.exports = { getUploadMultipleLead,addUploadMultipleLeadDetail,updateUploadMultipleLead,getUploadLead,addUploadLeadDetail,updateUploadLead,addProjectDetail,updateProjectDetail,getProjectDetail,getPropertyType,getPropertyUnitType,getPropertyStatus,getPropertyFor,addPropertyType,addPropertyUnitType,addPropertyStatus,addPropertyFor,updatePropertyType,updatePropertyUnitType,updatePropertyStatus,updatePropertyFor };
