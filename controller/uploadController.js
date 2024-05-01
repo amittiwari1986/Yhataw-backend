@@ -308,18 +308,21 @@ const insertMultipleLead = async (req, res) => {
             let csvParsePromise = new Promise((resolve, reject) => {
                     var dataArray = [];
                     var dataArrayError = [];
-                        const parser = csv.parseStream(csvFile, { headers: true }).on("data", function (data) {
-                            // console.log(data);
+                        const parser = csv.parseStream(csvFile, { headers: true }).on("data", async (data) => {
+
                             var objec = {};
                             var Things = Object.keys(data);
+
                             var dynamic = [];
                             getMapData.forEach(function(eleData) {
+
+
                                  for (var i = 0; i < Things.length; i++) {
                                      Things[i]
                                      var notdat = Object.keys(eleData)[0];
                                     if(Things[i] == Object.values(eleData)[0]){
                                         // console.log(Object.keys(eleData)[0] != "lead_name");
-                                        if((notdat == "lead_name") || (notdat == "lead_email") || (notdat == "lead_phone") || (notdat == "lead_source")){
+                                        if((notdat == "lead_name") || (notdat == "lead_email") || (notdat == "lead_phone") || (notdat == "lead_source") || (notdat == "lead_project")){
                                             
                                         }else{
                                             objec[Object.keys(eleData)[0]] = data[Things[i]];
@@ -328,10 +331,11 @@ const insertMultipleLead = async (req, res) => {
                                  }
                             });
                             dynamic.push(objec);
-                                var projectid = projectOperations.findProjectUid(data.lead_project);
-                                var formDetails =  formOperations.getFormById(projectid._id.toString());
-                                var projectDetails = projectDetailOperations.findOneProjectId(formDetails.projectId);
-
+                            
+                                var projectid = await projectOperations.findProjectUid(data.lead_project);
+                                var formDetails = await formOperations.findFormByProjectId(projectid[0]._id.toString());
+                                var projectDetails = await projectDetailOperations.findOneProjectId(formDetails[0].projectId);
+                                
                                 var lead_name = data.lead_name;
                                 var source = data.lead_source;
                                 var lead_phone = data.lead_phone;
@@ -367,11 +371,11 @@ const insertMultipleLead = async (req, res) => {
                             var oneRow = {
                                      
                                         // const lead = new Lead(
-                                          "form_name": formDetails.form_name,
-                                          "formId": element.formId,
-                                          "developerId": formDetails.developerId,
-                                          "projectId": formDetails.projectId,
-                                          "projecttypeId": formDetails.projecttypeId,
+                                          "form_name": formDetails[0].form_name,
+                                          "formId": formDetails[0]._id.toString(),
+                                          "developerId": formDetails[0].developerId,
+                                          "projectId": formDetails[0].projectId,
+                                          "projecttypeId": formDetails[0].projecttypeId,
                                           "leadName": lead_name,
                                           "leadEmail": email,
                                           "leadPhone": lead_phone,
@@ -393,11 +397,11 @@ const insertMultipleLead = async (req, res) => {
                                 var oneRow1 = {
                                      
                                         // const lead = new Lead(
-                                          "form_name": formDetails.form_name,
-                                          "formId": element.formId,
-                                          "developerId": formDetails.developerId,
-                                          "projectId": formDetails.projectId,
-                                          "projecttypeId": formDetails.projecttypeId,
+                                          "form_name": formDetails[0].form_name,
+                                          "formId": formDetails[0]._id.toString(),
+                                          "developerId": formDetails[0].developerId,
+                                          "projectId": formDetails[0].projectId,
+                                          "projecttypeId": formDetails[0].projecttypeId,
                                           "leadName": lead_name,
                                           "leadEmail": email,
                                           "leadPhone": lead_phone,
@@ -416,13 +420,11 @@ const insertMultipleLead = async (req, res) => {
                                  dataArrayError.push(oneRow1);
 
                              }
-                                
-                        }).on("end", async function () {
-                            // console.log(dataArray);
-                            const addLead = await leadOperations.addManyLead(dataArray);
-                            const rejected = await leadRejectedOperations.addManyLead(dataArrayError);
+                             // console.log(dataArray);
+                             const addLead = await leadOperations.addManyLead(dataArray);
 
-                            let getLead = await leadOperations.getLeadByUploadLeadId(element._id.toString());
+                             let getLead = await leadOperations.getLeadByUploadLeadId(element._id.toString());
+                             console.log(getLead)
                                 var obj = projectDetails.AssignToUser;
                                 var obj = obj.replace(/["']/g, "");
                                 obj = obj.split(',');
@@ -458,16 +460,23 @@ const insertMultipleLead = async (req, res) => {
                                       dataArrayPushStage.push(oneRow4); 
                                   }); 
                             });
-                             leadMappingOperations.addManyLeadMapping(dataArrayPush);
-                            leadUserStageOperations.addManyLeadUserStage(dataArrayPushStage);
-                            leadLogOperations.addManyLeadLog(dataArrayPushLog);
-                            let lead = await uploadLeadOperations.getUploadLeadById(element._id.toString());
-                            lead.fail_count = dataArrayError.length;
-                            lead.success_count = dataArray.length;
-                            lead.status = "3";
 
-                            await uploadLeadOperations.updateUploadLead(lead._id,lead);
+                            
+                            console.log(dataArrayPushStage);
+                            const rejected = await leadRejectedOperations.addManyLead(dataArrayError);
+                             await leadMappingOperations.addManyLeadMapping(dataArrayPush);
+                            await leadUserStageOperations.addManyLeadUserStage(dataArrayPushStage);
+                            await leadLogOperations.addManyLeadLog(dataArrayPushLog);
 
+                            let leadMultiple = await uploadMultipleLeadOperations.getUploadMultipleLeadById(element._id.toString());
+                            console.log(leadMultiple);
+                            leadMultiple.fail_count = dataArrayError.length;
+                            leadMultiple.success_count = dataArray.length;
+                            leadMultiple.status = "3";
+
+                            await uploadMultipleLeadOperations.updateUploadMultipleLead(leadMultiple._id,leadMultiple);
+                                return res.status(200).send({ auth: true,data: dataArray, message: 'csv parse process finished', success: 1});
+                        }).on("end", async function () {
                             return res.status(200).send({ auth: true,data: dataArray, message: 'csv parse process finished', success: 1});
                         }).on("error", function () {
                             reject('csv parse process failed')
@@ -476,6 +485,7 @@ const insertMultipleLead = async (req, res) => {
                 });
             }
         });
+        // return res.status(200).send({ auth: true,data: [], message: 'csv parse process finished', success: 1});
      })
       .catch((err)=>{
           // console.log(err.message)
