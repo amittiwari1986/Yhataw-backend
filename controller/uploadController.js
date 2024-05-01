@@ -27,6 +27,8 @@ const LeadUserStage = require("../dto/leaduserstageto");
 const leadUserStageOperations = require("../services/leadUserStageService");
 const uploadMultipleLeadOperations = require("../services/uploadMultipleLeadService");
 const UploadMultipleLead = require("../dto/uploadmultipleleadto");
+const projectOperations = require("../services/projectService");
+const Project = require("../dto/projectto");
 
 aws.config.update({
 	secretAccessKey: 'pSD+OEcgsCzItA1bVzIuDICxg/bM+U1hps19638Q',
@@ -311,7 +313,7 @@ const insertMultipleLead = async (req, res) => {
                             var objec = {};
                             var Things = Object.keys(data);
                             var dynamic = [];
-                            getMapData.forEach(function(eleData) { 
+                            getMapData.forEach(function(eleData) {
                                  for (var i = 0; i < Things.length; i++) {
                                      Things[i]
                                      var notdat = Object.keys(eleData)[0];
@@ -326,8 +328,8 @@ const insertMultipleLead = async (req, res) => {
                                  }
                             });
                             dynamic.push(objec);
-
-                                var formDetails =  formOperations.getFormById(data.lead_project);
+                                var projectid = projectOperations.findProjectUid(data.lead_project);
+                                var formDetails =  formOperations.getFormById(projectid._id.toString());
                                 var projectDetails = projectDetailOperations.findOneProjectId(formDetails.projectId);
 
                                 var lead_name = data.lead_name;

@@ -20,6 +20,10 @@ const projectSerives = {
         const promise = await projectModel.find({developerId})
         return promise 
     },
+    async findProjectUid(uid){
+        const promise = await projectModel.find({"project_uid": uid})
+        return promise 
+    },
     async getProjectById(id){
         const promise = await projectModel.findById(id)
         return promise

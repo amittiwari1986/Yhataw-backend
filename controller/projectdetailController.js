@@ -1369,7 +1369,7 @@ const updateUploadMultipleLead = async (req, res) => {
   });
   if(setdata){
     let data;
-    let id = req.body.uploadMultipleLeadId;
+    let id = req.body.uploadLeadId;
       try {
         let pDetails = await uploadMultipleLeadOperations.getUploadMultipleLeadById(id);
 
