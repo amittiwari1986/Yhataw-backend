@@ -20,6 +20,10 @@ const formServices = {
         const promise = await formModel.find({stateId})
         return promise 
     },
+    async findFormByProjectId(projectId){
+        const promise = await formModel.find({"projectId": projectId})
+        return promise 
+    },
     async getFormById(id){
         const promise = await formModel.findById(id)
         return promise
