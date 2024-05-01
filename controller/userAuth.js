@@ -2840,6 +2840,16 @@ if(users.userRole == 6){
                   var arr2 = {};
                     var total_count = 0;
                     
+                    var total_new_count = 0;
+                    var total_answered_count = 0;
+                    var total_intrested_count = 0;
+                    var total_call_back_count = 0;
+                    var total_visit_done_count = 0;
+                    var total_pipeline_count = 0;
+                    var total_future_count = 0;
+                    var total_customer_count = 0;
+                    var total_booked_count = 0;
+                    var total_released_pipeline = 0;
 
                     var lead_my_total_count = 0;
                     var lead_my_new_count = 0;
