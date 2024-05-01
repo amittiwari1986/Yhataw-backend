@@ -492,7 +492,7 @@ const updateLeadForm = async (req, res) => {
     let id = req.body.id;
       try {
         let lead = await leadOperations.getLeadById(id);
-        console.log(lead);
+        // console.log(lead);
 
         if (!lead) {
           return res.status(400).json({ success: 0, message: "Lead Details not found" });
@@ -551,13 +551,37 @@ const updateLeadStage = async (req, res) => {
                       }
                       dataArrayPushLog.push(oneRow3);
 
-        await leadOperations.updateLead(lead._id,lead);
+        
         leadLogOperations.addManyLeadLog(dataArrayPushLog);
 
          let leadUserStage = await leadUserStageOperations.findLeadUserStageByleadIdUserId(lead._id.toString(),setdata);
          // console.log(leadUserStage);
          leadUserStage.stage = req.body.stage;
          await leadUserStageOperations.updateLeadUserStage(leadUserStage._id,leadUserStage);
+
+         let leadUserAllStage = await leadUserStageOperations.findLeadUserStageId(lead._id.toString());
+         var leadUserAllStageCount = leadUserAllStage.length;
+         var not_intrested_count = 0;
+         const addOne = 1;
+         leadUserAllStage.forEach(async (element) => {
+          if(element.stage == "Not Answered"){
+            not_intrested_count = not_intrested_count + addOne;
+          }
+         });
+
+        //  let lead = await leadOperations.getLeadById(lead._id.toString());
+
+        // if (!lead) {
+        //   return res.status(400).json({ success: 0, message: "Lead Details not found" });
+        // }
+
+        // lead.stage = "Not Answered";
+
+        // await leadOperations.updateLead(lead._id.toString(),lead);
+
+         if(leadUserAllStageCount == not_intrested_count){
+          await leadOperations.updateLead(lead._id,lead); 
+         }
 
         return res.status(200).json({ success: 1, message: "Lead stage Updated Successfully" });
       } catch (error) {
@@ -2234,10 +2258,50 @@ const leadTrasfer = async (req, res) => {
       // return res.status(200).send(decoded.id.id);
       setdata = decoded.id.id;
   });
-  if(setdata){
+  if(setdata){ 
     let data;
     let id = req.body.id;
-      return res.status(200).json({ success: 1, message: "Lead Remark Updated Successfully" });
+    var userId = req.body.user_id;
+    var arrayUserId = userId.split(",");
+    var leadId = req.body.lead_id;
+    var arrayLeadId = leadId.split(",");
+    //foreach(arrayLeadId as arrayLead_id){
+      arrayLeadId.forEach(async (eleData) => {
+
+        await leadMappingOperations.deleteLeadId(arrayLead_id);
+        var obj = req.body.user_id;
+        var obj = obj.replace(/["']/g, "");
+        obj = obj.split(',');
+        obj.forEach(async (element) => {
+
+              var leadMapping = new LeadMapping(
+                arrayLead_id,
+                element,
+                "user",
+              );
+
+                leadMappingOperations.addLeadMapping(leadMapping);
+                let leadUserStage = await leadUserStageOperations.findLeadUserStageByleadIdUserId(arrayLead_id,element);
+                // console.log(leadUserStage);
+                if(!leadUserStage){
+                  var dataArrayPushStage = [];
+                  var oneRow4 = {
+                                          "lead_id": arrayLead_id,
+                                          "user_id": element,
+                                          "type": "user",
+                                          "user_name": "",
+                                          "stage": "new",
+                                          "status": "1"
+                                      }
+                  dataArrayPushStage.push(oneRow4); 
+                  leadUserStageOperations.addManyLeadUserStage(dataArrayPushStage);
+                }
+         
+          }); 
+
+    });
+      return res.status(200).json({ success: 1, message: "Lead Assign Successfully" });
+    
     }else{
             return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }

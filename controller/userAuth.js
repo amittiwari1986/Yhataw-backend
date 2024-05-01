@@ -33,6 +33,10 @@ const sendEmail = require("../utils/sendEmail");
 const jwt = require("jsonwebtoken");
 const LeadUserStage = require("../dto/leaduserstageto");
 const leadUserStageOperations = require("../services/leadUserStageService");
+const Project = require("../dto/projectto");
+const projectOperations = require("../services/projectService");
+const projectDetails = require("../dto/projectdetailsto");
+const projectDetailsOperations = require("../services/projectDetailsService");
 
 const {
   PHONE_NOT_FOUND_ERR,
@@ -2609,6 +2613,18 @@ const testDT = async (req, res) => {
   };
 
   const dashboard = async (req, res) => {
+
+    let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+            console.log(decoded);
+        });
   var dt = new Date();
   let hours = dt.getHours() + 5;
   let minutes = dt.getMinutes() + 30;
@@ -2620,6 +2636,12 @@ var team_id = 'all';
 var page = 0;
 var limit = 25;
 var skip = limit * page;
+var users = await userOperations.findOneUserId(setdata);
+console.log(users.userRole);
+
+if(users.userRole == 6){
+
+}
   
   query = {"team_id":team_id, "start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": page};
     const promise = userOperations.getAllUserData(query,team_id)
@@ -2641,6 +2663,9 @@ var skip = limit * page;
                     var total_customer_count = 0;
                     var total_booked_count = 0;
                     var total_released_pipeline = 0;
+                    var projects_total = 0;
+                    var projects_commercial = 0;
+                    var projects_residencial = 0;
                   // total_arr.push(arr2);
                  var arrrr = Promise.all(data[0].data.map(async (element) => {
                     var req = element;
@@ -2672,6 +2697,7 @@ var skip = limit * page;
                           dataArray["new_count"] = item.total_records;
                           total_new_count = Number(total_new_count) + Number(item.total_records);
                           total_count = Number(total_count) + Number(item.total_records);
+                          total_released_pipeline1 = Number(total_new_count) + Number(item.total_records);
                         }
                         if(item._id == "Pipeline"){
                           dataArray["pipeline_count"] = item.total_records;
@@ -2726,15 +2752,23 @@ var skip = limit * page;
                           total_released_pipeline = Number(total_released_pipeline) + Number(item.total_records);
                           total_count = Number(total_count) + Number(item.total_records);
                           allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                          
                         }
                         dataArray['call_done'] = allDataExpectNew;
                       });
                       
                     // }
-
+                    // setQuery = "new";
+                    // var projectData = await projectOperations.getListProject(setQuery);
+                    // var prsidentailCountData = await projectDetailsOperations.findProjectDetailPropertyTypeId('654bca8dc9a73c31e42056f2');
+                    // var commercialCountData = await projectDetailsOperations.findProjectDetailPropertyTypeId('654bca94c9a73c31e42056f5');
+                    // console.log(prsidentailCountData.length);
+                    // projects_total = projectData.length;
+                    // var projects_commercial = commercialCountData.length;
+                    // var projects_residencial = prsidentailCountData.length;
 
                     arr.push(dataArray);
-                    console.log(arr);
+                    // console.log(arr);
                     return arr;
                    
                     }
@@ -2753,30 +2787,19 @@ var skip = limit * page;
                     arr2['lead_total_customer_count'] = total_customer_count;
                     arr2['lead_total_booked_count'] = total_booked_count;
                     arr2['lead_total_released_pipeline'] = total_released_pipeline;
-                    arr2['lead_my_total_count'] = 0;
-                    arr2['lead_my_new_count'] = 0;
-                    arr2['lead_my_answered_count'] = 0;
-                    arr2['lead_my_intrested_count'] = 0;
-                    arr2['lead_my_call_back_count'] = 0;
-                    arr2['lead_my_visit_done_count'] = 0;
-                    arr2['lead_my_pipeline_count'] = 0;
-                    arr2['lead_my_future_count'] = 0;
-                    arr2['lead_my_customer_count'] = 0;
-                    arr2['lead_my_booked_count'] = 0;
-                    arr2['lead_my_released_pipeline'] = 0;
-                    arr2['projects_total'] = 113;
-                    arr2['projects_commercial'] = 0;
-                    arr2['projects_residencial'] = 11;
-                    arr2['attendence_total_emp'] = 40;
-                    arr2['attendence_present_today'] = 33;
-                    arr2['attendence_absent_today'] = 7;
-                    arr2['attendence_leave_today'] = 2;
-                    arr2['attendence_late_today'] = 1;
-                    arr2['attendence_my_current_month'] = 30;
-                    arr2['attendence_my_current_month_present'] = 12;
-                    arr2['attendence_my_current_month_absent'] = 7;
-                    arr2['attendence_my_current_month_leave'] = 2;
-                    arr2['attendence_my_current_month_late'] = 1;
+                    // arr2['projects_total'] = projects_total;
+                    // arr2['projects_commercial'] = projects_commercial;
+                    // arr2['projects_residencial'] = projects_residencial;
+                    // arr2['attendence_total_emp'] = 40;
+                    // arr2['attendence_present_today'] = 33;
+                    // arr2['attendence_absent_today'] = 7;
+                    // arr2['attendence_leave_today'] = 2;
+                    // arr2['attendence_late_today'] = 1;
+                    // arr2['attendence_my_current_month'] = 30;
+                    // arr2['attendence_my_current_month_present'] = 12;
+                    // arr2['attendence_my_current_month_absent'] = 7;
+                    // arr2['attendence_my_current_month_leave'] = 2;
+                    // arr2['attendence_my_current_month_late'] = 1;
                     total_arr.push(arr2);
                     if(responseText.length > 0){
                          res.status(200).json({
@@ -2795,5 +2818,389 @@ var skip = limit * page;
   };
 
 
+  const dashboardMylead = async (req, res) => {
 
-module.exports = { saveChangePasswordByAdmin,dashboard,checkPunchIn,testDT,updateUserLoan,createSalary,getSalary,getRole,addRole,updateRole,getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
+    let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+            console.log(decoded);
+        });
+      const promise = userOperations.findByUserId(setdata)
+              promise
+              .then((data)=>{
+                console.log(data);
+                  let arr = [];
+                  let total_arr = [];
+                  var arr2 = {};
+                    var total_count = 0;
+                    
+
+                    var lead_my_total_count = 0;
+                    var lead_my_new_count = 0;
+                    var lead_my_answered_count = 0;
+                    var lead_my_intrested_count = 0;
+                    var lead_my_call_back_count = 0;
+                    var lead_my_visit_done_count = 0;
+                    var lead_my_pipeline_count = 0;
+                    var lead_my_future_count = 0;
+                    var lead_my_customer_count = 0;
+                    var lead_my_booked_count = 0;
+                    var lead_my_released_pipeline = 0;
+
+                    var total_lead_my_new_count = 0;
+                    var total_lead_my_answered_count = 0;
+                    var total_lead_my_intrested_count = 0;
+                    var total_lead_my_call_back_count = 0;
+                    var total_lead_my_visit_done_count = 0;
+                    var total_lead_my_pipeline_count = 0;
+                    var total_lead_my_future_count = 0;
+                    var total_lead_my_customer_count = 0;
+                    var total_lead_my_booked_count = 0;
+                    var total_lead_my_released_pipeline = 0;
+                  // total_arr.push(arr2);
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+                    // console.log(req);
+                    var dataArray = {};
+                    dataArray['_id'] = req._id.toString(); 
+                    dataArray['user_name'] = req.name;
+                    // newQuery = {"user_id":req.user_id, "start_date": start_date, "end_date": end_date};
+                    newQuery = req._id.toString();
+                    var newData = await leadUserStageOperations.findLeadUserStageByleadIdUserIdCount(newQuery);
+                    var allDataExpectNew = 0;
+                    dataArray['total_lead_my_new_count'] = 0;
+                    dataArray['total_lead_my_call_done'] = 0;
+                    dataArray['total_lead_my_not_answered_count'] = 0;
+                    dataArray['total_lead_my_not_intrested_count'] = 0;
+                    dataArray['total_lead_my_call_back_count'] = 0;
+                    dataArray['total_lead_my_visit_done_count'] = 0;
+                    dataArray['total_lead_my_pipeline_count'] = 0;
+                    dataArray['total_lead_my_future_count'] = 0;
+                    dataArray['total_lead_my_customer_count'] = 0;
+                    dataArray['total_lead_my_booked_count'] = 0;
+                    dataArray['total_lead_my_released_pipeline'] = 0;
+                    
+
+                    // if(newData.length > 0){
+                    // console.log(newData);
+                      newData.forEach(function(item) {
+                            if(item._id == "new"){
+                              //dataArray["new_count"] = item.total_records;
+                              total_new_count = Number(total_new_count) + Number(item.total_records);
+                              total_count = Number(total_count) + Number(item.total_records);
+                            }
+                            if(item._id == "Pipeline"){
+                              //dataArray["pipeline_count"] = item.total_records;
+                              total_pipeline_count = Number(total_pipeline_count) + Number(item.total_records);
+                              total_count = Number(total_count) + Number(item.total_records);
+                              allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                            }
+                            if(item._id == "Not Answered"){
+                              //dataArray["not_answered_count"] = item.total_records;
+                              total_answered_count = Number(total_answered_count) + Number(item.total_records);
+                              total_count = Number(total_count) + Number(item.total_records);
+                              allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                            }
+                            if(item._id == "Not Interested"){
+                              //dataArray["not_intrested_count"] = item.total_records;
+                              total_intrested_count = Number(total_intrested_count) + Number(item.total_records);
+                              total_count = Number(total_count) + Number(item.total_records);
+                              allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                            }
+                            if(item._id == "Call Back"){
+                              //dataArray["call_back_count"] = item.total_records;
+                              call_back_count = 0 + Number(item.total_records);
+                              total_count = Number(total_count) + Number(item.total_records);
+                              allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                            }
+                            if(item._id == "Visit Done"){
+                              dataArray["visit_done_count"] = item.total_records;
+                              total_visit_done_count = Number(total_visit_done_count) + Number(item.total_records);
+                              total_count = Number(total_count) + Number(item.total_records);
+                              allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                            }
+                            if(item._id == "Future"){
+                              //dataArray["future_count"] = item.total_records;
+                              total_future_count = Number(total_future_count) + Number(item.total_records);
+                              total_count = Number(total_count) + Number(item.total_records);
+                              allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                            }
+                            if(item._id == "Customer"){
+                              //dataArray["customer_count"] = item.total_records;
+                              total_customer_count = Number(total_customer_count) + Number(item.total_records);
+                              total_count = Number(total_count) + Number(item.total_records);
+                              allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                            }
+                            if(item._id == "Booked"){
+                              dataArray["customer_count"] = item.total_records;
+                              total_booked_count = Number(total_booked_count) + Number(item.total_records);
+                              total_count = Number(total_count) + Number(item.total_records);
+                              allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                            }
+                            if(item._id == "Released Pipeline"){
+                              //dataArray['released_pipeline'] = item.total_records;
+                              total_released_pipeline = Number(total_released_pipeline) + Number(item.total_records);
+                              total_count = Number(total_count) + Number(item.total_records);
+                              allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                            }
+                            //dataArray['call_done'] = allDataExpectNew;
+                      });
+                       
+
+                      arr.push(dataArray);
+                          // console.log(arr);
+                          return arr;
+                   
+                    }
+                  )
+                ).then((responseText) => {
+                   console.log(responseText);
+                  var arr2 = {};
+                    arr2['lead_my_total_count'] = total_count;
+                    arr2['lead_my_new_count'] = total_new_count;
+                    arr2['lead_my_answered_count'] = total_answered_count;
+                    arr2['lead_my_intrested_count'] = total_intrested_count;
+                    arr2['lead_my_call_back_count'] = total_call_back_count;
+                    arr2['lead_my_visit_done_count'] = total_visit_done_count;
+                    arr2['lead_my_pipeline_count'] = total_pipeline_count;
+                    arr2['lead_my_future_count'] = total_future_count;
+                    arr2['lead_my_customer_count'] = total_customer_count;
+                    arr2['lead_my_booked_count'] = total_booked_count;
+                    arr2['lead_my_released_pipeline'] = total_released_pipeline;
+                   
+                    total_arr.push(arr2);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: total_arr,
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+                });
+  };
+
+    const dashboardProject = async (req, res) => {
+
+    let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+            console.log(decoded);
+        });
+  
+  query = "new";
+  var projectData = await projectOperations.getListProject(query);
+    const promise = projectDetailsOperations.getAllProjectDetail(query)
+              promise
+              .then((data)=>{
+                console.log(data);
+                  let arr = [];
+                  let total_arr = [];
+                  var arr2 = {};
+                    var projects_total = 0;
+                    var projects_commercial = 0;
+                    var projects_residencial = 0;
+                  // total_arr.push(arr2);
+                    setQuery = "new";
+                    
+                    projects_total = projectData.length;
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+                    // console.log(req);
+                    var allDataExpectNew = 0;
+                    
+                    if(req.projecttypeId == "654bca8dc9a73c31e42056f2"){
+                        projects_commercial = Number(projects_commercial) + 1;
+                      }else{
+                        projects_residencial = Number(projects_residencial) + 1;
+                      }
+                    
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText);
+                  var arr2 = {};
+                    arr2['projects_total'] = projects_total;
+                    arr2['projects_commercial'] = projects_commercial;
+                    arr2['projects_residencial'] = projects_residencial;
+                    total_arr.push(arr2);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: total_arr,
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+                });
+  };
+
+
+   const dashboardAttendance = async (req, res) => {
+
+    let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+            console.log(decoded);
+        });
+
+            let uid = req.params.userId
+            if(!uid){
+
+              query = {"userId": "","month": "11"};
+              var projectData = await userAttendanceOperations.getAllAttendanceSum(query);
+            const promise = userAttendanceOperations.getAllAttendanceSum(query)
+              promise
+              .then((data)=>{
+                console.log(data);
+                  let arr = [];
+                  let total_arr = [];
+                  var arr2 = {};
+                    var attendence_total_emp = 40;
+                    var attendence_present_today = 0;
+                    var attendence_absent_today = 0;
+                    var attendence_leave_today = 0;
+                    var attendence_late_today = 0;
+                  // total_arr.push(arr2);
+                    setQuery = "new";
+                    
+                    projects_total = projectData.length;
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+                    // console.log(req);
+                    var allDataExpectNew = 0;
+                    
+                    if(req.work_type == "Present"){
+                        attendence_present_today = Number(attendence_present_today) + 1;
+                      }
+                       if(req.work_type == "Leave"){
+                        attendence_leave_today = Number(attendence_leave_today) + 1;
+                      }
+                       if(req.work_type == ""){
+                        attendence_absent_today = Number(attendence_absent_today) + 1;
+                      }
+                    
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText);
+                  var arr2 = {};
+                      arr2['attendence_total_emp'] = attendence_total_emp;
+                      arr2['attendence_present_today'] = attendence_present_today;
+                      arr2['attendence_absent_today'] = attendence_absent_today;
+                      arr2['attendence_leave_today'] = attendence_leave_today;
+                      arr2['attendence_late_today'] = attendence_late_today;
+                    total_arr.push(arr2);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: total_arr,
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+                });
+
+            }else{
+
+              query = {"userId": uid,"month": "11"};
+          var projectData = await userAttendanceOperations.getAllAttendanceSum(query);
+            const promise = userAttendanceOperations.getAllAttendanceSum(query)
+              promise
+              .then((data)=>{
+                console.log(data);
+                  let arr = [];
+                  let total_arr = [];
+                  var arr2 = {};
+                      var attendence_my_current_month = 30;
+                    var attendence_my_current_month_present = 0;
+                    var attendence_my_current_month_absent = 0;
+                    var attendence_my_current_month_leave = 0;
+                    var attendence_my_current_month_late = 0;
+                  // total_arr.push(arr2);
+                    setQuery = "new";
+                    
+                    projects_total = projectData.length;
+                 var arrrr = Promise.all(data.map(async (element) => {
+                    var req = element;
+                    // console.log(req);
+                    var allDataExpectNew = 0;
+                    
+                    if(req.work_type == "Present"){
+                        attendence_my_current_month_present = Number(attendence_my_current_month_present) + 1;
+                      }
+                       if(req.work_type == "Leave"){
+                        attendence_my_current_month_leave = Number(attendence_my_current_month_leave) + 1;
+                      }
+                       if(req.work_type == ""){
+                        attendence_my_current_month_absent = Number(attendence_my_current_month_absent) + 1;
+                      }
+                    
+                    }
+                  )
+                ).then((responseText) => {
+                  // console.log(responseText);
+                  var arr2 = {};
+                      arr2['attendence_my_current_month'] = attendence_my_current_month;
+                      arr2['attendence_my_current_month_present'] = attendence_my_current_month_present;
+                      arr2['attendence_my_current_month_absent'] = attendence_my_current_month_absent;
+                      arr2['attendence_my_current_month_leave'] = attendence_my_current_month_leave;
+                      arr2['attendence_my_current_month_late'] = attendence_my_current_month_late;
+                    total_arr.push(arr2);
+                    if(responseText.length > 0){
+                         res.status(200).json({
+                          data: total_arr,
+                          success: 1
+                          }) 
+                      }else{
+                          res.status(200).json({
+                          data: [],
+                          message: "No Data found",
+                          success: 0
+                        }) 
+                      }
+                  });
+                });
+
+            }
+  
+  
+  };
+
+
+
+
+module.exports = { dashboardAttendance,dashboardProject,dashboardMylead,saveChangePasswordByAdmin,dashboard,checkPunchIn,testDT,updateUserLoan,createSalary,getSalary,getRole,addRole,updateRole,getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };

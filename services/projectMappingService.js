@@ -16,6 +16,10 @@ const ProjectMappingSerives = {
         const query = { project_id: leadId };
         const result = await ProjectMappingModel.deleteMany(query);
     },
+    async deleteLeadId(leadId){
+        const query = { project_id: leadId };
+        const result = await ProjectMappingModel.deleteMany(query);
+    },
     async findOneUserId(userId){
         const promise = await ProjectMappingModel.findOne({userId})
         return promise 

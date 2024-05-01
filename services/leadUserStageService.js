@@ -28,6 +28,10 @@ const LeadUserStageSerives = {
         const promise = await LeadUserStageModel.find({leadId})
         return promise 
     },
+    async findLeadUserIdStage(userId,stage){
+        const promise = await LeadUserStageModel.find({"user_id": userId, "stage": stage})
+        return promise 
+    },
     async findLeadUserStageByleadIdUserId(leadId,userId){
         const promise = await LeadUserStageModel.findOne({ "lead_id": leadId, "user_id": userId})
         return promise 

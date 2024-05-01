@@ -24,12 +24,16 @@ const projectDetailsServices = {
         const promise = await projectDetailModel.find({stateId})
         return promise 
     },
+    async findProjectDetailPropertyTypeId(propertyType){
+        const promise = await projectDetailModel.find({"propertytypeid": propertyType})
+        return promise 
+    },
     async getProjectDetailById(id){
         const promise = await projectDetailModel.findById(id)
         return promise
     },
     async getAllProjectDetail(query){
-        const promise = query ? await projectDetailModel.find().sort({_id:-1}).limit(5): await projectDetailModel.find()
+        const promise = query ? await projectDetailModel.find().sort({_id:-1}).limit(1000): await projectDetailModel.find()
        // const promise = await projectDetailModel.aggregate(
        //      [
        //          { "$project": { "developer_id": { "$toObjectId": "$developerId" },

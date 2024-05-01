@@ -245,7 +245,11 @@ const userSerives = {
         return promise
     }, 
     async findOneUserId(userId){
-        const promise = await UserModel.findOne({userId})
+        const promise = await UserModel.findOne({'_id': userId})
+        return promise
+    },
+    async findByUserId(userId){
+        const promise = await UserModel.find({'_id': userId})
         return promise
     },
     async getUserById(id){

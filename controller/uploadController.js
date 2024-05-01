@@ -283,7 +283,7 @@ const insertLead = async (req, res) => {
 
 const insertMultipleLead = async (req, res) => {
     var query = "";
-    const promise = uploadLeadOperations.getAllUploadLead(query)
+    const promise = uploadMultipleLeadOperations.getAllUploadMultipleLead(query)
       promise
       .then((dataStart)=>{
           // console.log(dataStart)
@@ -295,8 +295,7 @@ const insertMultipleLead = async (req, res) => {
             
             // console.log(myArray[3]);
             // exit;
-            var formDetails = await formOperations.getFormById(element.formId);
-            var projectDetails = await projectDetailOperations.findOneProjectId(formDetails.projectId);
+            
                 const params = {
                     Bucket: 'team-document',
                     Key: myArray[3],
@@ -327,6 +326,10 @@ const insertMultipleLead = async (req, res) => {
                                  }
                             });
                             dynamic.push(objec);
+
+                                var formDetails =  formOperations.getFormById(data.lead_project);
+                                var projectDetails = projectDetailOperations.findOneProjectId(formDetails.projectId);
+
                                 var lead_name = data.lead_name;
                                 var source = data.lead_source;
                                 var lead_phone = data.lead_phone;
@@ -353,19 +356,6 @@ const insertMultipleLead = async (req, res) => {
                                     var phoneStatus = 0;
                                 }
                             if(nameStatus == 1 && phoneStatus == 1 && emailStatus == 1){
-                                // parser.pause();
-                                // var lead_name = data.lead_name;
-                                // var email = data.lead_email;
-                                // var lead_phone = data.lead_phone;
-                                // var source = data.lead_source;
-                                // var date = data.date;
-                                // var dynamic = [];
-                                // var dataAssign = data;
-                                // delete dataAssign.lead_name;
-                                // delete dataAssign.email;
-                                // delete dataAssign.lead_phone;
-                                // delete dataAssign.source;
-                                // dynamic.push(dataAssign);
                                 dynamic = JSON.stringify(dynamic);
                             //console.log('One line from .csv >> ', data);
                             var random = Math.floor(1000 + Math.random() * 9000);

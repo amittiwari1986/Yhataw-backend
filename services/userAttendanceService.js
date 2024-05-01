@@ -33,7 +33,7 @@ const userAttendanceSerives = {
         // return promise
 
         console.log(query);
-
+if(query.userId != ''){
             const promise = await UserAttendanceModel.aggregate(
                 [
                 {
@@ -44,9 +44,26 @@ const userAttendanceSerives = {
                     "month": { "$toString": "$month" },
                     "date": { "$toString": "$date" },
                     "working_hours": { "$toString": "$working_hours" },
+                    "work_type": { "$toString": "$work_type" },
                 }},
                     { $sort : { updatedAt : -1} }])
             return promise
+        }else{
+            const promise = await UserAttendanceModel.aggregate(
+                [
+                {
+                    "$match": {"month": query.month}
+                },
+                { "$project": {
+                    "userId": { "$toObjectId": "$userId" },
+                    "month": { "$toString": "$month" },
+                    "date": { "$toString": "$date" },
+                    "working_hours": { "$toString": "$working_hours" },
+                    "work_type": { "$toString": "$work_type" },
+                }},
+                    { $sort : { updatedAt : -1} }])
+            return promise
+        }
 
 
     
