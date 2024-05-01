@@ -2666,6 +2666,9 @@ if(users.userRole == 6){
                     var projects_total = 0;
                     var projects_commercial = 0;
                     var projects_residencial = 0;
+                    var total_broker_count = 0;
+                    var total_not_intrested_count = 0;
+                    var total_not_answered_count = 0;
                   // total_arr.push(arr2);
                  var arrrr = Promise.all(data[0].data.map(async (element) => {
                     var req = element;
@@ -2754,6 +2757,24 @@ if(users.userRole == 6){
                           allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
                           
                         }
+                        if(item._id == "Broker"){
+                              //dataArray['released_pipeline'] = item.total_records;
+                              total_broker_count = Number(total_broker_count) + Number(item.total_records);
+                              total_count = Number(total_count) + Number(item.total_records);
+                              allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                            }
+                            if(item._id == "Not Answered"){
+                              //dataArray['released_pipeline'] = item.total_records;
+                              total_not_answered_count = Number(total_not_answered_count) + Number(item.total_records);
+                              total_count = Number(total_count) + Number(item.total_records);
+                              allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                            }
+                            if(item._id == "Not Intrested"){
+                              //dataArray['released_pipeline'] = item.total_records;
+                              total_not_intrested_count = Number(total_not_intrested_count) + Number(item.total_records);
+                              total_count = Number(total_count) + Number(item.total_records);
+                              allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                            }
                         dataArray['call_done'] = allDataExpectNew;
                       });
                       
@@ -2787,19 +2808,10 @@ if(users.userRole == 6){
                     arr2['lead_total_customer_count'] = total_customer_count;
                     arr2['lead_total_booked_count'] = total_booked_count;
                     arr2['lead_total_released_pipeline'] = total_released_pipeline;
-                    // arr2['projects_total'] = projects_total;
-                    // arr2['projects_commercial'] = projects_commercial;
-                    // arr2['projects_residencial'] = projects_residencial;
-                    // arr2['attendence_total_emp'] = 40;
-                    // arr2['attendence_present_today'] = 33;
-                    // arr2['attendence_absent_today'] = 7;
-                    // arr2['attendence_leave_today'] = 2;
-                    // arr2['attendence_late_today'] = 1;
-                    // arr2['attendence_my_current_month'] = 30;
-                    // arr2['attendence_my_current_month_present'] = 12;
-                    // arr2['attendence_my_current_month_absent'] = 7;
-                    // arr2['attendence_my_current_month_leave'] = 2;
-                    // arr2['attendence_my_current_month_late'] = 1;
+                    arr2['lead_my_not_answered_count'] = total_not_answered_count;
+                    arr2['lead_my_not_intrested_count'] = total_not_intrested_count;
+                    arr2['lead_my_broker_count'] = total_broker_count;
+                    
                     total_arr.push(arr2);
                     if(responseText.length > 0){
                          res.status(200).json({
@@ -2850,6 +2862,9 @@ if(users.userRole == 6){
                     var total_customer_count = 0;
                     var total_booked_count = 0;
                     var total_released_pipeline = 0;
+                    var total_broker_count = 0;
+                    var total_not_intrested_count = 0;
+                    var total_not_answered_count = 0;
 
                     var lead_my_total_count = 0;
                     var lead_my_new_count = 0;
@@ -2959,7 +2974,25 @@ if(users.userRole == 6){
                               total_count = Number(total_count) + Number(item.total_records);
                               allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
                             }
-                            //dataArray['call_done'] = allDataExpectNew;
+                            if(item._id == "Broker"){
+                              //dataArray['released_pipeline'] = item.total_records;
+                              total_broker_count = Number(total_broker_count) + Number(item.total_records);
+                              total_count = Number(total_count) + Number(item.total_records);
+                              allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                            }
+                            if(item._id == "Not Answered"){
+                              //dataArray['released_pipeline'] = item.total_records;
+                              total_not_answered_count = Number(total_not_answered_count) + Number(item.total_records);
+                              total_count = Number(total_count) + Number(item.total_records);
+                              allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                            }
+                            if(item._id == "Not Intrested"){
+                              //dataArray['released_pipeline'] = item.total_records;
+                              total_not_intrested_count = Number(total_not_intrested_count) + Number(item.total_records);
+                              total_count = Number(total_count) + Number(item.total_records);
+                              allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                            }
+                            // dataArray['call_done'] = allDataExpectNew;
                       });
                        
 
@@ -2983,6 +3016,9 @@ if(users.userRole == 6){
                     arr2['lead_my_customer_count'] = total_customer_count;
                     arr2['lead_my_booked_count'] = total_booked_count;
                     arr2['lead_my_released_pipeline'] = total_released_pipeline;
+                    arr2['lead_my_not_answered_count'] = total_not_answered_count;
+                    arr2['lead_my_not_intrested_count'] = total_not_intrested_count;
+                    arr2['lead_my_broker_count'] = total_broker_count;
                    
                     total_arr.push(arr2);
                     if(responseText.length > 0){

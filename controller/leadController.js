@@ -2267,26 +2267,30 @@ const leadTrasfer = async (req, res) => {
     var arrayLeadId = leadId.split(",");
     //foreach(arrayLeadId as arrayLead_id){
       arrayLeadId.forEach(async (eleData) => {
+        var deleteLead = eleData.replace(/["']/g, "");
+        let lead = await leadOperations.getLeadById(deleteLead);
+        lead.AssignToUser = JSON.stringify(req.body.user_id);
+        await leadOperations.updateLead(lead._id,lead);
 
-        await leadMappingOperations.deleteLeadId(arrayLead_id);
+        await leadMappingOperations.deleteLeadId(deleteLead);
         var obj = req.body.user_id;
         var obj = obj.replace(/["']/g, "");
         obj = obj.split(',');
         obj.forEach(async (element) => {
 
               var leadMapping = new LeadMapping(
-                arrayLead_id,
+                deleteLead,
                 element,
                 "user",
               );
 
                 leadMappingOperations.addLeadMapping(leadMapping);
-                let leadUserStage = await leadUserStageOperations.findLeadUserStageByleadIdUserId(arrayLead_id,element);
+                let leadUserStage = await leadUserStageOperations.findLeadUserStageByleadIdUserId(deleteLead,element);
                 // console.log(leadUserStage);
                 if(!leadUserStage){
                   var dataArrayPushStage = [];
                   var oneRow4 = {
-                                          "lead_id": arrayLead_id,
+                                          "lead_id": deleteLead,
                                           "user_id": element,
                                           "type": "user",
                                           "user_name": "",
