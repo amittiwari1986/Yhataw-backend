@@ -3121,7 +3121,7 @@ if(users.userRole == 6){
             let uid = req.params.userId
             if(!uid){
 
-              query = {"userId": "","month": "11"};
+              query = {"userId": "","month": "05"};
               var projectData = await userAttendanceOperations.getAllAttendanceSum(query);
             const promise = userAttendanceOperations.getAllAttendanceSum(query)
               promise
@@ -3182,7 +3182,7 @@ if(users.userRole == 6){
 
             }else{
 
-              query = {"userId": uid,"month": "11"};
+              query = {"userId": uid,"month": "05"};
           var projectData = await userAttendanceOperations.getAllAttendanceSum(query);
             const promise = userAttendanceOperations.getAllAttendanceSum(query)
               promise
