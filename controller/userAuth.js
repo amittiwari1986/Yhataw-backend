@@ -2722,7 +2722,7 @@ if(users.userRole == 6){
                         }
                         if(item._id == "Call Back"){
                           dataArray["call_back_count"] = item.total_records;
-                          call_back_count = 0 + Number(item.total_records);
+                          total_call_back_count = Number(total_call_back_count) + Number(item.total_records);
                           total_count = Number(total_count) + Number(item.total_records);
                           allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
                         }
@@ -2940,7 +2940,7 @@ if(users.userRole == 6){
                             }
                             if(item._id == "Call Back"){
                               //dataArray["call_back_count"] = item.total_records;
-                              call_back_count = 0 + Number(item.total_records);
+                              total_call_back_count = Number(total_call_back_count) + Number(item.total_records);
                               total_count = Number(total_count) + Number(item.total_records);
                               allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
                             }
