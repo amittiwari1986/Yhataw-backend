@@ -899,7 +899,7 @@ const addProject = async (req, res) => {
     const project = new Project(
       req.body.developerId,
       req.body.project_name,
-      'PY_'.randomNo
+      'PY_' + randomNo
     );
     const promise = projectOperations.addProject(project);
     promise
@@ -2114,4 +2114,38 @@ const updateDepartment = async (req, res) => {
         }
 };
 
-module.exports = { updateDepartment,updateDeveloper,updateProject,getTeamDropDownProject,getMultipleTeamWiseDropDownProject,getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
+
+const updateProjectUid= async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  
+  if(!setdata){
+    let data;
+    let id = req.body.id;
+      try {
+        var query = "new";
+        //await projectOperations.updateProject(project._id,project);
+        let teamDoc = await projectOperations.getListProject(query);
+        var i = 1;
+        teamDoc.forEach(async function(element) {
+          var project = await projectOperations.getProjectById(element._id);
+          project.project_uid = 'PY_0000' + i;
+           projectOperations.updateProject(project._id,project);
+          i = Number(i) + 1;
+          console.log(i)
+        });
+        // console.log(req.body.info);
+        // console.log(JSON.stringify(req.body.info));
+
+        
+        return res.status(200).json({ success: 1, message: "Team Updated Successfully" });
+      } catch (error) {
+        return res.status(400).json({ success: 0, message: "Details not found" });
+      }
+    }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+
+};
+
+module.exports = { updateProjectUid,updateDepartment,updateDeveloper,updateProject,getTeamDropDownProject,getMultipleTeamWiseDropDownProject,getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
