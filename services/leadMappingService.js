@@ -17,7 +17,7 @@ const LeadMappingSerives = {
         return promise
     },
     async deleteLeadId(leadId){
-        const query = { lead_id: "66323a0a72f553c4a688a8c5" };
+        const query = { "lead_id": leadId };
         console.log(query);
         const promise = await LeadMappingModel.deleteMany(query);
          return promise 

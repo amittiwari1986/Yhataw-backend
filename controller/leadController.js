@@ -678,7 +678,7 @@ const updateLeadAssignToUser = async (req, res) => {
 
                 leadMappingOperations.addLeadMapping(leadMapping);
                 let leadUserStage = await leadUserStageOperations.findLeadUserStageByleadIdUserId(req.body.id,element);
-                // console.log(leadUserStage);
+                // console.log(leadUserStage); 
                 if(!leadUserStage){
                   var dataArrayPushStage = [];
                   var oneRow4 = {
