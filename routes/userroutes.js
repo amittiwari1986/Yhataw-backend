@@ -77,7 +77,8 @@ Routes.get("/getAllSalesHead",userController.getAllSalesHead)
 Routes.get("/getAllManagerByTeamWise/:id",userController.getAllManagerByTeamWise)
 Routes.get("/insertLead",uploadController.insertLead)
 Routes.get("/insertMultipleLead",uploadController.insertMultipleLead)
-
+Routes.get("/import99AcersLead",uploadController.import99AcersLead)
+Routes.get("/importHousingLead",uploadController.importHousingLead)
 // Routes.post("/upload-image",uploadController.uploadImage)
 
 Routes.post('/upload-image',upload.single('file'), function (req, res, next) {     

@@ -707,8 +707,8 @@ const insertMultipleLead = async (req, res) => {
 
                                         let leadMultiple = await uploadMultipleLeadOperations.getUploadMultipleLeadById(element._id.toString());
                                         // console.log(leadMultiple);
-                                        leadMultiple.fail_count = okCount;
-                                        leadMultiple.success_count = errorCount;
+                                        leadMultiple.fail_count = errorCount;
+                                        leadMultiple.success_count = okCount;
                                         leadMultiple.status = "3";
                                         await uploadMultipleLeadOperations.updateUploadMultipleLead(leadMultiple._id,leadMultiple);
                                  }
@@ -739,18 +739,55 @@ const insertMultipleLead = async (req, res) => {
 
 };
 
+const importHousingLead = async (req, res) => {
+    var moment = require('moment');
+    var crypto = require('crypto');
+    const axios = require('axios');
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1);
 
+    Date.prototype.toUnixTime = function() { return this.getTime()/1000|0 };
+    Date.time = function() { return new Date().toUnixTime(); }
 
-// import * as AWS from 'aws-sdk';
-// const s3 = new AWS.S3();
-// const csv = require('@fast-csv/parse');
+    var startTime = '1715040000';
+    var endTime = Date.time();
+    var currentTime = Date.time();
+    //var currentTimeStamp = date('h:i:s', $currentTime);
+    var secretKey = 'e50a97895066c91ba4745271828cd9e9';
+    var id = '5349396';
+    const hash = crypto.createHmac('sha256', secretKey).update(JSON.stringify(currentTime)).digest('hex');
 
+    var url = 'https://pahal.housing.com/api/v0/get-builder-leads?start_date=' + startTime + '&end_date=' + endTime + '&current_time=' + currentTime + '&hash=' + hash + '&id=' + id;
 
-
-
+    var options = {
+        'method': 'GET',
+        'url': url
+    };
   
+    const result = await axios(options);
+    res.status(200).json({message: "get data", success: 1, data: result.data});
 
-  
+};
+
+const import99AcersLead = async (req, res) => {
+//     var d = new Date();
+// d.setDate(d.getDate() - 1);
+// d.setHours(0,0,0,0);
+
+     Date.prototype.toUnixTime = function() { return this.getTime()/1000|0 };
+    Date.time = function() { return new Date().toUnixTime(); }
+
+     const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    Date.timew = function() { return new yesterday.toUnixTime(); }
+
+console.log(Date.timew);
+    res.status(200).json({message: "get data", success: 1, data: result.data});
+
+};
 
 
-	module.exports = { uploadImage,insertLead,insertMultipleLead }
+
+
+	module.exports = { importHousingLead,import99AcersLead,uploadImage,insertLead,insertMultipleLead }
