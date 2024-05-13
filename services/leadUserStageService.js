@@ -8,7 +8,7 @@ const LeadUserStageSerives = {
         const promise = await LeadUserStageModel.findByIdAndUpdate(id,data,{new:true})
         return promise
     },
-    async addManyLeadUserStage(UserObject){
+    async addManyLeadUserStage(UserObject){ 
         const promise = await LeadUserStageModel.insertMany(UserObject);
         return promise
     },
@@ -54,6 +54,23 @@ const LeadUserStageSerives = {
             [
              {
                 "$match": {"user_id": userId}
+             },
+            { "$project": { "_id": { "$toString": "$_id" },
+                "leadId": { "$toString": "$_id" },
+                "user_id": { "$toString": "$user_id" },
+                "stage": { "$toString": "$stage" },
+                "updatedAt": { "$toString": "$updatedAt" },
+            }},
+                { $sort : { updatedAt : -1} },{ $group: { _id: "$stage", total_records: { $sum: 1 } } },])
+        return promise 
+    },
+    async findLeadUserStageByUserIdLeadIdCount(newQuery){
+        console.log(newQuery);
+        // const promise = await LeadUserStageModel.find({"user_id": userId, "stage": stage}).count();
+        const promise = await LeadUserStageModel.aggregate(
+            [
+             {
+                "$match": {"lead_id": { "$in" : newQuery}}
              },
             { "$project": { "_id": { "$toString": "$_id" },
                 "leadId": { "$toString": "$_id" },

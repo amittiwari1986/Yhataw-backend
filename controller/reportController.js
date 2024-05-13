@@ -262,7 +262,7 @@ const getSourceReport = (req, res) => {
               const promise = leadSourceOperations.getAllLeadSources(query)
               promise
               .then((data)=>{
-                  console.log(data)
+                  // console.log(data)
                   // const {others} = data
                   // if(data.length > 0){
                   //  res.status(200).json({
@@ -286,93 +286,97 @@ const getSourceReport = (req, res) => {
                     var total_released_pipeline = 0;
                  var arrrr = Promise.all(data[0].data.map(async (element) => {
                     var req = element;
-                    console.log(req);
+                    // console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     dataArray['source_name'] = req.source_name;
                     var allDataExpectNew = 0;
-                    var newData = await leadOperations.getLeadCountSourceWise("new",req.source_name);
-                    dataArray['new_count'] = newData;
-                     total_new_count = Number(total_new_count) + Number(newData);
-                      total_count = Number(total_count) + Number(newData);
-
-                    var not_answered_count = await leadOperations.getLeadCountSourceWise("Not Answered",req.source_name);
-                    dataArray['not_answered_count'] = not_answered_count;
-                    total_answered_count = Number(total_answered_count) + Number(not_answered_count);
-                      total_count = Number(total_count) + Number(not_answered_count);
-                      allDataExpectNew = Number(allDataExpectNew) + Number(not_answered_count);
-
-
-                    var not_intrested_count = await leadOperations.getLeadCountSourceWise("Not Intrested",req.source_name);
-                    dataArray['not_intrested_count'] = not_intrested_count;
-                    total_intrested_count = Number(total_intrested_count) + Number(not_intrested_count);
-                      total_count = Number(total_count) + Number(not_intrested_count);
-                      allDataExpectNew = Number(allDataExpectNew) + Number(not_intrested_count);
-
-
-                    var call_back_count = await leadOperations.getLeadCountSourceWise("Call Back",req.source_name);
-                    dataArray['call_back_count'] = call_back_count;
-                    total_call_back_count = Number(total_call_back_count) + Number(call_back_count);
-                      total_count = Number(total_count) + Number(call_back_count);
-                      allDataExpectNew = Number(allDataExpectNew) + Number(call_back_count);
-
-
-                    // var visit_planned_count = await leadOperations.getLeadCountStageWise("Visit Planned");
-                    // dataArray['visit_planned_count'] = visit_planned_count;
-
-                    var visit_done_count = await leadOperations.getLeadCountSourceWise("Visit Done",req.source_name);
-                    dataArray['visit_done_count'] = visit_done_count;
-                    total_visit_done_count = Number(total_visit_done_count) + Number(visit_done_count);
-                      total_count = Number(total_count) + Number(visit_done_count);
-                      allDataExpectNew = Number(allDataExpectNew) + Number(visit_done_count);
-
-
-                    var pipeline_count = await leadOperations.getLeadCountSourceWise("Pipeline",req.source_name);
-                    dataArray['pipeline_count'] = pipeline_count;
-                    total_pipeline_count = Number(total_pipeline_count) + Number(pipeline_count);
-                      total_count = Number(total_count) + Number(pipeline_count);
-                      allDataExpectNew = Number(allDataExpectNew) + Number(pipeline_count);
-
-
-                    var future_count = await leadOperations.getLeadCountSourceWise("Future",req.source_name);
-                    dataArray['future_count'] = future_count;
-                    total_future_count = Number(total_future_count) + Number(future_count);
-                      total_count = Number(total_count) + Number(future_count);
-                      allDataExpectNew = Number(allDataExpectNew) + Number(future_count);
-
-
-                    var customer_count = await leadOperations.getLeadCountSourceWise("Customer",req.source_name);
-                    dataArray['customer_count'] = customer_count;
-                    total_customer_count = Number(total_customer_count) + Number(customer_count);
-                      total_count = Number(total_count) + Number(customer_count);
-                      allDataExpectNew = Number(allDataExpectNew) + Number(customer_count);
-
-
-                    // var Scheduled = await leadOperations.getLeadCountStageWise("Visit Scheduled");
-                    // dataArray['visit_scheduled_count'] = Scheduled;
-
-                    var booked_count = await leadOperations.getLeadCountSourceWise("Booked",req.source_name);
-                    dataArray['booked_count'] = booked_count;
-                     total_booked_count = Number(total_booked_count) + Number(booked_count);
-                      total_count = Number(total_count) + Number(booked_count);
-                      allDataExpectNew = Number(allDataExpectNew) + Number(booked_count);
-
-                    // var fresh_visit_count = await leadOperations.getLeadCountStageWise("Fresh Visit");
-                    // dataArray['fresh_visit_count'] = fresh_visit_count;
-
-                    // var walk_in_count = await leadOperations.getLeadCountStageWise("Walk-In");
-                    // dataArray['walk_in_count'] = walk_in_count;
-
-					var Released = await leadOperations.getLeadCountSourceWise("Released Pipeline",req.source_name);
-                    dataArray['released_pipeline'] = Released;
-                     total_released_pipeline = Number(total_released_pipeline) + Number(Released);
-                      total_count = Number(total_count) + Number(Released);
-                       allDataExpectNew = Number(allDataExpectNew) + Number(Released);
+                    dataArray['new_count'] = 0;
+                    dataArray['call_done'] = 0;
+                    dataArray['not_answered_count'] = 0;
+                    dataArray['not_intrested_count'] = 0;
+                    dataArray['call_back_count'] = 0;
+                    dataArray['visit_done_count'] = 0;
+                    dataArray['pipeline_count'] = 0;
+                    dataArray['future_count'] = 0;
+                    dataArray['customer_count'] = 0;
+                    dataArray['booked_count'] = 0;
+                    dataArray['released_pipeline'] = 0;
+                    //
+                    var sourceWiseData = await leadOperations.getAllleadData(req.source_name);
+                    var df = [];
+                    sourceWiseData.forEach(function(items) {
+                      newQuery = items._id.toString();
+                      df.push(newQuery);
+                    });
+                    // console.log(df);
+                     var newData = await leadUserStageOperations.findLeadUserStageByUserIdLeadIdCount(df);
+                     // console.log(newQuery);
+                     // console.log(newData);
+                     
+                     newData.forEach(function(item) {
+                        if(item._id == "new"){
+                          dataArray["new_count"] = item.total_records;
+                          total_new_count = Number(total_new_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                        }
+                        if(item._id == "Pipeline"){
+                          dataArray["pipeline_count"] = item.total_records;
+                          total_pipeline_count = Number(total_pipeline_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Not Answered"){
+                          dataArray["not_answered_count"] = item.total_records;
+                          total_answered_count = Number(total_answered_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Not Interested"){
+                          dataArray["not_intrested_count"] = item.total_records;
+                          total_intrested_count = Number(total_intrested_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Call Back"){
+                          dataArray["call_back_count"] = item.total_records;
+                          call_back_count = 0 + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Visit Done"){
+                          dataArray["visit_done_count"] = item.total_records;
+                          total_visit_done_count = Number(total_visit_done_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Future"){
+                          dataArray["future_count"] = item.total_records;
+                          total_future_count = Number(total_future_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Customer"){
+                          dataArray["customer_count"] = item.total_records;
+                          total_customer_count = Number(total_customer_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Booked"){
+                          dataArray["customer_count"] = item.total_records;
+                          total_booked_count = Number(total_booked_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Released Pipeline"){
+                          dataArray['released_pipeline'] = item.total_records;
+                          total_released_pipeline = Number(total_released_pipeline) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
                         dataArray['call_done'] = allDataExpectNew;
+                      });
 
-
-                    
-                    // dataArray['status'] = req.status;
                     
                     arr.push(dataArray);
                     return arr;
@@ -583,8 +587,9 @@ const getProjectReport = (req, res) => {
             let limit = req.query.limit
             var skip = limit * page;
              query = {"project_id":project_id, "start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page)};
-                 console.log(query);
-              const promise = projectOperations.getAllProject(query,project_id)
+                 // console.log(query);
+             const promise = projectOperations.getListProject(query)
+              // const promise = projectOperations.getListProject(query,project_id)
               promise
               .then((data)=>{
                   // console.log(data)
@@ -609,88 +614,105 @@ const getProjectReport = (req, res) => {
                     var total_customer_count = 0;
                     var total_booked_count = 0;
                     var total_released_pipeline = 0;
-                 var arrrr = Promise.all(data[0].data.map(async (element) => {
+                 var arrrr = Promise.all(data.map(async (element) => {
                     var req = element;
-                    // console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     dataArray['project_name'] = req.project_name;
-
                     var projectDetails = await projectDetailOperations.findOneProjectId(req._id);
                     dataArray['project_details'] = projectDetails;
+var allDataExpectNew = 0;
+                    dataArray['new_count'] = 0;
+                    dataArray['call_done'] = 0;
+                    dataArray['not_answered_count'] = 0;
+                    dataArray['not_intrested_count'] = 0;
+                    dataArray['call_back_count'] = 0;
+                    dataArray['visit_done_count'] = 0;
+                    dataArray['pipeline_count'] = 0;
+                    dataArray['future_count'] = 0;
+                    dataArray['customer_count'] = 0;
+                    dataArray['booked_count'] = 0;
+                    dataArray['released_pipeline'] = 0;
+                    //
+                    var projectWiseData = await leadOperations.getAllleadDataByProjectId(req._id.toString());
+                    var df = [];
+                    // console.log(projectWiseData);
+                    projectWiseData.forEach(function(items) {
+                      newQuery = items._id.toString();
+                      df.push(newQuery);
+                    });
+                    // console.log(df);
+                     var newData = await leadUserStageOperations.findLeadUserStageByUserIdLeadIdCount(df);
+                     // console.log(newQuery);
+                     // console.log(newData);
+                     
+                     newData.forEach(function(item) {
+                        if(item._id == "new"){
+                          dataArray["new_count"] = item.total_records;
+                          total_new_count = Number(total_new_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                        }
+                        if(item._id == "Pipeline"){
+                          dataArray["pipeline_count"] = item.total_records;
+                          total_pipeline_count = Number(total_pipeline_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Not Answered"){
+                          dataArray["not_answered_count"] = item.total_records;
+                          total_answered_count = Number(total_answered_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Not Interested"){
+                          dataArray["not_intrested_count"] = item.total_records;
+                          total_intrested_count = Number(total_intrested_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Call Back"){
+                          dataArray["call_back_count"] = item.total_records;
+                          call_back_count = 0 + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Visit Done"){
+                          dataArray["visit_done_count"] = item.total_records;
+                          total_visit_done_count = Number(total_visit_done_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Future"){
+                          dataArray["future_count"] = item.total_records;
+                          total_future_count = Number(total_future_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Customer"){
+                          dataArray["customer_count"] = item.total_records;
+                          total_customer_count = Number(total_customer_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Booked"){
+                          dataArray["customer_count"] = item.total_records;
+                          total_booked_count = Number(total_booked_count) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        if(item._id == "Released Pipeline"){
+                          dataArray['released_pipeline'] = item.total_records;
+                          total_released_pipeline = Number(total_released_pipeline) + Number(item.total_records);
+                          total_count = Number(total_count) + Number(item.total_records);
+                          allDataExpectNew = Number(allDataExpectNew) + Number(item.total_records);
+                        }
+                        dataArray['call_done'] = allDataExpectNew;
+                      });
 
-                    var newData = await leadOperations.getLeadCountProjectWise("new",req._id);
-                    dataArray['new_count'] = newData;
-                    total_new_count = Number(total_new_count) + Number(newData);
-                      total_count = Number(total_count) + Number(newData);
-
-                    var not_answered_count = await leadOperations.getLeadCountProjectWise("Not Answered",req._id);
-                    dataArray['not_answered_count'] = not_answered_count;
-                    total_answered_count = Number(total_answered_count) + Number(not_answered_count);
-                      total_count = Number(total_count) + Number(not_answered_count);
-
-                    var not_intrested_count = await leadOperations.getLeadCountProjectWise("Not Intrested",req._id);
-                    dataArray['not_intrested_count'] = not_intrested_count;
-                    total_intrested_count = Number(total_intrested_count) + Number(not_intrested_count);
-                      total_count = Number(total_count) + Number(not_intrested_count);
-
-                    var call_back_count = await leadOperations.getLeadCountProjectWise("Call Back",req._id);
-                    dataArray['call_back_count'] = call_back_count;
-                    total_call_back_count = Number(total_call_back_count) + Number(call_back_count);
-                      total_count = Number(total_count) + Number(call_back_count);
-
-                    // var visit_planned_count = await leadOperations.getLeadCountStageWise("Visit Planned");
-                    // dataArray['visit_planned_count'] = visit_planned_count;
-
-                    var visit_done_count = await leadOperations.getLeadCountProjectWise("Visit Done",req._id);
-                    dataArray['visit_done_count'] = visit_done_count;
-                    total_visit_done_count = Number(total_visit_done_count) + Number(visit_done_count);
-                      total_count = Number(total_count) + Number(visit_done_count);
-
-                    var pipeline_count = await leadOperations.getLeadCountProjectWise("Pipeline",req._id);
-                    dataArray['pipeline_count'] = pipeline_count;
-                    total_pipeline_count = Number(total_pipeline_count) + Number(pipeline_count);
-                      total_count = Number(total_count) + Number(pipeline_count);
-
-                    var future_count = await leadOperations.getLeadCountProjectWise("Future",req._id);
-                    dataArray['future_count'] = future_count;
-                    total_future_count = Number(total_future_count) + Number(future_count);
-                      total_count = Number(total_count) + Number(future_count);
-
-                    var customer_count = await leadOperations.getLeadCountProjectWise("Customer",req._id);
-                    dataArray['customer_count'] = customer_count;
-                     total_customer_count = Number(total_customer_count) + Number(customer_count);
-                      total_count = Number(total_count) + Number(customer_count);
-
-                    // var Scheduled = await leadOperations.getLeadCountStageWise("Visit Scheduled");
-                    // dataArray['visit_scheduled_count'] = Scheduled;
-
-                    var booked_count = await leadOperations.getLeadCountProjectWise("Booked",req._id);
-                    dataArray['booked_count'] = booked_count;
-                     total_booked_count = Number(total_booked_count) + Number(booked_count);
-                      total_count = Number(total_count) + Number(booked_count);
-
-                    // var fresh_visit_count = await leadOperations.getLeadCountStageWise("Fresh Visit");
-                    // dataArray['fresh_visit_count'] = fresh_visit_count;
-
-                    // var walk_in_count = await leadOperations.getLeadCountStageWise("Walk-In");
-                    // dataArray['walk_in_count'] = walk_in_count;
-
-					var Released = await leadOperations.getLeadCountProjectWise("Released Pipeline",req._id);
-                    dataArray['released_pipeline'] = Released;
-                    total_released_pipeline = Number(total_released_pipeline) + Number(Released);
-                      total_count = Number(total_count) + Number(Released);
-
-
-
-
-
-                    
-                    // dataArray['status'] = req.status;
                     
                     arr.push(dataArray);
                     return arr;
-                   
+
                     }
                   )
                 ).then((responseText) => {

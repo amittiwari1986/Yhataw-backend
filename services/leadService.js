@@ -48,6 +48,14 @@ const leadServices = {
         const promise = await leadModel.find({"stage":{"$ne": stage}}).count();
         return promise
     },
+    async getAllleadData(source){
+        const promise = leadModel.find({"source":source});
+         return promise
+    },
+    async getAllleadDataByProjectId(projectId){
+        const promise = leadModel.find({"projectId":projectId});
+         return promise
+    },
     async getAllLead(query){
         // const promise = query ? await leadModel.find().sort({_id:-1}).limit(5): await leadModel.find()
         if(query.start_date != ''){
