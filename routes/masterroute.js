@@ -49,5 +49,8 @@ Routes.put("/updateProject",mastercontroller.updateProject)
 Routes.put("/updateDeveloper",mastercontroller.updateDeveloper)
 Routes.put("/updateDepartment",mastercontroller.updateDepartment)
 Routes.get("/updateProjectUid",mastercontroller.updateProjectUid)
+Routes.get("/getProjectUnMap",mastercontroller.getProjectUnMap)
+Routes.post("/addProjectApiNew",mastercontroller.addProjectApiNew)
+Routes.put("/updateProjectApiNew",mastercontroller.updateProjectApiNew)
 module.exports = Routes
 

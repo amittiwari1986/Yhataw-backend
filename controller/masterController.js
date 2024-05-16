@@ -43,6 +43,9 @@ const roleOperations = require("../services/roleService");
 const jwt = require("jsonwebtoken");
 const db  = require('../db/connect');
 
+const projectApiOperations = require("../services/projectApiService");
+const ProjectApi = require("../dto/projectapito");
+
 
 //User countru
 const getCountry = (req, res) => {
@@ -960,6 +963,64 @@ const getProject = (req, res) => {
               promise
               .then((data)=>{
                   console.log(data)
+                  const {others} = data
+                  if(data.length > 0){
+                   res.status(200).json({
+                    data: data,
+                    success: 1
+                    }) 
+                }else{
+                    res.status(200).json({
+                    data: [],
+                    message: "No Data found",
+                    success: 0
+                    }) 
+                }
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            }
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
+
+const getProjectUnMap = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             let id = req.params.id
+             if(id){
+                 const promise = projectApiOperations.findProjectId(id)
+              promise
+              .then((data)=>{
+                  // console.log(data)
+                  const {others} = data
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                  })
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+             }else{
+               const query = req.query.new 
+              const promise = projectApiOperations.getAllProjectSimple(query, 'all')
+              promise
+              .then((data)=>{
+                  // console.log(data)
                   const {others} = data
                   if(data.length > 0){
                    res.status(200).json({
@@ -2148,4 +2209,87 @@ const updateProjectUid= async (req, res) => {
 
 };
 
-module.exports = { updateProjectUid,updateDepartment,updateDeveloper,updateProject,getTeamDropDownProject,getMultipleTeamWiseDropDownProject,getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
+const addProjectApiNew = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+    var checkdata = await projectOperations.getProjectByName(req.body.project_name);
+  if(checkdata > 0){
+   return res.status(400).send({ auth: false, message: 'This project name all ready exist.', success: 0});
+  }
+  var randomNo = req.body.project_code;
+  if(setdata){
+    const project = new Project(
+      '64ada7528dc0397c823b3269',
+      req.body.project_name,
+      'HC_' + randomNo
+    );
+    const promise = projectOperations.addProject(project);
+    promise
+      .then((data) => {
+        res.status(201).json({
+          message: "Save Successfully",
+          success: 1,
+          data: data,
+        });
+      })
+      .catch((err) => {
+        // res.status(500).json(err.message);
+        // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        // var keys = Object.keys(err.keyPattern);
+        // var duplicate = keys[0];
+        if(err.keyPattern){
+          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+        }else{
+          res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        }
+      });
+    }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
+
+const updateProjectApiNew = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  //   var checkdata = await projectApiOperations.getProjectByName(req.body.projectId);
+  // if(checkdata > 0){
+  //  return res.status(400).send({ auth: false, message: 'This project name all ready exist.', success: 0});
+  // }
+  if(setdata){
+    let data;
+    let id = req.body._id;
+      try {
+        let project = await projectApiOperations.getProjectById(id);
+        if (!project) {
+          return res.status(400).json({ success: 0, message: "Project name not found" });
+        }
+        if(req.body.project_id != '' || req.body.project_id != undefined){
+          project.project_uid = req.body.project_id;
+        }
+        await projectApiOperations.updateProject(project._id,project);
+        return res.status(200).json({ success: 1, message: "Project name Mapped Successfully" });
+      } catch (error) {
+        res.status(404);
+        res.json({ success: 0, message: `an error occured: ${error}` });
+      }
+    }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
+module.exports = { updateProjectApiNew,addProjectApiNew,getProjectUnMap,updateProjectUid,updateDepartment,updateDeveloper,updateProject,getTeamDropDownProject,getMultipleTeamWiseDropDownProject,getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }

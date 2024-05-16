@@ -749,7 +749,7 @@ const importHousingLead = async (req, res) => {
     Date.prototype.toUnixTime = function() { return this.getTime()/1000|0 };
     Date.time = function() { return new Date().toUnixTime(); }
 
-    var startTime = '1715040000';
+    var startTime = '1715711400';
     var endTime = Date.time();
     var currentTime = Date.time();
     //var currentTimeStamp = date('h:i:s', $currentTime);
