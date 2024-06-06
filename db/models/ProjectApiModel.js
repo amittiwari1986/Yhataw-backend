@@ -5,6 +5,7 @@ const connection  = require('../connect');
         developerId:{type:Schema.Types.String,required:true,ref: "developers"},
      project_name:{type:Schema.Types.String,unique:true,required:true},
      project_uid:{type:Schema.Types.String,unique:true,required:true},
+     status:{type:Schema.Types.String,required:false},
      createdAt:{type:Schema.Types.Date,default:new Date().toString()}
  },{timestamps:true}); 
  

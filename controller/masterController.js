@@ -2282,6 +2282,7 @@ const updateProjectApiNew = async (req, res) => {
         if(req.body.project_id != '' || req.body.project_id != undefined){
           project.project_uid = req.body.project_id;
         }
+        project.status = "3";
         await projectApiOperations.updateProject(project._id,project);
         return res.status(200).json({ success: 1, message: "Project name Mapped Successfully" });
       } catch (error) {
