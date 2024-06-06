@@ -163,7 +163,7 @@ const insertLead = async (req, res) => {
                                           "form_name": formDetails.form_name,
                                           "formId": element.formId,
                                           "developerId": formDetails.developerId,
-                                          "projectId": formDetails.projectId,
+                                          "projectId": 01.projectId,
                                           "projecttypeId": formDetails.projecttypeId,
                                           "leadName": lead_name,
                                           "leadEmail": email,
@@ -787,7 +787,25 @@ console.log(Date.timew);
 
 };
 
+const moveLeadFromUnmap = async (req, res) => {
+//     var d = new Date();
+// d.setDate(d.getDate() - 1);
+// d.setHours(0,0,0,0);
+
+     Date.prototype.toUnixTime = function() { return this.getTime()/1000|0 };
+    Date.time = function() { return new Date().toUnixTime(); }
+
+     const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    Date.timew = function() { return new yesterday.toUnixTime(); }
+
+console.log(Date.timew);
+    return res.status(200).send({ auth: true, message: 'process start to move data in lead', success: 0});
+
+};
 
 
 
-	module.exports = { importHousingLead,import99AcersLead,uploadImage,insertLead,insertMultipleLead }
+
+	module.exports = { moveLeadFromUnmap,importHousingLead,import99AcersLead,uploadImage,insertLead,insertMultipleLead }

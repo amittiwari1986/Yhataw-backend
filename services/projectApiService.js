@@ -45,6 +45,7 @@ const projectApiSerives = {
             { "$project": { "_id": { "$toString": "$_id" },
                  "projectId": { "$toString": "$_id" },
                 "project_name": { "$toString": "$project_name" },
+                "status": {"$toString": "$status"},
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
                 { $sort : { updatedAt : -1} },
@@ -58,6 +59,7 @@ const projectApiSerives = {
             { "$project": { "_id": { "$toString": "$_id" },
                  "projectId": { "$toString": "$_id" },
                 "project_name": { "$toString": "$project_name" },
+                "status": {"$toString": "$status"},
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
             {
@@ -81,6 +83,7 @@ const projectApiSerives = {
                  "projectId": { "$toString": "$_id" },
                 "project_name": { "$toString": "$project_name" },
                 "project_uid": { "$toString": "$project_uid" },
+                "status": {"$toString": "$status"},
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
                 ])
@@ -92,6 +95,7 @@ const projectApiSerives = {
                  "projectId": { "$toString": "$_id" },
                 "project_name": { "$toString": "$project_name" },
                 "project_uid": { "$toString": "$project_uid" },
+                "status": {"$toString": "$status"},
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
             {

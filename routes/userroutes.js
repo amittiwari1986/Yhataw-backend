@@ -79,6 +79,7 @@ Routes.get("/insertLead",uploadController.insertLead)
 Routes.get("/insertMultipleLead",uploadController.insertMultipleLead)
 Routes.get("/import99AcersLead",uploadController.import99AcersLead)
 Routes.get("/importHousingLead",uploadController.importHousingLead)
+Routes.get("/moveLeadFromUnmap/:id",uploadController.moveLeadFromUnmap)
 // Routes.post("/upload-image",uploadController.uploadImage)
 
 Routes.post('/upload-image',upload.single('file'), function (req, res, next) {     
