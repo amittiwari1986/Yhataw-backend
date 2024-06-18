@@ -85,6 +85,14 @@ const leadServices = {
                 "create_date": { "$toString": "$date" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
+            {$lookup: 
+                    {from: "lead_mapping", 
+                    localField: "leadId", 
+                    foreignField: "lead_id",
+                    as: "mapping"}
+                },
+                {"$unwind":"$mapping"},
+                {"$match":{"mapping.user_id": {$in: query.user_id}}},
                 { $sort : { updatedAt : -1} },
                   { $facet : { metadata: [ { $count: "total" }, { $addFields: { page: query.page } } ],
                             data: [ { $skip: query.skip }, { $limit: query.limit } ]

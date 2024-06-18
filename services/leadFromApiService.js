@@ -56,6 +56,10 @@ const leadFromApiServices = {
         const promise = leadFromApiModel.find({"projectId":projectId});
          return promise
     },
+    async getAllLeadUnMap(query){
+        const promise = query ? await leadFromApiModel.find().sort({_id:-1}).limit(500): await leadFromApiModel.find()
+        return promise
+    },
     
     
 }

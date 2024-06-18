@@ -6,6 +6,7 @@ const multerS3 = require("multer-s3");
 const uploadfile = multer({ dest: 'uploads/' })
 const csvtojson = require('csvtojson');
 const csv = require('@fast-csv/parse');
+const moment = require('moment');
 
 const User = require("../dto/userdto");
 const userOperations = require("../services/userService");
@@ -29,6 +30,11 @@ const uploadMultipleLeadOperations = require("../services/uploadMultipleLeadServ
 const UploadMultipleLead = require("../dto/uploadmultipleleadto");
 const projectOperations = require("../services/projectService");
 const Project = require("../dto/projectto");
+
+const unmergeLeadOperations = require("../services/unmergeLeadService");
+const UnmergeLead = require("../dto/unmergeLeadto");
+const projectApiOperations = require("../services/projectApiService");
+const ProjectApi = require("../dto/projectapito");
 
 aws.config.update({
 	secretAccessKey: 'pSD+OEcgsCzItA1bVzIuDICxg/bM+U1hps19638Q',
@@ -163,7 +169,7 @@ const insertLead = async (req, res) => {
                                           "form_name": formDetails.form_name,
                                           "formId": element.formId,
                                           "developerId": formDetails.developerId,
-                                          "projectId": 01.projectId,
+                                          "projectId": formDetails.projectId,
                                           "projecttypeId": formDetails.projecttypeId,
                                           "leadName": lead_name,
                                           "leadEmail": email,
@@ -749,10 +755,9 @@ const importHousingLead = async (req, res) => {
     Date.prototype.toUnixTime = function() { return this.getTime()/1000|0 };
     Date.time = function() { return new Date().toUnixTime(); }
 
-    var startTime = '1715711400';
-    var endTime = Date.time();
+    var startTime = moment().subtract(1, 'days').startOf('day').unix();
+    var endTime = moment().endOf('day').unix();
     var currentTime = Date.time();
-    //var currentTimeStamp = date('h:i:s', $currentTime);
     var secretKey = 'e50a97895066c91ba4745271828cd9e9';
     var id = '5349396';
     const hash = crypto.createHmac('sha256', secretKey).update(JSON.stringify(currentTime)).digest('hex');
@@ -765,9 +770,56 @@ const importHousingLead = async (req, res) => {
     };
   
     const result = await axios(options);
-    res.status(200).json({message: "get data", success: 1, data: result.data});
+    const obj = result.data.data;
+    var dataArrayPushStage = [];
+    obj.forEach(async function(elementD) {
+        var projectId = "HC_" + elementD.project_id;
+        var property_field = elementD.property_field;
+        let getProjectData = await projectOperations.findProjectUid(projectId);
+        if(getProjectData.length !== 0){
+            var projectId = getProjectData[0]._id.toString();
+        }else{
+            var oneRow1 = {};
+            let getProjectApi = await projectApiOperations.findProjectUid(projectId);
+            if(getProjectApi.length === 0){
+                var oneRow1 = {
+                    "project_name": elementD.project_name,
+                    "project_uid": projectId,
+                    "developerId": "894395943590hkjhgjnfdkjg",
+                    "status": "0"
+                }
+                await projectApiOperations.addManyProject(oneRow1);
+            }
+            
+        }
+          var oneRow2 = {
+                "lead_date": elementD.lead_date,
+                "apartment_names": elementD.apartment_names,
+                "country_code": elementD.country_code,
+                "service_type": elementD.service_type,
+                "category_type": elementD.category_type,
+                "locality_name": elementD.locality_name,
+                "city_name": elementD.city_name,
+                "lead_name": elementD.lead_name,
+                "lead_email": elementD.lead_email,
+                "lead_phone": elementD.lead_phone,
+                "max_area": elementD.max_area,
+                "min_area": elementD.min_area,
+                "min_price": elementD.min_price,
+                "max_price": elementD.min_price,
+                "project_id": projectId,
+                "project_name": elementD.project_name,
+                "property_field": property_field.toString()
+          }
+          
+          // dataArrayPushStage.push(oneRow4); 
+          await unmergeLeadOperations.addManyUnmergeLeadMapping(oneRow2);
+      }); 
+    // await unmergeLeadOperations.addManyUnmergeLeadMapping(dataArrayPushStage);
+    res.status(200).json({message: "get data", success: 1, data: dataArrayPushStage});
 
 };
+
 
 const import99AcersLead = async (req, res) => {
 //     var d = new Date();
@@ -788,22 +840,223 @@ console.log(Date.timew);
 };
 
 const moveLeadFromUnmap = async (req, res) => {
-//     var d = new Date();
-// d.setDate(d.getDate() - 1);
-// d.setHours(0,0,0,0);
+var query = "new";
+const promise = unmergeLeadOperations.getAllUnmergeLead(query);
+      promise
+      .then((dataStart)=>{
+            var objec = {};
+            var dynamic = [];
+            var dataArray = [];
+            dataStart.forEach(async function(data) {
+                // console.log(data);
+                 var Things = Object.keys(data._doc);
+                     for (var i = 0; i < Things.length; i++) {
+                         Things[i]
+                         var notdat = Object.keys(data)[0];
+                        if(Things[i] == Object.values(data)[0]){
+                            // console.log(Object.keys(eleData)[0] != "lead_name");
+                            if((notdat == "lead_name") || (notdat == "lead_email") || (notdat == "lead_phone") || (notdat == "lead_source")){
+                                
+                            }else{
+                                objec[Object.keys(data)[0]] = data[Things[i]];
+                            }
+                        }
+                     }
+            dynamic.push(objec);
 
-     Date.prototype.toUnixTime = function() { return this.getTime()/1000|0 };
-    Date.time = function() { return new Date().toUnixTime(); }
+            var projectid = await projectOperations.findProjectUid(data.project_id);
+            if(projectid.length == 0){
+                return res.status(400).send({ auth: false, message: 'Please add Project then Form', success: 0});
+            }
+            var formDetails = await formOperations.findFormByProjectId(projectid[0]._id.toString());
+            var projectDetails = await projectDetailOperations.findOneProjectId(formDetails[0].projectId);
+             // console.log(projectDetails);
+            var lead_name = data.lead_name;
+            var source = "Housing";
+            var lead_phone = data.lead_phone;
+            var date = data.date;
 
-     const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    Date.timew = function() { return new yesterday.toUnixTime(); }
+                if(data.lead_email != '' && data.lead_email != undefined){
+                    var email = data.lead_email;
+                    var emailStatus = 1;
+                }else{
+                    var email = "";
+                    var emailStatus = 0;
+                }
+                if(data.lead_name != '' && data.lead_name != undefined){
+                    var lead_name = data.lead_name;
+                    var nameStatus = 1;
+                }else{
+                    var lead_name = "";
+                    var nameStatus = 0;
+                }
+                if(data.lead_phone != '' && data.lead_phone != undefined){
+                    var lead_phone = data.lead_phone;
+                    var phoneStatus = 1;
+                }else{
+                    var email = "";
+                    var phoneStatus = 0;
+                }
 
-console.log(Date.timew);
-    return res.status(200).send({ auth: true, message: 'process start to move data in lead', success: 0});
+            if(nameStatus == 1 && phoneStatus == 1 && emailStatus == 1){
+                dynamic = JSON.stringify(dynamic);
+                 
+            var random = Math.floor(1000 + Math.random() * 9000);
+                        var uid = "LD" + random;
+                        var stage = "new";
+                        statusData = 1;
+            var oneRow = {                
+                        // const lead = new Lead(
+                          "form_name": formDetails[0].form_name,
+                          "formId": formDetails[0]._id.toString(),
+                          "developerId": formDetails[0].developerId,
+                          "projectId": formDetails[0].projectId,
+                          "projecttypeId": formDetails[0].projecttypeId,
+                          "leadName": lead_name,
+                          "leadEmail": email,
+                          "leadPhone": lead_phone,
+                          "dynamicFields": dynamic,
+                          "status": statusData,
+                          "AssignTo": projectDetails.AssignTo,
+                          "AssignToUser": projectDetails.AssignToUser,
+                          "source": source,
+                          "uid": uid,
+                          "stage": stage,
+                          "date": "",
+                          "lead_type": "housing_api",
+                          "upload_file_name": "",
+                          "uploadLeadId": ""
+                        }
+                 dataArray.push(oneRow);
+             }else{
 
-};
+                var oneRow1 = {                       
+                              "form_name": formDetails[0].form_name,
+                              "formId": formDetails[0]._id.toString(),
+                              "developerId": formDetails[0].developerId,
+                              "projectId": formDetails[0].projectId,
+                              "projecttypeId": formDetails[0].projecttypeId,
+                              "leadName": lead_name,
+                              "leadEmail": email,
+                              "leadPhone": lead_phone,
+                              "dynamicFields": "",
+                              "status": "1",
+                              "AssignTo": projectDetails.AssignTo,
+                              "AssignToUser": projectDetails.AssignToUser,
+                              "source": source,
+                              "uid": "",
+                              "stage": "",
+                              "date": date,
+                              "type": "housing_api",
+                              "upload_file_name": "",
+                              "uploadLeadId": ""
+                            }
+                 dataArrayError.push(oneRow1);
+             }
+            const addLead = await leadOperations.addManyLead(dataArray);
+            const rejected = await leadRejectedOperations.addManyLead(dataArray);
+            var insertLeadId = addLead[0]._id.toString();
+                var obj = projectDetails.AssignToUser;
+                var obj = obj.replace(/["']/g, "");
+                obj = obj.split(',');
+                var dataArrayPush = [];
+                var dataArrayPushLog = [];
+                var dataArrayPushStage = [];
+            // getLead.forEach(ele => {
+                 var oneRow3 = {
+                          "leadId": insertLeadId,
+                          "userId": "6540ee334deef597cddbd055",
+                          "old_value": "create new",
+                          "new_value": "create new"
+                      }
+                      dataArrayPushLog.push(oneRow3);
+                obj.forEach(element => {
+                    // var userData = await userOperations.getUserById(element);
+                    // console.log(userData);
+                     var oneRow2 = {
+                          "lead_id": insertLeadId,
+                          "user_id": element,
+                          "type": "user"
+                      }
+                      dataArrayPush.push(oneRow2);
+                      var oneRow4 = {
+                          "lead_id": insertLeadId,
+                          "user_id": element,
+                          "type": "user",
+                          "user_name": "",
+                          "stage": "new",
+                          "status": "1"
+                      }
+                      // console.log(oneRow4);
+                      dataArrayPushStage.push(oneRow4); 
+                  }); 
+            // });
+            leadMappingOperations.addManyLeadMapping(dataArrayPush);
+            leadUserStageOperations.addManyLeadUserStage(dataArrayPushStage);
+            leadLogOperations.addManyLeadLog(dataArrayPushLog);
+             
+            });
+            return res.status(200).send({ auth: true, message: 'inseted successful', success: 1});
+        })
+
+// .on("end", async function () {
+//             // console.log(dataArray);
+//             const addLead = await leadOperations.addManyLead(dataArray);
+//             const rejected = await leadRejectedOperations.addManyLead(dataArrayError);
+
+//             let getLead = await leadOperations.getLeadByUploadLeadId(element._id.toString());
+//                 var obj = projectDetails.AssignToUser;
+//                 var obj = obj.replace(/["']/g, "");
+//                 obj = obj.split(',');
+//                 var dataArrayPush = [];
+//                 var dataArrayPushLog = [];
+//                 var dataArrayPushStage = [];
+//             getLead.forEach(ele => {
+//                  var oneRow3 = {
+//                           "leadId": ele._id.toString(),
+//                           "userId": "6540ee334deef597cddbd055",
+//                           "old_value": "create new",
+//                           "new_value": "create new"
+//                       }
+//                       dataArrayPushLog.push(oneRow3);
+//                 obj.forEach(element => {
+//                     // var userData = await userOperations.getUserById(element);
+//                     // console.log(userData);
+//                      var oneRow2 = {
+//                           "lead_id": ele._id.toString(),
+//                           "user_id": element,
+//                           "type": "user"
+//                       }
+//                       dataArrayPush.push(oneRow2);
+//                       var oneRow4 = {
+//                           "lead_id": ele._id.toString(),
+//                           "user_id": element,
+//                           "type": "user",
+//                           "user_name": "",
+//                           "stage": "new",
+//                           "status": "1"
+//                       }
+//                       // console.log(oneRow4);
+//                       dataArrayPushStage.push(oneRow4); 
+//                   }); 
+//             });
+//             leadMappingOperations.addManyLeadMapping(dataArrayPush);
+//             leadUserStageOperations.addManyLeadUserStage(dataArrayPushStage);
+//             leadLogOperations.addManyLeadLog(dataArrayPushLog);
+//             let lead = await uploadLeadOperations.getUploadLeadById(element._id.toString());
+//             lead.fail_count = dataArrayError.length;
+//             lead.success_count = dataArray.length;
+//             lead.status = "3";
+
+//             await uploadLeadOperations.updateUploadLead(lead._id,lead);
+
+//             return res.status(200).send({ auth: true,data: dataArray, message: 'csv parse process finished', success: 1});
+                        
+
+// });
+    };
+
+
 
 
 
