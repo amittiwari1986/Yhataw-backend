@@ -776,22 +776,31 @@ const importHousingLead = async (req, res) => {
         var projectId = "HC_" + elementD.project_id;
         var property_field = elementD.property_field;
         let getProjectData = await projectOperations.findProjectUid(projectId);
+        $status = 0;
         if(getProjectData.length !== 0){
-            var projectId = getProjectData[0]._id.toString();
-        }else{
-            var oneRow1 = {};
-            let getProjectApi = await projectApiOperations.findProjectUid(projectId);
-            if(getProjectApi.length === 0){
-                var oneRow1 = {
+            $status = 1;
+            var formDetails = await formOperations.findFormByProjectId(getProjectData[0]._id.toString());
+            if(formDetails.length !== 0){
+                $status = 2;
+            }
+            //var projectId = getProjectData[0]._id.toString();
+        // }else{
+           
+            // let getProjectApi = await projectApiOperations.findProjectUid(projectId);
+            // if(getProjectApi.length === 0){
+               
+            // }
+            
+        }
+         var oneRow1 = {};
+            var oneRow2 = {};
+         var oneRow1 = {
                     "project_name": elementD.project_name,
                     "project_uid": projectId,
                     "developerId": "894395943590hkjhgjnfdkjg",
-                    "status": "0"
+                    "status": $status
                 }
                 await projectApiOperations.addManyProject(oneRow1);
-            }
-            
-        }
           var oneRow2 = {
                 "lead_date": elementD.lead_date,
                 "apartment_names": elementD.apartment_names,
@@ -844,10 +853,12 @@ var query = "new";
 const promise = unmergeLeadOperations.getAllUnmergeLead(query);
       promise
       .then((dataStart)=>{
-            var objec = {};
+            
+            dataStart.forEach(async function(data) {
+                var objec = {};
             var dynamic = [];
             var dataArray = [];
-            dataStart.forEach(async function(data) {
+            var dataArrayError = [];
                 // console.log(data);
                  var Things = Object.keys(data._doc);
                      for (var i = 0; i < Things.length; i++) {
@@ -858,7 +869,7 @@ const promise = unmergeLeadOperations.getAllUnmergeLead(query);
                             if((notdat == "lead_name") || (notdat == "lead_email") || (notdat == "lead_phone") || (notdat == "lead_source")){
                                 
                             }else{
-                                objec[Object.keys(data)[0]] = data[Things[i]];
+                                //objec[Object.keys(data)[0]] = data[Things[i]];
                             }
                         }
                      }
@@ -954,8 +965,10 @@ const promise = unmergeLeadOperations.getAllUnmergeLead(query);
                  dataArrayError.push(oneRow1);
              }
             const addLead = await leadOperations.addManyLead(dataArray);
-            const rejected = await leadRejectedOperations.addManyLead(dataArray);
+            console.log(addLead);
+            const rejected = await leadRejectedOperations.addManyLead(dataArrayError);
             var insertLeadId = addLead[0]._id.toString();
+            console.log(insertLeadId);
                 var obj = projectDetails.AssignToUser;
                 var obj = obj.replace(/["']/g, "");
                 obj = obj.split(',');
