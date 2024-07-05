@@ -35,6 +35,7 @@ const unmergeLeadOperations = require("../services/unmergeLeadService");
 const UnmergeLead = require("../dto/unmergeLeadto");
 const projectApiOperations = require("../services/projectApiService");
 const ProjectApi = require("../dto/projectapito");
+const CronJob  = require("node-cron");
 
 aws.config.update({
 	secretAccessKey: 'pSD+OEcgsCzItA1bVzIuDICxg/bM+U1hps19638Q',
@@ -745,6 +746,17 @@ const insertMultipleLead = async (req, res) => {
 
 };
 
+CronJob.schedule('0 0 */1 * * *', function() {
+console.log("start housing api for insert");
+    importHousingLead();
+    console.log("stop housing api for insert");
+});
+
+CronJob.schedule('0 5 */1 * * *', function() {
+console.log("start housing api for insert in main table");
+    // moveLeadFromUnmap();
+    console.log("stop housing api for insert in main table");
+});
 const importHousingLead = async (req, res) => {
     var moment = require('moment');
     var crypto = require('crypto');
@@ -755,8 +767,14 @@ const importHousingLead = async (req, res) => {
     Date.prototype.toUnixTime = function() { return this.getTime()/1000|0 };
     Date.time = function() { return new Date().toUnixTime(); }
 
-    var startTime = moment().subtract(1, 'days').startOf('day').unix();
-    var endTime = moment().endOf('day').unix();
+    // var startTime = moment().subtract(1, 'hours').startOf('day').unix();
+    // var endTime = moment().endOf('day').unix();
+    var startTime = moment().subtract(1, 'hours').unix();
+    var endTime = moment().unix();
+    // console.log("start date");
+    // console.log(startTime);
+    // console.log("end date");
+    // console.log(endTime);
     var currentTime = Date.time();
     var secretKey = 'e50a97895066c91ba4745271828cd9e9';
     var id = '5349396';
@@ -825,7 +843,7 @@ const importHousingLead = async (req, res) => {
           await unmergeLeadOperations.addManyUnmergeLeadMapping(oneRow2);
       }); 
     // await unmergeLeadOperations.addManyUnmergeLeadMapping(dataArrayPushStage);
-    res.status(200).json({message: "get data", success: 1, data: dataArrayPushStage});
+    // res.status(200).json({message: "get data", success: 1, data: dataArrayPushStage});
 
 };
 
