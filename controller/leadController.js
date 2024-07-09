@@ -895,6 +895,12 @@ const getLeadForm = (req, res) => {
                 let limit = req.query.limit
                 var skip = limit * page;
 
+                let id = "654247ddf398be5f9449fe67,65422d5ff398be5f9449f736";
+                var userId1 = id;
+                        var userId1 = userId1.replace(/["']/g, "");
+                        userId1 = userId1.split(',');
+                        console.log(userId1);
+
                 var dt = new Date();
                 year  = dt.getFullYear();
                 month = (dt.getMonth() + 1).toString().padStart(2, "0");
