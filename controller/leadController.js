@@ -1391,11 +1391,12 @@ const getLeadReminder = (req, res) => {
              let id = req.params.id
              var checkUserData = userOperations.getUserById(setdata);
 
-                    if(checkUserData.role == "65277273c5d66b4d6ccb0fe7"){
-                      var getUserId = setdata;
-                    }else{
-                      var getUserId = 'NA';
-                    }
+                    // if(checkUserData.role == "65277273c5d66b4d6ccb0fe7"){
+                    //   var getUserId = setdata;
+                    // }else{
+                    //   var getUserId = 'NA';
+                    // }
+                    var getUserId = setdata;
                     
              if(id){
                  const promise = leadReminderOperations.findLeadReminderLeadId(id,getUserId)
