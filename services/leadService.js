@@ -83,6 +83,7 @@ const leadServices = {
                 "dynamicFields": { "$toString": "$dynamicFields" },
                 "lead_type": { "$toString": "$lead_type" },
                 "create_date": { "$toString": "$date" },
+                "createdAt": { "$toString": "$createdAt" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
             {$lookup: 
@@ -122,6 +123,7 @@ const leadServices = {
                 "dynamicFields": { "$toString": "$dynamicFields" },
                 "lead_type": { "$toString": "$lead_type" },
                 "create_date": { "$toString": "$date" },
+                "createdAt": { "$toString": "$createdAt" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
                 { $sort : { updatedAt : -1} },
@@ -163,6 +165,7 @@ const leadServices = {
                 "dynamicFields": { "$toString": "$dynamicFields" },
                 "lead_type": { "$toString": "$lead_type" },
                 "create_date": { "$toString": "$date" },
+                "createdAt": { "$toString": "$createdAt" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
             {$lookup: 
@@ -203,6 +206,7 @@ const leadServices = {
                 "dynamicFields": { "$toString": "$dynamicFields" },
                 "lead_type": { "$toString": "$lead_type" },
                 "create_date": { "$toString": "$date" },
+                "createdAt": { "$toString": "$createdAt" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
             {$lookup: 
@@ -252,6 +256,7 @@ const leadServices = {
                 "dynamicFields": { "$toString": "$dynamicFields" },
                 "lead_type": { "$toString": "$lead_type" },
                 "create_date": { "$toString": "$date" },
+                "createdAt": { "$toString": "$createdAt" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
             {$lookup: 
@@ -280,6 +285,7 @@ const leadServices = {
                 "uid": { "$toString": "$uid" },
                 "stage": { "$toString": "$stage" },
                 "create_date": { "$toString": "$date" },
+                "createdAt": { "$toString": "$createdAt" },
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
             {$lookup: 
