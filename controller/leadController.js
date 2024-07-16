@@ -1347,7 +1347,7 @@ const updateLeadReminder = async (req, res) => {
   });
   if(setdata){
     let data;
-    let id = req.body.id;
+    let id = req.body.leadId;
       try {
         let leadreminder = await leadReminderOperations.getLeadReminderById(id);
         console.log(leadreminder);
@@ -1356,15 +1356,9 @@ const updateLeadReminder = async (req, res) => {
           return res.status(200).json({ success: 0, message: "Lead Reminder Details not found" });
         }
 
-        // leadreminder.leadId = req.body.leadId;
-        // leadreminder.userId = req.body.userId;
-        // leadreminder.title = req.body.title;
-        // leadreminder.notes = req.body.notes;
-        // leadreminder.date = req.body.date;
-        // leadreminder.time = req.body.time;
         leadreminder.status = req.body.status;
 
-        await leadReminderOperations.updateReminderLead(leadreminder._id,leadreminder);
+        await leadReminderOperations.updateLeadReminder(leadreminder._id,leadreminder);
         return res.status(200).json({ success: 1, message: "Lead Reminder Updated Successfully" });
       } catch (error) {
         return res.status(400).json({ success: 0, message: "Details not found" });

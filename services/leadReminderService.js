@@ -32,7 +32,7 @@ const leadReminderServices = {
         return promise
     },
     async getAllLeadReminder(query){
-        const promise = query ? await leadReminderModel.find().sort({_id:-1}).limit(5): await leadReminderModel.find()
+        const promise = query ? await leadReminderModel.find({"status": "1"}).sort({_id:-1}).limit(100): await leadReminderModel.find({"status": "1"})
         return promise
     },
 }
