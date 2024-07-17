@@ -1351,7 +1351,7 @@ const updateLeadReminder = async (req, res) => {
   });
   if(setdata){
     let data;
-    let id = req.body.leadId;
+    let id = req.body.id;
       try {
         let leadreminder = await leadReminderOperations.getLeadReminderById(id);
         console.log(leadreminder);
