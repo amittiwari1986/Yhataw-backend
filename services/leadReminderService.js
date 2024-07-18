@@ -19,10 +19,10 @@ const leadReminderServices = {
     async findLeadReminderLeadId(leadId,userId){
         console.log(userId);
         if(userId == 'NA'){
-            const promise = await leadReminderModel.find({leadId}).sort({createdAt:-1})
+            const promise = await leadReminderModel.find({"leadId": leadId, "status": "1"}).sort({createdAt:-1})
             return promise 
         }else{
-            const promise = await leadReminderModel.find({"leadId": leadId, "userId": userId}).sort({createdAt:-1})
+            const promise = await leadReminderModel.find({"leadId": leadId, "userId": userId, "status": "1"}).sort({createdAt:-1})
             return promise 
         }
         
