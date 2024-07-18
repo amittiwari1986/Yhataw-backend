@@ -746,17 +746,17 @@ const insertMultipleLead = async (req, res) => {
 
 };
 
-CronJob.schedule('0 0 */1 * * *', function() {
-console.log("start housing api for insert");
-    importHousingLead();
-    console.log("stop housing api for insert");
-});
+// CronJob.schedule('0 0 */1 * * *', function() {
+// console.log("start housing api for insert");
+//     importHousingLead();
+//     console.log("stop housing api for insert");
+// });
 
-CronJob.schedule('0 5 */1 * * *', function() {
-console.log("start housing api for insert in main table");
-    // moveLeadFromUnmap();
-    console.log("stop housing api for insert in main table");
-});
+// CronJob.schedule('0 5 */1 * * *', function() {
+// console.log("start housing api for insert in main table");
+//     // moveLeadFromUnmap();
+//     console.log("stop housing api for insert in main table");
+// });
 const importHousingLead = async (req, res) => {
     var moment = require('moment');
     var crypto = require('crypto');
@@ -767,10 +767,10 @@ const importHousingLead = async (req, res) => {
     Date.prototype.toUnixTime = function() { return this.getTime()/1000|0 };
     Date.time = function() { return new Date().toUnixTime(); }
 
-    // var startTime = moment().subtract(1, 'hours').startOf('day').unix();
-    // var endTime = moment().endOf('day').unix();
-    var startTime = moment().subtract(1, 'hours').unix();
-    var endTime = moment().unix();
+    var startTime = moment().subtract(1, 'days').startOf('day').unix();
+    var endTime = moment().endOf('day').unix();
+    // var startTime = moment().subtract(1, 'hours').unix();
+    // var endTime = moment().unix();
     // console.log("start date");
     // console.log(startTime);
     // console.log("end date");
@@ -789,8 +789,11 @@ const importHousingLead = async (req, res) => {
   
     const result = await axios(options);
     const obj = result.data.data;
+    console.log(obj);
     var dataArrayPushStage = [];
     obj.forEach(async function(elementD) {
+        var checkProjectId = elementD.project_id;
+        if(checkProjectId){
         var projectId = "HC_" + elementD.project_id;
         var property_field = elementD.property_field;
         let getProjectData = await projectOperations.findProjectUid(projectId);
@@ -841,6 +844,7 @@ const importHousingLead = async (req, res) => {
           
           // dataArrayPushStage.push(oneRow4); 
           await unmergeLeadOperations.addManyUnmergeLeadMapping(oneRow2);
+      }
       }); 
     // await unmergeLeadOperations.addManyUnmergeLeadMapping(dataArrayPushStage);
     // res.status(200).json({message: "get data", success: 1, data: dataArrayPushStage});
