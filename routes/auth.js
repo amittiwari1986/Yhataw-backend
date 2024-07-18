@@ -45,7 +45,7 @@ Routes.post("/createSalary",userAuth.createSalary)
 Routes.get("/getSalary/:userId",userAuth.getSalary)
 Routes.get("/getSalary/:userId/:id",userAuth.getSalary)
 
-Routes.get("/dashboardAllLead",userAuth.dashboard)
+Routes.post("/dashboardAllLead",userAuth.dashboard)
 Routes.get("/dashboardMylead",userAuth.dashboardMylead)
 Routes.get("/dashboardProject",userAuth.dashboardProject)
 Routes.get("/dashboardAttendance",userAuth.dashboardAttendance)
