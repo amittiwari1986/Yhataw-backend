@@ -2632,12 +2632,23 @@ const testDT = async (req, res) => {
 
 var start_date = ""; 
 var end_date = "" ;
-var team_id = 'all';
+if(req.body.team_id){
+  var team_id = req.body.team_id;
+}else{
+  var team_id = 'all';
+}
+
 var page = 0;
 var limit = 25;
 var skip = limit * page;
 var users = await userOperations.findOneUserId(setdata);
-console.log(users.userRole);
+
+
+// let id = req.body.AssignTo;
+//                 var userId1 = id;
+//                         var userId1 = userId1.replace(/["']/g, "");
+//                         userId1 = userId1.split(',');
+//                         console.log(userId1);
 
 if(users.userRole == 6){
 

@@ -4,6 +4,10 @@ const projectApiSerives = {
         const promise = await projectApiModel.create(UserObject);
         return promise
     },
+    async addManyProject(UserObject){
+        const promise = await projectApiModel.insertMany(UserObject);
+        return promise
+    },
     async updateProject(id,data){
         const promise = await projectApiModel.findByIdAndUpdate(id,data,{new:true})
         return promise
