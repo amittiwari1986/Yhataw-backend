@@ -901,8 +901,12 @@ const getLeadForm = (req, res) => {
                 var userId1 = id;
                         var userId1 = userId1.replace(/["']/g, "");
                         userId1 = userId1.split(',');
+                if(id=='undefined'){
+                  var userId1 = "";
+                }
+                
                         
-                        // console.log(userId1);
+                        console.log(userId1);
                 var dt = new Date();
                 year  = dt.getFullYear();
                 month = (dt.getMonth() + 1).toString().padStart(2, "0");
