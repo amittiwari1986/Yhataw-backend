@@ -58,14 +58,15 @@ const leadServices = {
     },
     async getAllLead(query){
         // const promise = query ? await leadModel.find().sort({_id:-1}).limit(5): await leadModel.find()
-        if(query.start_date != ''){
-
+        
+        if(query.user_id != ''){
             const promise = await leadModel.aggregate(
             [
              {
                 "$match": {"date": {"$gte": query.start_date, "$lte": query.end_date}}
              },
             { "$project": { "_id": { "$toString": "$_id" },
+                "leadId": { "$toString": "$_id" },
                 "form_name": { "$toString": "$form_name" },
                 "formId": { "$toString": "$formId" },
                 "developerId": { "$toString": "$developerId" },
@@ -87,15 +88,15 @@ const leadServices = {
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
             {$lookup: 
-                    {from: "lead_mapping", 
+                    {from: "lead_mappings", 
                     localField: "leadId", 
                     foreignField: "lead_id",
                     as: "mapping"}
                 },
                 {"$unwind":"$mapping"},
-                {"$match":{"mapping.user_id": {$in: query.user_id}}},
+                {"$match":{"mapping.user_id": {$in:query.user_id}}},
                 { $sort : { updatedAt : -1} },
-                  { $facet : { metadata: [ { $count: "total" }, { $addFields: { page: query.page } } ],
+                 { $facet : { metadata: [ { $count: "total" }, { $addFields: { page: query.page } } ],
                             data: [ { $skip: query.skip }, { $limit: query.limit } ]
     } }])
 
@@ -106,6 +107,7 @@ const leadServices = {
              const promise = await leadModel.aggregate(
             [
             { "$project": { "_id": { "$toString": "$_id" },
+                "leadId": { "$toString": "$_id" },
                 "form_name": { "$toString": "$form_name" },
                 "formId": { "$toString": "$formId" },
                 "developerId": { "$toString": "$developerId" },
@@ -169,7 +171,7 @@ const leadServices = {
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
             {$lookup: 
-                    {from: "lead_mapping", 
+                    {from: "lead_mappings", 
                     localField: "leadId", 
                     foreignField: "lead_id",
                     as: "mapping"}
@@ -260,7 +262,7 @@ const leadServices = {
                 "updatedAt": { "$toString": "$updatedAt" },
             }},
             {$lookup: 
-                    {from: "lead_mapping", 
+                    {from: "lead_mappings", 
                     localField: "leadId", 
                     foreignField: "lead_id",
                     as: "mapping"}

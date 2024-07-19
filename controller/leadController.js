@@ -730,109 +730,109 @@ const getLeadForm = (req, res) => {
                     // console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
-                    if(req.projectId != 'NA'){
-                      // console.log(req.projectId);
-                      var projectData = projectOperations.getProjectById(req.projectId);
-                      // console.log(projectData);
-                      if(projectData){
-                          dataArray['projectId'] = req.projectId;
-                          dataArray['project_name'] = projectData.project_name;
+                      if(req.projectId != 'NA'){
+                        // console.log(req.projectId);
+                        var projectData = projectOperations.getProjectById(req.projectId);
+                        // console.log(projectData);
+                        if(projectData){
+                            dataArray['projectId'] = req.projectId;
+                            dataArray['project_name'] = projectData.project_name;
+                        }else{
+                          dataArray['projectId'] = '';
+                          dataArray['project_name'] = '';
+                        }
+                       
                       }else{
                         dataArray['projectId'] = '';
                         dataArray['project_name'] = '';
                       }
-                     
-                    }else{
-                      dataArray['projectId'] = '';
-                      dataArray['project_name'] = '';
-                    }
 
-                    if(req.developerId != 'NA'){
-                      var developerData = developerOperations.getDeveloperById(req.developerId);
-                      if(developerData){
-                        dataArray['developerId'] = req.developerId;
-                        dataArray['developer_name'] = developerData.developer_name;
+                      if(req.developerId != 'NA'){
+                        var developerData = developerOperations.getDeveloperById(req.developerId);
+                        if(developerData){
+                          dataArray['developerId'] = req.developerId;
+                          dataArray['developer_name'] = developerData.developer_name;
+                        }else{
+                          dataArray['developerId'] = '';
+                          dataArray['developer_name'] = '';
+                        }
+                        
                       }else{
                         dataArray['developerId'] = '';
                         dataArray['developer_name'] = '';
                       }
-                      
-                    }else{
-                      dataArray['developerId'] = '';
-                      dataArray['developer_name'] = '';
-                    }
                     
-                     if(req.projecttypeId != 'NA'){
-                      var projectTypeData = propertyTypeOperations.getPropertyTypeById(req.projecttypeId);
-                      if(projectTypeData){
-                        dataArray['projecttypeId'] = req.projecttypeId;
-                        dataArray['projecttype_name'] = projectTypeData.name;
-                      }else{
-                        dataArray['projecttypeId'] = '';
-                        dataArray['projecttype_name'] = '';
-                      }
-                      
-                    }else{
-                      dataArray['projecttypeId'] = '';
-                      dataArray['projecttype_name'] = '';
-                    }
+                       if(req.projecttypeId != 'NA'){
+                          var projectTypeData = propertyTypeOperations.getPropertyTypeById(req.projecttypeId);
+                          if(projectTypeData){
+                            dataArray['projecttypeId'] = req.projecttypeId;
+                            dataArray['projecttype_name'] = projectTypeData.name;
+                          }else{
+                            dataArray['projecttypeId'] = '';
+                            dataArray['projecttype_name'] = '';
+                          }
+                        
+                        }else{
+                          dataArray['projecttypeId'] = '';
+                          dataArray['projecttype_name'] = '';
+                        }
 
-                    if(req.AssignTo != 'NA'){
-                      var teamId = req.AssignTo;
-                      var teamId = teamId.replace(/["']/g, "");
-                      teamId = teamId.split(',');
-                      console.log(teamId);
-                      var teamData = teamOperations.getMultipleTeam(teamId);
-                      if(teamData){
-                        dataArray['AssignTo'] = teamData;
-                      }else{
-                        dataArray['AssignTo'] = '';
-                      }
-                      
-                    }else{
-                      dataArray['AssignTo'] = '';
-                    }
+                        if(req.AssignTo != 'NA'){
+                          var teamId = req.AssignTo;
+                          var teamId = teamId.replace(/["']/g, "");
+                          teamId = teamId.split(',');
+                          console.log(teamId);
+                          var teamData = teamOperations.getMultipleTeam(teamId);
+                          if(teamData){
+                            dataArray['AssignTo'] = teamData;
+                          }else{
+                            dataArray['AssignTo'] = '';
+                          }
+                          
+                        }else{
+                          dataArray['AssignTo'] = '';
+                        }
 
-                     if(req.AssignToUser != 'NA'){
-                      if(req.stage == "Pipeline"){
-                        var projectDetailsData = await projectDetailOperations.findOneProjectId(req.projectId);
-                        var userId = projectDetailsData.AssignToUser;
-                        var userId = userId1.replace(/["']/g, "");
-                        userId = userId1.split(',');
-                      }else{
-                        var userId = req.AssignToUser;
-                        var userId = userId.replace(/["']/g, "");
-                        userId = userId.split(',');
-                      }
-                      var userData = await userOperations.getMultipleUser(userId);
-                      var qurData = {"user": userId, "leadId": req._id.toString()}
-                      var leadUserStageData = await leadUserStageOperations.getMultipleUser(qurData);
-                      var stageArray = [];
-                      leadUserStageData.forEach(element => {
-                        var userDataSet = userOperations.getUserById(element.user_id);
-                        var oneRow = {
-                                          "lead_id": element.lead_id,
-                                          "user_id": element.user_id,
-                                          "type": element.type,
-                                          "user_name": userDataSet.name,
-                                          "stage": element.stage
-                                      }
-                        // console.log(oneRow4);
-                        stageArray.push(oneRow); 
+                       if(req.AssignToUser != 'NA'){
+                            if(req.stage == "Pipeline"){
+                              var projectDetailsData = await projectDetailOperations.findOneProjectId(req.projectId);
+                              var userId = projectDetailsData.AssignToUser;
+                              var userId = userId1.replace(/["']/g, "");
+                              userId = userId1.split(',');
+                            }else{
+                              var userId = req.AssignToUser;
+                              var userId = userId.replace(/["']/g, "");
+                              userId = userId.split(',');
+                            }
+                            var userData = await userOperations.getMultipleUser(userId);
+                            var qurData = {"user": userId, "leadId": req._id.toString()}
+                            var leadUserStageData = await leadUserStageOperations.getMultipleUser(qurData);
+                            var stageArray = [];
+                            leadUserStageData.forEach(element => {
+                              var userDataSet = userOperations.getUserById(element.user_id);
+                              var oneRow = {
+                                                "lead_id": element.lead_id,
+                                                "user_id": element.user_id,
+                                                "type": element.type,
+                                                "user_name": userDataSet.name,
+                                                "stage": element.stage
+                                            }
+                              // console.log(oneRow4);
+                              stageArray.push(oneRow); 
 
-                      });
-                        dataArray['AssignToUserStage'] = stageArray;
-                      if(userData){
-                        dataArray['AssignToUser'] = userData;
+                            });
+                              dataArray['AssignToUserStage'] = stageArray;
+                            if(userData){
+                              dataArray['AssignToUser'] = userData;
+                            }else{
+                              dataArray['AssignToUser'] = '';
+                              dataArray['AssignToUserStage'] = '';
+                            }
+                        
                       }else{
                         dataArray['AssignToUser'] = '';
                         dataArray['AssignToUserStage'] = '';
                       }
-                      
-                    }else{
-                      dataArray['AssignToUser'] = '';
-                      dataArray['AssignToUserStage'] = '';
-                    }
 
                     dataArray['form_name'] = req.form_name;
                     dataArray['formId'] = req.formId;
@@ -897,12 +897,12 @@ const getLeadForm = (req, res) => {
                 let limit = req.query.limit
                 var skip = limit * page;
 
-                let id = "654247ddf398be5f9449fe67,65422d5ff398be5f9449f736";
+                let id = req.query.searchUserId;
                 var userId1 = id;
                         var userId1 = userId1.replace(/["']/g, "");
                         userId1 = userId1.split(',');
-                        console.log(userId1);
-
+                        
+                        // console.log(userId1);
                 var dt = new Date();
                 year  = dt.getFullYear();
                 month = (dt.getMonth() + 1).toString().padStart(2, "0");
@@ -915,13 +915,13 @@ const getLeadForm = (req, res) => {
                 // if(end_date == ''){
                 //     end_date = day + '/' + month + '/' + year;
                 // }
-                 query = {"start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page)};
-                 console.log(query);
+                 query = {"start_date": start_date, "end_date": end_date, "limit": Number(limit), "skip": skip, "page": Number(page), "user_id": userId1};
+                 // console.log(query);
 
               const promise = leadOperations.getAllLead(query)
               promise
               .then((data)=>{
-                  // console.log(data[0].data)
+                  console.log(data)
                   // const {others} = data
                   // if(data.length > 0){
                   //  res.status(200).json({
