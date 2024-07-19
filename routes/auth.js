@@ -50,6 +50,7 @@ Routes.get("/dashboardMylead",userAuth.dashboardMylead)
 Routes.get("/dashboardProject",userAuth.dashboardProject)
 Routes.get("/dashboardAttendance",userAuth.dashboardAttendance)
 Routes.get("/dashboardAttendance/:userId",userAuth.dashboardAttendance)
+Routes.get("/getTeamIdUserWise/:userId",userAuth.getTeamIdUserWise)
 
 
 

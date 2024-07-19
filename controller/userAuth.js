@@ -3254,10 +3254,41 @@ if(users.userRole == 6){
 
             }
   
-  
   };
 
+  const getTeamIdUserWise = async (req, res) => {
+
+              let token=req.headers.token;
+                  let setdata = "";
+                  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+            
+                    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+                      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+                      
+                      // return res.status(200).send(decoded.id.id);
+                      setdata = decoded.id.id;
+                      // console.log(decoded);
+                  });
+              const promise = await userOfficeOperations.findUserId(req.params.userId)
+                  .then((data)=>{
+                    var req = data[0];
+                    let array = [];
+                    var arr = {};
+                     arr['team_id']=req.team_id;
+                     array.push(arr);
+                     res.status(200).json({
+                    message: "Lead Id",
+                    success: 1,
+                    data: array,
+                  });
+                })
+                  .catch((err) => {
+                res.status(400).json({message: err.message, success: 0, error_msg: err.message});
+              });
+            };
+  
 
 
 
-module.exports = { dashboardAttendance,dashboardProject,dashboardMylead,saveChangePasswordByAdmin,dashboard,checkPunchIn,testDT,updateUserLoan,createSalary,getSalary,getRole,addRole,updateRole,getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
+
+module.exports = { getTeamIdUserWise,dashboardAttendance,dashboardProject,dashboardMylead,saveChangePasswordByAdmin,dashboard,checkPunchIn,testDT,updateUserLoan,createSalary,getSalary,getRole,addRole,updateRole,getUserDoc,addUserDoc,updateUserDoc,attendanceApprove,leaveApprove,addAttendanceDummy,updateOrganization,addOrganiation,saveChangePassword,deactivateUser,register, loginUser, loginWithPhone, resetUserPassword, saveResetPassword, addUserOffice, addUserBank, addUserLeave, addUserSalary, addUserLoan, punchIn, punchOut, addUserApplyLeave, updateUserBank, updateUserPersonal, updateUserOffice, updateUserLeave, updateUserSalary };
