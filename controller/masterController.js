@@ -46,6 +46,9 @@ const db  = require('../db/connect');
 const projectApiOperations = require("../services/projectApiService");
 const ProjectApi = require("../dto/projectapito");
 
+const projectUidMappingOperations = require("../services/projectUidMappingService");
+const projectUidMapping = require("../dto/projectuidmappingto");
+
 
 //User countru
 const getCountry = (req, res) => {
@@ -2293,4 +2296,106 @@ const updateProjectApiNew = async (req, res) => {
             return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
         }
 };
-module.exports = { updateProjectApiNew,addProjectApiNew,getProjectUnMap,updateProjectUid,updateDepartment,updateDeveloper,updateProject,getTeamDropDownProject,getMultipleTeamWiseDropDownProject,getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
+
+const addProjectUidMapping = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+  if(setdata){
+    const projectUidMappingData = new projectUidMapping(
+      req.body.project_id,
+      req.body.type,
+      req.body.uid,
+    );
+    const promise = projectUidMappingOperations.addProjectUidMapping(projectUidMappingData);
+    promise
+      .then((data) => {
+        res.status(201).json({
+          message: "Save Successfully",
+          success: 1,
+          data: data,
+        });
+      })
+      .catch((err) => {
+        // res.status(500).json(err.message);
+        // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        // var keys = Object.keys(err.keyPattern);
+        // var duplicate = keys[0];
+        if(err.keyPattern){
+          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+        }else{
+          res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        }
+      });
+    }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
+
+const getProjectUidMapping = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             let id = req.params.id
+             if(id){
+                 const promise = projectUidMappingOperations.findProjectUidMappingProjectId(id)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  const {others} = data
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                  })
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            }
+            //  }else{
+            //    const query = req.query.new 
+            //   const promise = projectUidMappingOperations.findProjectUidMappingProjectId(query)
+            //   promise
+            //   .then((data)=>{
+            //       console.log(data)
+            //       const {others} = data
+            //       if(data.length > 0){
+            //        res.status(200).json({
+            //         data: data,
+            //         success: 1
+            //         }) 
+            //     }else{
+            //         res.status(200).json({
+            //         data: [],
+            //         message: "No Data found",
+            //         success: 0
+            //         }) 
+            //     }
+            //   })
+            //   .catch((err)=>{
+            //       // console.log(err.message)
+            //       res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+            //   });
+            // }
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
+
+module.exports = { addProjectUidMapping,getProjectUidMapping,updateProjectApiNew,addProjectApiNew,getProjectUnMap,updateProjectUid,updateDepartment,updateDeveloper,updateProject,getTeamDropDownProject,getMultipleTeamWiseDropDownProject,getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
