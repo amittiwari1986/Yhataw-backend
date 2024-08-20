@@ -769,7 +769,7 @@ const importHousingLead = async (req, res) => {
 
     var startTime = moment().subtract(1, 'days').startOf('day').unix();
     var endTime = moment().endOf('day').unix();
-    // var startTime = moment().subtract(1, 'hours').unix();
+    // var startTime = moment().subtract(6, 'hours').unix();
     // var endTime = moment().unix();
     // console.log("start date");
     // console.log(startTime);
@@ -847,7 +847,7 @@ const importHousingLead = async (req, res) => {
       }
       }); 
     // await unmergeLeadOperations.addManyUnmergeLeadMapping(dataArrayPushStage);
-    // res.status(200).json({message: "get data", success: 1, data: dataArrayPushStage});
+    res.status(200).json({message: "get data", success: 1, data: ""});
 
 };
 
