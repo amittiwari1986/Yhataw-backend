@@ -49,6 +49,8 @@ const ProjectApi = require("../dto/projectapito");
 const projectUidMappingOperations = require("../services/projectUidMappingService");
 const projectUidMapping = require("../dto/projectuidmappingto");
 
+const bannerOperations = require("../services/bannerService");
+const Banner = require("../dto/bannerto");
 
 //User countru
 const getCountry = (req, res) => {
@@ -2398,4 +2400,83 @@ const getProjectUidMapping = (req, res) => {
         }
 };
 
-module.exports = { addProjectUidMapping,getProjectUidMapping,updateProjectApiNew,addProjectApiNew,getProjectUnMap,updateProjectUid,updateDepartment,updateDeveloper,updateProject,getTeamDropDownProject,getMultipleTeamWiseDropDownProject,getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
+const addBanner = async (req, res) => {
+  let token=req.headers.token;
+  let setdata = "";
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0 });
+
+    jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+      
+      // return res.status(200).send(decoded.id.id);
+      setdata = decoded.id.id;
+  });
+    var status = 1;
+  if(setdata){
+    const bannerData = new Banner(
+      req.body.title,
+      req.body.description,
+      req.body.image,
+      status
+    );
+    const promise = bannerOperations.addBanner(bannerData);
+    promise
+      .then((data) => {
+        res.status(201).json({
+          message: "Save Successfully",
+          success: 1,
+          data: data,
+        });
+      })
+      .catch((err) => {
+        // res.status(500).json(err.message);
+        // res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        // var keys = Object.keys(err.keyPattern);
+        // var duplicate = keys[0];
+        if(err.keyPattern){
+          res.status(500).json({message: "duplicate "+duplicate+" data", success: 0, error_msg: err.message});
+        }else{
+          res.status(500).json({message: "Internal Server Error", success: 0, error_msg: err.message});
+        }
+      });
+    }else{
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+        }
+};
+
+const getBanner = (req, res) => {
+  // let token=req.headers.token;
+  //       let setdata = "";
+  //       if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+  //         jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+  //           if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+  //           // return res.status(200).send(decoded.id.id);
+  //           setdata = decoded.id.id;
+  //       });
+  //       if(setdata){
+             // let id = req.params.id
+             // if(id){
+          var query = "new";
+                 const promise = bannerOperations.getAllBanner(query)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  const {others} = data
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                  })
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            // }
+        // }else{
+        //     return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        // }
+};
+
+module.exports = { getBanner,addBanner,addProjectUidMapping,getProjectUidMapping,updateProjectApiNew,addProjectApiNew,getProjectUnMap,updateProjectUid,updateDepartment,updateDeveloper,updateProject,getTeamDropDownProject,getMultipleTeamWiseDropDownProject,getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
