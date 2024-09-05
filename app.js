@@ -33,6 +33,11 @@ app.use("/",require("./routes/masterroute"))
 app.use("/",require("./routes/projectroute"))
 app.use("/",require("./routes/leadroute"))
 app.use("/",require("./routes/reportroute"))
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 // Creating object of key and certificate
 // for SSL
 const options = {
