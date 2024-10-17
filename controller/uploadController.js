@@ -910,7 +910,7 @@ const import99AcersLead = async (req, res) => {
           // dataArrayPushStage.push(oneRow4); 
           await unmergeLeadOperations.addManyUnmergeLeadMapping(oneRow2);
       }
-    res.status(200).json({message: "get data", success: 1, data: ""});
+    res.status(200).json({message: "Data Inserted successfully", success: 1});
 
 };
 
