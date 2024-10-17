@@ -20,8 +20,8 @@ const leadLogSerives = {
         const promise = await leadLogModel.findOne({userId})
         return promise 
     },
-    async findLeadLogId(stateId){
-        const promise = await leadLogModel.find({stateId})
+    async findLeadLogByLeadId(leadId){
+        const promise = await leadLogModel.find({"leadId": leadId})
         return promise 
     },
     async getLeadLogById(id){

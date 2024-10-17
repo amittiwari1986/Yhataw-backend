@@ -767,10 +767,10 @@ const importHousingLead = async (req, res) => {
     Date.prototype.toUnixTime = function() { return this.getTime()/1000|0 };
     Date.time = function() { return new Date().toUnixTime(); }
 
-    var startTime = moment().subtract(1, 'days').startOf('day').unix();
-    var endTime = moment().endOf('day').unix();
-    // var startTime = moment().subtract(6, 'hours').unix();
-    // var endTime = moment().unix();
+    // var startTime = moment().subtract(1, 'days').startOf('day').unix();
+    // var endTime = moment().endOf('day').unix();
+    var startTime = moment().subtract(26, 'hours').unix();
+    var endTime = moment().unix();
     // console.log("start date");
     // console.log(startTime);
     // console.log("end date");
@@ -864,9 +864,53 @@ const import99AcersLead = async (req, res) => {
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
     Date.timew = function() { return new yesterday.toUnixTime(); }
-
-console.log(Date.timew);
-    res.status(200).json({message: "get data", success: 1, data: result.data});
+    var elementD = req.body;
+        var checkProjectId = elementD.project_id;
+        if(checkProjectId){
+        var projectId = "99Acers_" + elementD.project_id;
+        var property_field = elementD.property_field;
+        let getProjectData = await projectOperations.findProjectUid(projectId);
+        $status = 0;
+        if(getProjectData.length !== 0){
+            $status = 1;
+            var formDetails = await formOperations.findFormByProjectId(getProjectData[0]._id.toString());
+            if(formDetails.length !== 0){
+                $status = 2;
+            }
+        }
+         var oneRow1 = {};
+            var oneRow2 = {};
+         var oneRow1 = {
+                    "project_name": elementD.project_name,
+                    "project_uid": projectId,
+                    "developerId": "894395943590hkjhgjnfdkjg",
+                    "status": $status
+                }
+                await projectApiOperations.addManyProject(oneRow1);
+          var oneRow2 = {
+                "lead_date": elementD.lead_date,
+                "apartment_names": elementD.apartment_names,
+                "country_code": elementD.country_code,
+                "service_type": elementD.service_type,
+                "category_type": elementD.category_type,
+                "locality_name": elementD.locality_name,
+                "city_name": elementD.city_name,
+                "lead_name": elementD.lead_name,
+                "lead_email": elementD.lead_email,
+                "lead_phone": elementD.lead_phone,
+                "max_area": elementD.max_area,
+                "min_area": elementD.min_area,
+                "min_price": elementD.min_price,
+                "max_price": elementD.min_price,
+                "project_id": projectId,
+                "project_name": elementD.project_name,
+                "property_field": ""
+          }
+          
+          // dataArrayPushStage.push(oneRow4); 
+          await unmergeLeadOperations.addManyUnmergeLeadMapping(oneRow2);
+      }
+    res.status(200).json({message: "get data", success: 1, data: ""});
 
 };
 
@@ -898,10 +942,13 @@ const promise = unmergeLeadOperations.getAllUnmergeLead(query);
             dynamic.push(objec);
 
             var projectid = await projectOperations.findProjectUid(data.project_id);
+            //console.log(projectid);
             if(projectid.length == 0){
                 return res.status(400).send({ auth: false, message: 'Please add Project then Form', success: 0});
             }
+            console.log(projectid[0]._id.toString());
             var formDetails = await formOperations.findFormByProjectId(projectid[0]._id.toString());
+            console.log(formDetails);
             var projectDetails = await projectDetailOperations.findOneProjectId(formDetails[0].projectId);
              // console.log(projectDetails);
             var lead_name = data.lead_name;
