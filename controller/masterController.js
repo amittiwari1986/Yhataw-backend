@@ -2494,7 +2494,7 @@ const getLeadHistory = (req, res) => {
             setdata = decoded.id.id;
         });
         if(setdata){
-             let id = req.params.lead_id
+             let id = req.params.id
              if(id){
               const promise = leadLogOperations.findLeadLogByLeadId(id)
               promise

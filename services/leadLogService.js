@@ -21,8 +21,32 @@ const leadLogSerives = {
         return promise 
     },
     async findLeadLogByLeadId(leadId){
-        const promise = await leadLogModel.find({"leadId": leadId})
-        return promise 
+        // const promise = await leadLogModel.find({"leadId": leadId})
+        // return promise 
+
+        const promise = await leadLogModel.aggregate(
+            [
+             {
+                "$match": {"leadId": leadId}
+             },
+            { "$project": { "log_id": { "$toString": "$_id" },
+                "user_id": { "$toObjectId": "$userId" },
+                "leadId": { "$toString": "$leadId" },
+                "userId": { "$toString": "$userId" },
+                "old_value": { "$toString": "$old_value" },
+                "new_value": { "$toString": "$new_value" },
+                "updatedAt": { "$toString": "$updatedAt" },
+            }},
+                {$lookup: 
+                    {from: "users", 
+                    localField: "user_id", 
+                    foreignField: "_id", 
+                    as: "users"}
+                },
+                { $sort : { updatedAt : -1} }])
+
+        
+        return promise
     },
     async getLeadLogById(id){
         const promise = await leadLogModel.findById(id)
