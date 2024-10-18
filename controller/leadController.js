@@ -936,7 +936,7 @@ const getLeadForm = (req, res) => {
                 let arr = [];
                  var arrrr = Promise.all(data[0].data.map(async (element) => {
                     var req = element;
-                    console.log(req);
+                    //console.log(req);
                     var dataArray = {};
                     dataArray['_id'] = req._id; 
                     if(req.projectId != 'NA'){
@@ -990,8 +990,12 @@ const getLeadForm = (req, res) => {
                       var teamId = req.AssignTo;
                       var teamId = teamId.replace(/["']/g, "");
                       teamId = teamId.split(',');
-                      // console.log(teamId);
-                      var teamData = await teamOperations.getMultipleTeam(teamId);
+                      console.log(teamId);
+                      var teamData = req;
+                      if(teamId.length > 0){
+                        var teamData = await teamOperations.getMultipleTeam(teamId);
+                      }
+                      
                       if(teamData){
                         dataArray['AssignTo'] = teamData;
                       }else{
@@ -1063,6 +1067,7 @@ const getLeadForm = (req, res) => {
                     if(req.dynamicFields){
                       dataArray['dynamicFields'] = JSON.parse(req.dynamicFields);
                     }
+                    console.log(dataArray);
                     
 
                     // if(req.formId != 'NA'){

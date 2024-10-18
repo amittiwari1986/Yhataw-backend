@@ -57,5 +57,7 @@ Routes.post("/addBanner",mastercontroller.addBanner)
 Routes.get("/getProjectUidMapping/:id",mastercontroller.getProjectUidMapping)
 Routes.get("/getBanner",mastercontroller.getBanner)
 Routes.get("/getLeadHistory/:id",mastercontroller.getLeadHistory)
+Routes.get("/getTeamUserWise/:id",mastercontroller.getTeamUserWise)
+Routes.get("/getTeamWiseMember/:id",mastercontroller.getTeamWiseMember)
 module.exports = Routes
 

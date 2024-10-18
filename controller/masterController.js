@@ -55,6 +55,9 @@ const Banner = require("../dto/bannerto");
 const LeadLog = require("../dto/leadlogto");
 const leadLogOperations = require("../services/leadLogService");
 
+const UserTeamMapping = require("../dto/userteamto");
+const userTeamMappingOperations = require("../services/userTeamService");
+
 //User countru
 const getCountry = (req, res) => {
   let token=req.headers.token;
@@ -2517,4 +2520,132 @@ const getLeadHistory = (req, res) => {
 };
 
 
-module.exports = { getLeadHistory,getBanner,addBanner,addProjectUidMapping,getProjectUidMapping,updateProjectApiNew,addProjectApiNew,getProjectUnMap,updateProjectUid,updateDepartment,updateDeveloper,updateProject,getTeamDropDownProject,getMultipleTeamWiseDropDownProject,getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
+const getTeamUserWise = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             let role_id = req.params.id
+             var action = 0;
+             if(role_id = "652771c1c5d66b4d6ccb0fd8"){
+              action = 0;
+             }else if(role_id = "65277225c5d66b4d6ccb0fde"){
+              action = 0;
+             }else if(role_id = "6527725cc5d66b4d6ccb0fe4"){
+              action = 1;
+             }else if(role_id = "65277273c5d66b4d6ccb0fe7"){
+              action = 1;
+             }
+             action = 1;
+             if(action = 1){
+                 const promise = teamOperations.getTeamById(role_id)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  // const {others} = data
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                  })
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+             }else{
+               const query = req.query.new 
+              const promise = teamOperations.getAllTeam(query)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  // const {others} = data
+                  if(data.length > 0){
+                   res.status(200).json({
+                    data: data,
+                    success: 1
+                    }) 
+                  }else{
+                      res.status(200).json({
+                      data: [],
+                      message: "No Data found",
+                      success: 0
+                      }) 
+                  }
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            }
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
+
+
+const getTeamWiseMember = (req, res) => {
+  let token=req.headers.token;
+        let setdata = "";
+        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.', success: 0});
+  
+          jwt.verify(token, process.env.JWT_SCRT, function(err, decoded) {
+            if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.', success: 0});
+            
+            // return res.status(200).send(decoded.id.id);
+            setdata = decoded.id.id;
+        });
+        if(setdata){
+             let team_id = req.params.id
+             if(team_id){
+                 const promise = userTeamMappingOperations.getAllDataTeamWise(team_id)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  // const {others} = data
+                  res.status(200).json({
+                      data: data,
+                      success: 1
+                  })
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+             }else{
+               const query = req.query.new 
+              const promise = userTeamMappingOperations.getAlldata(query)
+              promise
+              .then((data)=>{
+                  console.log(data)
+                  // const {others} = data
+                  if(data.length > 0){
+                   res.status(200).json({
+                    data: data,
+                    success: 1
+                    }) 
+                  }else{
+                      res.status(200).json({
+                      data: [],
+                      message: "No Data found",
+                      success: 0
+                      }) 
+                  }
+              })
+              .catch((err)=>{
+                  // console.log(err.message)
+                  res.status(500).json({message: "Internal Server Error", success: 0, error: err.message});
+              });
+            }
+        }else{
+            return res.status(401).send({ auth: false, message: 'Failed to authenticate token.', success: 0 });
+        }
+};
+
+module.exports = { getTeamWiseMember,getTeamUserWise,getLeadHistory,getBanner,addBanner,addProjectUidMapping,getProjectUidMapping,updateProjectApiNew,addProjectApiNew,getProjectUnMap,updateProjectUid,updateDepartment,updateDeveloper,updateProject,getTeamDropDownProject,getMultipleTeamWiseDropDownProject,getPropertyList,addPropertyList,updatePropertyList,getMultipleTeamWiseDropDown,getReportingManagerByRoleWise,getTeamDropDown,addLeadSource,getLeadSource,addLeadStatus,getLeadStatus,updateTeam,getTeam,addTeam,deleteProject,getDeveloperTree,addProject,getProject,addDeveloper,getDeveloper,addProperty,getTimezone,getDepartmentList,deleteDepartment,deleteDesignation,getCountry,addCountry,getState,addState,getCity,addCity,addDepartment,getDepartment,addDesignation,getDesignation }
