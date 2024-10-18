@@ -2543,7 +2543,7 @@ const getTeamUserWise = (req, res) => {
              }else if(role_id = "65277273c5d66b4d6ccb0fe7"){
               action = 1;
              }
-             action = 1;
+             action = 0;
              if(action = 1){
                  const promise = teamOperations.getTeamById(role_id)
               promise
