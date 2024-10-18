@@ -2535,16 +2535,16 @@ const getTeamUserWise = (req, res) => {
              let role_id = req.params.id
              var action = 0;
              if(role_id = "652771c1c5d66b4d6ccb0fd8"){
-              action = 0;
+              var action = 0;
              }else if(role_id = "65277225c5d66b4d6ccb0fde"){
-              action = 0;
+              var action = 0;
              }else if(role_id = "6527725cc5d66b4d6ccb0fe4"){
-              action = 1;
+              var action = 1;
              }else if(role_id = "65277273c5d66b4d6ccb0fe7"){
-              action = 1;
+              var action = 1;
              }
-             action = 0;
-             if(action = 1){
+             var action = 0;
+             if(action == 1){
                  const promise = teamOperations.getTeamById(role_id)
               promise
               .then((data)=>{
