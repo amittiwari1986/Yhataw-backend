@@ -41,6 +41,12 @@ const userTeamSerives = {
                     foreignField: "_id", 
                     as: "users"}
                 },
+                {$lookup: 
+                    {from: "user_offices", 
+                    localField: "userId", 
+                    foreignField: "userId", 
+                    as: "user_offices"}
+                },
                 { $sort : { updatedAt : -1} }])
 
         
